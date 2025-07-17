@@ -21,7 +21,7 @@ final class Version20250714081808 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE user ADD is_verified TINYINT(1) NOT NULL
+            ALTER TABLE users ADD is_verified TINYINT(1) NOT NULL
         SQL);
     }
 
@@ -29,7 +29,7 @@ final class Version20250714081808 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE user DROP is_verified
+            ALTER TABLE users DROP is_verified
         SQL);
     }
 }

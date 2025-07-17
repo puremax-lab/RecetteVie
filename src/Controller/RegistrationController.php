@@ -15,6 +15,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use DateTimeImmutable;
 
 class RegistrationController extends AbstractController
 {
@@ -25,6 +26,10 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
+        if ($this->getUser()) {
+            $this->addFlash('info', 'You are already connected.');
+            return $this->redirectToRoute("app_account");
+        }
         $user = new User();
         $form = $this->createForm(RegistrationForm::class, $user);
         $form->handleRequest($request);
@@ -35,6 +40,9 @@ class RegistrationController extends AbstractController
 
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+
+            $user->setCreatedAt(new DateTimeImmutable());
+            $user->setUpdatedAt(new DateTimeImmutable());
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -50,6 +58,7 @@ class RegistrationController extends AbstractController
 
             // do anything else you need here, like send an email
 
+            $this->addFlash('info', "Go check your email to confirm your registration.");
             return $this->redirectToRoute('app_login');
         }
 
@@ -77,6 +86,6 @@ class RegistrationController extends AbstractController
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_recipe_index');
     }
 }

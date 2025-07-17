@@ -12,7 +12,7 @@ use App\Entity\Traits\Timestampable;
 
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
 #[ORM\Table(name: "recipes")]
-#[UniqueEntity("title", message: 'Une recette avec ce titre existe déjà.')]
+#[UniqueEntity("title")]
 class Recipe
 {
     #[ORM\Id]
@@ -21,9 +21,9 @@ class Recipe
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'Le titre ne peut pas être vide.')]
+    #[Assert\NotBlank()]
     // #[Assert\Length(min: 10, minMessage: 'Le titre doit comporter au moins {{ limit }} caractères.')]
-    #[Assert\Length(max: 50, maxMessage: 'Le titre ne peut pas dépasser {{ limit }} caractères.')]
+    #[Assert\Length(max: 50)]
     // #[Assert\NotEqualTo("Merde", message: 'Le titre ne peut pas être "Merde".')]
     #[InappropriateWords()]
     private ?string $title = null;
@@ -32,16 +32,16 @@ class Recipe
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank(message: 'Le contenu ne peut pas être vide.')]
-    #[Assert\Length(min: 20, minMessage: 'Le contenu doit comporter au moins {{ limit }} caractères.')]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 20)]
     private ?string $content = null;
 
 
     use Timestampable;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\Positive(message: 'La durée doit être un nombre positif.')]
-    #[Assert\LessThan(1440, message: 'La durée doit être inférieure à 24 heures (1440 minutes).')]
+    #[Assert\Positive()]
+    #[Assert\LessThan(1440)]
     private ?int $duration = null;
 
     #[ORM\Column(length: 500, nullable: true)]

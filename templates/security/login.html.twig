@@ -6,20 +6,26 @@
     <div class="col-md-6 mx-auto text-center">    
         <form method="post">
             {% if error %}
-                <div class="alert alert-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                <div class="alert alert-error">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
             {% endif %}
 
             {% if app.user %}
                 <div class="mb-3">
-                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                    {{ 'login.logged_in_as'|trans({'%user%': app.user.userIdentifier}) }}
+                    <a href="{{ path('app_logout') }}">{{ 'login.logout'|trans }}</a>
                 </div>
             {% endif %}
 
-            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-            <label for="username">Email</label>
+            <h1 class="h3 mb-3 font-weight-normal">{{ 'login.title'|trans }}</h1>
+
+            <label for="username">{{ 'login.email.label'|trans }}</label>
             <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-            <label for="password">Password</label>
+
+            <label for="password">{{ 'login.password.label'|trans }}</label>
             <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+
             <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
 
             {#
@@ -33,16 +39,19 @@
             #}
 
             <div>
-            <a href = "#">Forgot Password ?</a>
+                <a href="{{ path('app_forgot_password_request') }}">
+                    {{ 'login.forgot_password'|trans }}
+                </a>
             </div>
 
             <button class="btn btn-lg btn-primary" type="submit">
-                Sign in
+                {{ 'login.button'|trans }}
             </button>
 
             <div>
-                <span>not registered yet?</span>
-                <a href="#">Create an account</a>
+                <span>{{ 'login.not_registered'|trans }}</span>
+                <a href="#">{{ 'login.create_account'|trans }}</a>
+            </div>
         </form>
     </div>
 {% endblock %}

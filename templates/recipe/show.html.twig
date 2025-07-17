@@ -32,16 +32,17 @@
                 Updated {{ recipe.updatedAt | date('d/m/Y h:i') }}
             </p>
             <br>
-            <a class="btn btn-primary btn-sm" href={{ path('app_recipe_edit', {id: recipe.id}) }}>
-                Edit Recipe
-            </a>
-            <a class="btn btn-danger btn-sm" href="#" onclick="event.preventDefault(); if(confirm('Are you sure you want to delete this recipe?')) { document.getElementById('js-recipe-delete-form').submit(); }">
-                Delete
-            </a>
+            {% if app.user %}
+                {% if app.user.isVerified() and app.user.id == recipe.user.id %}   
+                    <a class="btn btn-primary btn-sm" href={{ path('app_recipe_edit', {id: recipe.id}) }}>
+                        Edit Recipe
+                    </a>
+                    <a class= "btn btn-danger btn-sm" href={{ path('app_recipe_delete', {id: recipe.id}) }} onclick="return confirm('Are you sure you want to delete this recipe?')">delete</a>
+                {% endif %}
+            {% endif %}
             <a class="btn btn-secondary btn-sm" href={{ path('app_recipe_index')}}>
                 Go Back
             </a>
-            <form id="js-recipe-delete-form" action={{ path('app_recipe_delete',{id: recipe.id})}} method="post" style="display:none;"></form>
         </article>
     </div>
 {% endblock %}

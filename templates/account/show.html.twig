@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Profile" %}
+
+{% block body %}
+    <div class = "row">
+        <div class = "col-md-6 mx-auto text-center">
+            <h1>{{"accountShow-profile"|trans}}</h1>
+            <br>
+            <p>{{"accountShow.Accountcreatedon"|trans}} {{ app.user.createdAt|date("d/m/Y") }}</p>
+            <br>
+            <p>
+                <a class="btn btn-primary btn-sm" href="#">{{"accountShow.editAccount"|trans}}</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}

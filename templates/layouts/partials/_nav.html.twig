@@ -38,23 +38,25 @@
              <a class="nav-link {{ app.current_route == 'app_recipe_show' or app.current_route == 'app_recipe_index' ? 'active' : '' }}" href={{ path('app_recipe_index') }}>{{ "navBar.recipes" |trans}}</a>
            </li>
            {% if app.user %}
+            {% if app.user.isVerified() %}
+              <li class="nav-item ">
+                <a class="nav-link {{ app.current_route == 'app_recipe_create' ? 'active' : '' }}" href={{ path('app_recipe_create') }}>{{ "navBar.addRecipe" |trans}}</a>
+              </li>
+            {% endif %}
            <li class="nav-item ">
-             <a class="nav-link {{ app.current_route == 'app_recipe_create' ? 'active' : '' }}" href={{ path('app_recipe_create') }}>{{ "navBar.addRecipe" |trans}}</a>
-           </li>
-           <li class="nav-item ">
-             <a class="nav-link {{ app.current_route == 'app_account' ? 'active' : '' }}" href={{ path("app_account") }}>{{ "navBar.account" |trans}}</a>
+             <a class="nav-link {{ app.current_route == 'app_account' ? 'active' : '' }}" href={{ path("app_account")}}>{{ "navBar.account" |trans}}</a>
            </li>
            <li class="nav-item ">
              <a class="nav-link " href={{ path('app_logout') }}>{{ "navBar.logout" |trans}}</a>
            </li>
-           {% else %}
+          {% else %}
            <li class="nav-item ">
              <a class="nav-link {{ app.current_route == 'app_register' ? 'active' : '' }}" href={{ path("app_register") }}>{{ "navBar.signUp" |trans}}</a>
            </li>
            <li class="nav-item ">
              <a class="nav-link {{ app.current_route == 'app_login' ? 'active' : '' }}" href={{ path('app_login') }} >{{ "navBar.login" |trans}}</a>
            </li>
-           {% endif %}
+          {% endif %}
         </ul>
         </div>
     </div>      

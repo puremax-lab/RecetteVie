@@ -1,20 +1,38 @@
-# Title : "Titre"
-# Content : "Description"
-# Duration : "Durée"
-# Image name : "Image"
-# Save : "Enregistrer"
-
-recipeForm:
-  title: "Titre"
-  content: "Description"
-  duration: "Durée"
-  image_name: "Image"
-  save: "Enregistrer"
-navBar:
-  home: "Accueil"
-  recipes: "liste des recettes"
-  addRecipe: "Ajouter une recette"
-  signUp: "S'enregistrer"
-  login: "Se connecter"
-  logout: "Se déconnecter"
-  account: "Mon compte"
+recipeForm.title: Titre
+recipeForm.content: Description
+recipeForm.duration: Durée
+recipeForm.image_name: Image
+recipeForm.save: Enregistrer
+navBar.home: Accueil
+navBar.recipes: 'liste des recettes'
+navBar.addRecipe: 'Ajouter une recette'
+navBar.signUp: "S'enregistrer"
+navBar.login: 'Se connecter'
+navBar.logout: 'Se déconnecter'
+navBar.account: 'Mon compte'
+registerTemplate.title: Inscription
+registerTemplate.button: "s'enregistrer"
+registrationForm.firstname: Prénom
+registrationForm.lastname: Nom
+registrationForm.email: Email
+registrationForm.password: 'Mot de passe'
+registrationForm.agreeTerms: "Accepter les conditions d'utilisation"
+'Your email adress is not verified.': "Votre adresse email n'est pas vérifiée."
+recipeController.emailNotVerified: "Votre adresse email n'est pas vérifiée."
+'Forgot Password ?': 'Mot de passe oublié ?'
+reset_password.title: 'Réinitialiser votre mot de passe'
+reset_password.instructions: 'Veuillez saisir votre nouveau mot de passe.'
+reset_password.button: 'Réinitialiser le mot de passe'
+login.logged_in_as: 'Vous êtes connecté en tant que %user%'
+login.logout: 'Se déconnecter'
+login.title: 'Veuillez vous connecter'
+login.email.label: 'Adresse e-mail'
+login.password.label: 'Mot de passe'
+login.forgot_password: 'Mot de passe oublié ?'
+login.button: 'Se connecter'
+login.not_registered: 'Pas encore inscrit ?'
+login.create_account: 'Créer un compte'
+registration.title: Inscrivez-vous
+accountShow-profile: "Profil du compte"
+accountShow.Accountcreatedon: "Compte créé le"
+accountShow.editAccount: "Modifier le compte"

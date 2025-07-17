@@ -56,7 +56,7 @@ Voici la liste des recettes
                         <img src = {{ recipe.imageName }} width="250" height="370">
                     </p>
                     <p>
-                        Submitted {{ recipe.createdAt |ago(locale='fr') }}
+                        Submitted {{ recipe.createdAt |ago }}
                     </p>
                     <p>By {{ recipe.user.firstname }} {{ recipe.user.lastname }}
                     </p>

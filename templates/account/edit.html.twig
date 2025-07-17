@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Profile" %}
+
+{% block body %}
+<div class"row">
+    <div class="col-md-6 mx-auto text-center">
+        <h1 class="text-center my-5">{{ "Update Profile"|trans }}</h1>
+        {{ form_start(userform) }}
+        {{ form_row(userform.firstname)}}
+        {{ form_row(userform.lastname)}}
+        <br>
+        <p>
+            <button type="submit" class="btn btn-primary">{{ "Apply changes"|trans }} </button>
+        </p>
+        {{ form_end(userform) }}
+    <div>
+</div>
+{% endblock %}

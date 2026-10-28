@@ -26,6 +26,10 @@ Log in with **camille@recettevie.test** / **password**, or create your own accou
 |---|---|---|
 | ![Recipe](docs/screenshots/recipe.png) | ![Recipes](docs/screenshots/recipes.png) | ![Login](docs/screenshots/login.png) |
 
+| Mobile: home | Mobile: recipes | Mobile: recipe in English |
+|---|---|---|
+| ![Mobile home](docs/screenshots/mobile-home.png) | ![Mobile recipes](docs/screenshots/mobile-recipes.png) | ![Mobile recipe in English](docs/screenshots/mobile-recipe-en.png) |
+
 ## Tech stack
 
 | | |

@@ -28,7 +28,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 | **What it does** | Visitors browse and search recipes. Members publish, edit and delete their own recipes, in French and English |
 | **What it shows** | A complete Symfony app: authentication, permissions, forms and validation, a database, an external API, tests and deployment |
 | **Stand-out feature** | Authors write in one language, and **DeepL** translates the other, with a preview to review before saving |
-| **Status** | Deployed online, responsive on phones and desktops, covered by 46 automated tests |
+| **Status** | Deployed online, responsive on phones and desktops, covered by automated tests |
 
 ## Features
 
@@ -70,7 +70,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 - No Node.js build step: assets are served with Symfony AssetMapper.
 
 **Quality**
-- **46 tests** (PHPUnit): pages, permissions, forms, uploads, sign-up, login, language switch and the DeepL service.
+- **Automated tests** (PHPUnit): pages, permissions, forms, uploads, sign-up, login, language switch and the DeepL service.
 - DeepL is mocked with `MockHttpClient`, so the tests never call the real API.
 
 ## Tech stack

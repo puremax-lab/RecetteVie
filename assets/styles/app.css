@@ -227,7 +227,38 @@ turbo-frame.recipes-next { display: block; }
 .error-code { font-family: 'Fraunces', Georgia, serif; font-size: 6rem; font-weight: 700; color: var(--rv-primary); line-height: 1; }
 .breadcrumb a { text-decoration: none; }
 
+/* ---------- Phones: centred, single-column layout ---------- */
+.auth-card > .page-title,
+.auth-card > .page-title + p { text-align: center; }
+
+@media (max-width: 991.98px) {
+    .hero-title { font-size: clamp(2.1rem, 9vw, 3rem); }
+    .hero .lead { margin-inline: auto; max-width: 34rem; }
+}
+
+@media (max-width: 767.98px) {
+    /* Category chips on one row that scrolls sideways, like a mobile app */
+    .chips {
+        flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+        margin-inline: calc(var(--bs-gutter-x) * -.5); padding-inline: calc(var(--bs-gutter-x) * .5);
+        scroll-snap-type: x proximity;
+        /* Snap to the inner padding, so the first chip keeps the page margin */
+        scroll-padding-inline: calc(var(--bs-gutter-x) * .5);
+    }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip { flex-shrink: 0; scroll-snap-align: start; }
+
+    .section-title { font-size: 1.45rem; }
+    .search-bar { max-width: none; }
+    .profile-header .btn { width: 100%; }
+}
+
 @media (max-width: 575.98px) {
     .recipe-hero-img { height: 240px; }
     .panel, .auth-card { padding: 1.25rem; }
+    .auth-card { margin-block: 0; }
+    .search-bar .btn { padding-inline: 1rem; }
+    .recipe-actions form, .recipe-actions form .btn { width: 100%; }
+    .recipe-facts { gap: 1.25rem !important; }
+    .cta .btn { width: 100%; }
 }

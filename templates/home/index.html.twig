@@ -6,14 +6,14 @@
     <section class="hero">
         <div class="container py-5">
             <div class="row align-items-center g-4 g-lg-5">
-                <div class="col-lg-7">
+                <div class="col-lg-7 text-center text-lg-start">
                     <p class="eyebrow">{{ 'site.tagline'|trans }}</p>
                     <h1 class="display-4 hero-title">{{ 'home.hero_title'|trans }}</h1>
                     <p class="lead text-body-secondary mb-4">{{ 'home.hero_text'|trans }}</p>
-                    <form action="{{ path('app_recipe_index') }}" method="get" class="search-bar d-flex" role="search">
+                    <form action="{{ path('app_recipe_index') }}" method="get" class="search-bar d-flex mx-auto mx-lg-0" role="search">
                         <i class="bi bi-search"></i>
                         <input type="search" name="q" class="form-control" placeholder="{{ 'home.search_placeholder'|trans }}" aria-label="{{ 'home.search_button'|trans }}">
-                        <button class="btn btn-primary" type="submit">{{ 'home.search_button'|trans }}</button>
+                        <button class="btn btn-primary" type="submit" aria-label="{{ 'home.search_button'|trans }}"><span class="d-none d-sm-inline">{{ 'home.search_button'|trans }}</span><i class="bi bi-arrow-right d-sm-none"></i></button>
                     </form>
                 </div>
                 <div class="col-lg-5 d-none d-lg-block">
@@ -28,7 +28,7 @@
 
 {% block body %}
     <section class="mb-5">
-        <h2 class="section-title">{{ 'home.categories'|trans }}</h2>
+        <h2 class="section-title text-center text-md-start">{{ 'home.categories'|trans }}</h2>
         <div class="row row-cols-2 row-cols-md-3 row-cols-xl-6 g-3">
             {% for row in categories %}
                 <div class="col">
@@ -43,8 +43,8 @@
     </section>
 
     <section class="mb-5">
-        <div class="d-flex justify-content-between align-items-end mb-3">
-            <h2 class="section-title mb-0">{{ 'home.latest'|trans }}</h2>
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center align-items-sm-end gap-1 mb-3">
+            <h2 class="section-title text-center text-sm-start mb-0">{{ 'home.latest'|trans }}</h2>
             <a href="{{ path('app_recipe_index') }}" class="link-primary fw-semibold text-decoration-none">{{ 'home.see_all'|trans }} <i class="bi bi-arrow-right"></i></a>
         </div>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">

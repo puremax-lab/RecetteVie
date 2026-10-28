@@ -4,18 +4,18 @@
 
 {% block body %}
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-4">
-        <div>
+        <div class="text-center text-lg-start">
             <h1 class="page-title mb-1">{{ currentCategory ? currentCategory.icon ~ ' ' ~ currentCategory|category_name : 'recipe.list_title'|trans }}</h1>
             <p class="text-body-secondary mb-0">
                 {{ 'recipe.results'|trans({'%count%': recipes.totalItems}) }}
                 {% if query %}{{ 'recipe.results_for'|trans({'%query%': query}) }}{% endif %}
             </p>
         </div>
-        <form method="get" class="search-bar search-bar-sm d-flex" role="search">
+        <form method="get" class="search-bar search-bar-sm d-flex mx-auto mx-lg-0" role="search">
             <i class="bi bi-search"></i>
             {% if currentCategory %}<input type="hidden" name="categorie" value="{{ currentCategory.slug }}">{% endif %}
             <input type="search" name="q" value="{{ query }}" class="form-control" placeholder="{{ 'home.search_placeholder'|trans }}" aria-label="{{ 'home.search_button'|trans }}">
-            <button class="btn btn-primary" type="submit">{{ 'home.search_button'|trans }}</button>
+            <button class="btn btn-primary" type="submit" aria-label="{{ 'home.search_button'|trans }}"><span class="d-none d-sm-inline">{{ 'home.search_button'|trans }}</span><i class="bi bi-arrow-right d-sm-none"></i></button>
         </form>
     </div>
 

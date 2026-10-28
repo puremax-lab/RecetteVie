@@ -38,7 +38,7 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 - **Every recipe in two languages**: the author writes in French *or* English, and the other language is translated automatically with the **DeepL API** (both directions), then validated with the same rules. Without DeepL, both versions are required
 - **Translation preview**: a "Translate with DeepL" button fills the other language instantly, so the author can review it before saving (rate-limited to protect the API quota)
 - **Live character counters** on the form, with the same limits in both languages
-- **Responsive design**: custom Bootstrap 5 theme, works on mobile
+- **Responsive design**: custom Bootstrap 5 theme, mobile-first layout (centred content, swipeable category chips, full-width actions), tested from 320 px phones to desktop, with French typography (non-breaking spaces before `? ! :`)
 - **Custom error pages** (404, 403, 500)
 
 | Recipe page | Category filter | Login |
@@ -51,9 +51,10 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 |---|---|
 | Back end | PHP 8.2+, Symfony 7.4 (LTS), Doctrine ORM 3, Twig |
 | Database | MySQL 8/9 (tests run on SQLite) |
-| Front end | Bootstrap 5, Bootstrap Icons, AssetMapper, Turbo — no Node.js build step |
+| Front end | Bootstrap 5, Bootstrap Icons, AssetMapper, Turbo, Stimulus — no Node.js build step |
 | Security | Symfony Security: form login, CSRF protection, voters, login throttling |
 | Bundles | VerifyEmailBundle, ResetPasswordBundle, KnpTimeBundle, DoctrineFixturesBundle |
+| External API | DeepL (machine translation), called with Symfony HttpClient |
 | Tests | PHPUnit 12: functional and unit tests |
 
 ## Technical highlights

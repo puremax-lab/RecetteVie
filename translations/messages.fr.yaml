@@ -27,7 +27,7 @@ home:
     categories: Explorer par catégorie
     latest: Les dernières recettes
     see_all: Voir toutes les recettes
-    cta_title: Vous avez une recette fétiche ?
+    cta_title: Vous avez une recette fétiche ?
     cta_text: Créez un compte gratuit et partagez-la avec la communauté en deux minutes.
     cta_button: Partager une recette
     recipe_count: '{0} Aucune recette|{1} 1 recette|]1,Inf[ %count% recettes'
@@ -43,7 +43,7 @@ category:
 recipe:
     list_title: Toutes les recettes
     results: '{0} Aucune recette trouvée|{1} 1 recette|]1,Inf[ %count% recettes'
-    results_for: pour « %query% »
+    results_for: pour « %query% »
     loading: Chargement des recettes…
     all_categories: Toutes
     clear_filters: Effacer les filtres
@@ -58,12 +58,12 @@ recipe:
     category: Catégorie
     edit: Modifier
     delete: Supprimer
-    delete_confirm: Supprimer définitivement cette recette ?
+    delete_confirm: Supprimer définitivement cette recette ?
     back: Retour aux recettes
     similar: Dans la même catégorie
     create_title: Nouvelle recette
     create_intro: Partagez une recette que vous aimez cuisiner.
-    edit_title: Modifier « %title% »
+    edit_title: Modifier « %title% »
     save: Enregistrer la recette
     cancel: Annuler
     current_photo: Photo actuelle
@@ -90,7 +90,7 @@ recipe_form:
     photo: Photo
     photo_help: JPG, PNG ou WebP, 4 Mo maximum. Optionnel.
     languages_title: Votre recette en français et en anglais
-    languages_auto: Écrivez la recette dans la langue de votre choix et laissez l'autre vide, elle sera traduite automatiquement avec DeepL. Pour la relire avant d'enregistrer, utilisez le bouton « Traduire avec DeepL ». Les mêmes règles s'appliquent aux deux langues.
+    languages_auto: Écrivez la recette dans la langue de votre choix et laissez l'autre vide, elle sera traduite automatiquement avec DeepL. Pour la relire avant d'enregistrer, utilisez le bouton « Traduire avec DeepL ». Les mêmes règles s'appliquent aux deux langues.
     languages_manual: Les deux versions sont obligatoires (la traduction automatique n'est pas activée sur ce site). Les mêmes règles s'appliquent aux deux langues.
     language_fr: 🇫🇷 Français
     language_en: 🇬🇧 English
@@ -120,21 +120,21 @@ account:
 
 login:
     title: Connexion
-    subtitle: Heureux de vous revoir !
+    subtitle: Heureux de vous revoir !
     email: Adresse e-mail
     password: Mot de passe
     remember_me: Se souvenir de moi
-    forgot_password: Mot de passe oublié ?
+    forgot_password: Mot de passe oublié ?
     submit: Se connecter
-    no_account: Pas encore de compte ?
+    no_account: Pas encore de compte ?
     create_account: Créer un compte
-    demo: 'Compte de démo : %email% / %password%'
+    demo: 'Compte de démo : %email% / %password%'
 
 register:
     title: Créer un compte
     subtitle: Rejoignez la communauté et partagez vos recettes.
     submit: Créer mon compte
-    has_account: Déjà inscrit ?
+    has_account: Déjà inscrit ?
 
 reset_password:
     request_title: Mot de passe oublié
@@ -142,7 +142,7 @@ reset_password:
     request_submit: Envoyer le lien
     check_email_title: Vérifiez vos e-mails
     check_email_text: Si un compte existe pour cette adresse, un e-mail contenant un lien de réinitialisation vient d'être envoyé. Ce lien expirera dans %expires%.
-    check_email_retry: Rien reçu ? Vérifiez vos spams ou <a href="%url%">réessayez</a>.
+    check_email_retry: Rien reçu ? Vérifiez vos spams ou <a href="%url%">réessayez</a>.
     reset_title: Nouveau mot de passe
     new_password: Nouveau mot de passe
     repeat_password: Confirmez le mot de passe
@@ -153,7 +153,7 @@ email:
     signature: L'équipe RecetteVie
     confirm:
         subject: Confirmez votre adresse e-mail
-        text: Merci pour votre inscription ! Cliquez sur le bouton ci-dessous pour confirmer votre adresse e-mail.
+        text: Merci pour votre inscription ! Cliquez sur le bouton ci-dessous pour confirmer votre adresse e-mail.
         button: Confirmer mon adresse
         expires: Ce lien expirera dans %expires%.
     reset:
@@ -166,18 +166,18 @@ flash:
     recipe_created: Votre recette a bien été publiée.
     recipe_updated: La recette a bien été modifiée.
     recipe_deleted: La recette a bien été supprimée.
-    recipe_translated_en: La version anglaise a été traduite automatiquement. Vous pouvez la relire avec « Modifier ».
-    recipe_translated_fr: La version française a été traduite automatiquement. Vous pouvez la relire avec « Modifier ».
+    recipe_translated_en: La version anglaise a été traduite automatiquement. Vous pouvez la relire avec « Modifier ».
+    recipe_translated_fr: La version française a été traduite automatiquement. Vous pouvez la relire avec « Modifier ».
     profile_updated: Votre profil a bien été mis à jour.
-    registered: Bienvenue ! Un e-mail de confirmation vient de vous être envoyé.
-    registered_demo: Bienvenue ! Votre compte est prêt, vous pouvez publier vos recettes.
+    registered: Bienvenue ! Un e-mail de confirmation vient de vous être envoyé.
+    registered_demo: Bienvenue ! Votre compte est prêt, vous pouvez publier vos recettes.
     email_verified: Votre adresse e-mail est confirmée. Vous pouvez maintenant publier des recettes.
     verification_sent: Un nouvel e-mail de confirmation vient d'être envoyé.
     verify_email_first: Confirmez d'abord votre adresse e-mail pour publier une recette.
     password_reset: Votre mot de passe a été changé. Vous pouvez vous connecter.
 
 error:
-    title: Oups !
+    title: Oups !
     not_found_title: Page introuvable
     not_found_text: La page que vous cherchez n'existe pas ou a été déplacée.
     forbidden_title: Accès refusé

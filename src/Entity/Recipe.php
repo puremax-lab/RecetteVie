@@ -69,6 +69,10 @@ class Recipe
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageName = null;
 
+    /** True when the English version was produced by machine translation. */
+    #[ORM\Column(options: ['default' => false])]
+    private bool $autoTranslated = false;
+
     #[ORM\ManyToOne(inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
@@ -205,6 +209,33 @@ class Recipe
     public function getLocalizedSteps(string $locale): array
     {
         return self::splitLines('en' === $locale && $this->contentEn ? $this->contentEn : $this->content);
+    }
+
+    /**
+     * The three English fields, to detect whether the author edited them.
+     *
+     * @return array{?string, ?string, ?string}
+     */
+    public function getEnglishFields(): array
+    {
+        return [$this->titleEn, $this->ingredientsEn, $this->contentEn];
+    }
+
+    public function hasEnglishVersion(): bool
+    {
+        return [] !== array_filter($this->getEnglishFields(), static fn (?string $value) => null !== $value && '' !== trim($value));
+    }
+
+    public function isAutoTranslated(): bool
+    {
+        return $this->autoTranslated;
+    }
+
+    public function setAutoTranslated(bool $autoTranslated): static
+    {
+        $this->autoTranslated = $autoTranslated;
+
+        return $this;
     }
 
     public function getDuration(): ?int

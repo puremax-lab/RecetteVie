@@ -12,7 +12,7 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 ![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8%2F9-4479A1?logo=mysql&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-30_passing-2ea44f)
+![Tests](https://img.shields.io/badge/tests-38_passing-2ea44f)
 
 ![Home page](docs/screenshots/home.png)
 
@@ -35,6 +35,7 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 - **Accounts**: sign-up, login with "remember me", email verification, password reset by email, profile page listing your recipes
 - **Permissions**: only the author (or an admin) can edit or delete a recipe; members must confirm their email before publishing
 - **Bilingual**: French/English switch, browser language detected on the first visit
+- **Recipe translation**: each recipe has an optional English version, filled automatically with the **DeepL API** when the author leaves it empty
 - **Responsive design**: custom Bootstrap 5 theme, works on mobile
 - **Custom error pages** (404, 403, 500)
 
@@ -59,6 +60,7 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 - **Custom validation constraint** ([`InappropriateWords`](src/Validator/InappropriateWords.php)) rejects titles or steps containing forbidden words (whole words only, case-insensitive).
 - **Pagination without a bundle**: Doctrine's `Paginator` wrapped in a small [`Page`](src/Pagination/Page.php) class.
 - **Doctrine lifecycle callbacks**: timestamps and URL slugs are filled automatically ([`Timestampable`](src/Entity/Traits/Timestampable.php), [`Recipe::computeSlug()`](src/Entity/Recipe.php)).
+- **External API integration** ([`RecipeTranslator`](src/Service/RecipeTranslator.php)): calls DeepL with Symfony HttpClient, keeps line breaks by translating line by line, never overwrites a translation written by the author, and degrades gracefully (no key or API error = the save still works). Tested with `MockHttpClient`, so tests never hit the real API.
 - **Upload service** ([`RecipeImageUploader`](src/Service/RecipeImageUploader.php)) gives each file a unique, safe name and deletes the old photo when it is replaced.
 - **SEO-friendly URLs** like `/recettes/tarte-tatin-12`, with a 301 redirect when the slug is outdated.
 - **Translations**: all texts live in [`translations/`](translations/), and an event subscriber stores the chosen language in the session.
@@ -98,6 +100,10 @@ erDiagram
         text ingredients
         text content
         int duration "minutes"
+        string title_en "nullable"
+        text ingredients_en "nullable"
+        text content_en "nullable"
+        bool auto_translated
         string image_name "nullable"
         datetime created_at
         datetime updated_at
@@ -139,7 +145,7 @@ src/
 ├── Pagination/        Page (wrapper around Doctrine's Paginator)
 ├── Repository/        Search, latest and similar recipe queries
 ├── Security/          EmailVerifier, Voter/RecipeVoter
-├── Service/           RecipeImageUploader
+├── Service/           RecipeImageUploader, RecipeTranslator (DeepL)
 ├── Twig/              AppExtension (category_name and duration filters)
 └── Validator/         InappropriateWords constraint + validator
 templates/             Twig views (layout, partials, pages, emails, error pages)
@@ -211,6 +217,16 @@ EMAIL_VERIFICATION=true
 MAILER_DSN="smtp://USER:PASSWORD@sandbox.smtp.mailtrap.io:2525"
 ```
 
+### Automatic translation (optional)
+
+Recipes written in French can be translated into English automatically with [DeepL](https://www.deepl.com/pro-api). Create a free *DeepL API Free* account (500,000 characters per month), copy your authentication key and add it to `.env.local`:
+
+```dotenv
+DEEPL_API_KEY=your-key:fx
+```
+
+Without a key, everything works the same: authors can still write the English version themselves, and the French text is shown otherwise.
+
 ## Tests
 
 The tests use their own SQLite database, so they don't need MySQL:
@@ -219,11 +235,11 @@ The tests use their own SQLite database, so they don't need MySQL:
 php bin/phpunit
 ```
 
-They cover browsing, search, pagination, permissions (author, other user, admin), photo upload, form validation, CSRF protection, sign-up, login and the language switch.
+They cover browsing, search, infinite scroll, permissions (author, other user, admin), photo upload, form validation, CSRF protection, sign-up, demo mode, login, the language switch, English recipes and the DeepL translation service.
 
 ## Production notes
 
-- Set real environment variables: `APP_ENV=prod`, a random `APP_SECRET`, `DATABASE_URL` and `MAILER_DSN`.
+- Set real environment variables: `APP_ENV=prod`, a random `APP_SECRET`, `DATABASE_URL`, and optionally `MAILER_DSN` and `DEEPL_API_KEY`.
 - Compile the front-end files with `php bin/console asset-map:compile`.
 - The web server must be allowed to write to `public/uploads/recipes/`.
 

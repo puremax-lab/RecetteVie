@@ -9,6 +9,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\RecipeRepository;
 use App\Security\Voter\RecipeVoter;
 use App\Service\RecipeImageUploader;
+use App\Service\RecipeTranslator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,6 +28,7 @@ final class RecipeController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly RecipeImageUploader $uploader,
+        private readonly RecipeTranslator $translator,
     ) {
     }
 
@@ -73,11 +75,13 @@ final class RecipeController extends AbstractController
         }
 
         $recipe = (new Recipe())->setUser($user);
+        $before = $this->translator->snapshot($recipe);
         $form = $this->createForm(RecipeForm::class, $recipe);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->handleImageUpload($form, $recipe);
+            $this->translator->updateTranslation($recipe, $before);
             $this->em->persist($recipe);
             $this->em->flush();
             $this->addFlash('success', 'flash.recipe_created');
@@ -111,11 +115,13 @@ final class RecipeController extends AbstractController
     #[IsGranted(RecipeVoter::EDIT, 'recipe')]
     public function edit(Recipe $recipe, Request $request): Response
     {
+        $before = $this->translator->snapshot($recipe);
         $form = $this->createForm(RecipeForm::class, $recipe);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->handleImageUpload($form, $recipe);
+            $this->translator->updateTranslation($recipe, $before);
             $this->em->flush();
             $this->addFlash('success', 'flash.recipe_updated');
 

@@ -68,6 +68,7 @@ recipe:
     cancel: Cancel
     current_photo: Current photo
     no_photo: No photo yet
+    machine_translated: Translated automatically with DeepL.
 
 pagination:
     label: Pagination
@@ -91,7 +92,7 @@ recipe_form:
     ingredients_en: Ingredients in English
     steps_en: Method in English
     english_version: English version (optional)
-    english_help: Shown to visitors browsing the site in English. If left empty, the French version is shown.
+    english_help: Shown to visitors browsing the site in English. Leave empty for an automatic translation (when enabled); otherwise the French text is shown.
 
 user_form:
     firstname: First name

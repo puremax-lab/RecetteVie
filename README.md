@@ -86,12 +86,65 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 
 ## Database
 
-MySQL, 4 tables. **PK** = primary key, **FK** = foreign key, **unique** = no duplicates allowed.
+MySQL, 4 tables. **PK** = primary key, **FK** = foreign key, **UK** = unique (no duplicates allowed).
 
-**Relations**
-- A user writes 0 or more recipes. Each recipe has exactly 1 author (`recipes.user_id` → `users.id`).
-- A category groups 0 or more recipes. Each recipe has exactly 1 category (`recipes.category_id` → `categories.id`).
-- A user can have password reset requests (`reset_password_request.user_id` → `users.id`).
+```mermaid
+erDiagram
+    users ||--o{ recipes : "writes"
+    categories ||--o{ recipes : "groups"
+    users ||--o{ reset_password_request : "requests"
+
+    users {
+        int id PK
+        varchar email UK
+        json roles
+        varchar password "hashed"
+        varchar firstname
+        varchar lastname
+        boolean is_verified
+        datetime created_at
+        datetime updated_at
+    }
+    categories {
+        int id PK
+        varchar name
+        varchar slug UK
+        varchar icon
+        varchar color
+    }
+    recipes {
+        int id PK
+        int user_id FK
+        int category_id FK
+        varchar title
+        varchar slug
+        longtext ingredients
+        longtext content
+        varchar title_en "nullable"
+        longtext ingredients_en "nullable"
+        longtext content_en "nullable"
+        varchar machine_translated_locale "nullable"
+        int duration "minutes"
+        varchar image_name "nullable"
+        datetime created_at
+        datetime updated_at
+    }
+    reset_password_request {
+        int id PK
+        int user_id FK
+        varchar selector
+        varchar hashed_token
+        datetime requested_at
+        datetime expires_at
+    }
+```
+
+- A user writes 0 or more recipes. Each recipe has exactly 1 author.
+- A category groups 0 or more recipes. Each recipe has exactly 1 category.
+- A user can have 0 or more password reset requests.
+
+<details>
+<summary><b>See every column in detail</b></summary>
 
 **`users`**
 
@@ -147,6 +200,8 @@ MySQL, 4 tables. **PK** = primary key, **FK** = foreign key, **unique** = no dup
 | `hashed_token` | varchar(100) | no | Hashed secret token |
 | `requested_at` | datetime | no | |
 | `expires_at` | datetime | no | The link stops working after this date |
+
+</details>
 
 ## Run it locally
 

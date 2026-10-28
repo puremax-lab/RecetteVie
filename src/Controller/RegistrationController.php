@@ -8,18 +8,23 @@ use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 final class RegistrationController extends AbstractController
 {
-    public function __construct(private readonly EmailVerifier $emailVerifier)
-    {
+    public function __construct(
+        private readonly EmailVerifier $emailVerifier,
+        // false = demo mode: new accounts are confirmed without sending an email.
+        #[Autowire('%env(bool:EMAIL_VERIFICATION)%')]
+        private readonly bool $emailVerification,
+    ) {
     }
 
     #[Route('/inscription', name: 'app_register', methods: ['GET', 'POST'])]
@@ -41,12 +46,17 @@ final class RegistrationController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
+            $user->setIsVerified(!$this->emailVerification);
 
             $em->persist($user);
             $em->flush();
 
-            $this->emailVerifier->sendEmailConfirmation($user);
-            $this->addFlash('info', 'flash.registered');
+            if ($this->emailVerification) {
+                $this->emailVerifier->sendEmailConfirmation($user);
+                $this->addFlash('info', 'flash.registered');
+            } else {
+                $this->addFlash('success', 'flash.registered_demo');
+            }
 
             // Log the new user in straight away.
             return $security->login($user, 'form_login', 'main') ?? $this->redirectToRoute('app_account');

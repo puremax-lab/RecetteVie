@@ -58,6 +58,34 @@ final class SecurityControllerTest extends AppWebTestCase
         self::assertNotSame('un-mot-de-passe-solide', $user->getPassword());
     }
 
+    public function testDemoModeConfirmsNewAccountsWithoutEmail(): void
+    {
+        $_SERVER['EMAIL_VERIFICATION'] = $_ENV['EMAIL_VERIFICATION'] = 'false';
+
+        try {
+            $client = static::createClient();
+            $crawler = $client->request('GET', '/inscription');
+
+            $client->submit($crawler->selectButton('Créer mon compte')->form([
+                'registration_form[firstname]' => 'Hugo',
+                'registration_form[lastname]' => 'Bernard',
+                'registration_form[email]' => 'hugo@example.test',
+                'registration_form[plainPassword]' => 'un-mot-de-passe-solide',
+                'registration_form[agreeTerms]' => true,
+            ]));
+
+            self::assertEmailCount(0);
+            $user = static::getContainer()->get(UserRepository::class)->findOneBy(['email' => 'hugo@example.test']);
+            self::assertTrue($user->isVerified());
+
+            // The new member can publish straight away.
+            $client->request('GET', '/recettes/nouvelle');
+            self::assertResponseIsSuccessful();
+        } finally {
+            $_SERVER['EMAIL_VERIFICATION'] = $_ENV['EMAIL_VERIFICATION'] = 'true';
+        }
+    }
+
     public function testRegistrationRejectsDuplicateEmail(): void
     {
         $client = static::createClient();

@@ -8,7 +8,7 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 ![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8%2F9-4479A1?logo=mysql&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-29_passing-2ea44f)
+![Tests](https://img.shields.io/badge/tests-30_passing-2ea44f)
 
 ![Home page](docs/screenshots/home.png)
 
@@ -148,8 +148,8 @@ tests/                 Functional tests (controllers) and unit tests
 **Requirements:** PHP 8.2+ (extensions `intl`, `pdo_mysql`), [Composer](https://getcomposer.org), and MySQL, for example with WAMP, XAMPP or MAMP.
 
 ```bash
-git clone https://github.com/puremax-lab/TutoSymfony.git
-cd TutoSymfony
+git clone https://github.com/puremax-lab/RecetteVie.git
+cd RecetteVie
 composer install
 ```
 
@@ -191,11 +191,19 @@ All accounts use the password `password`.
 | `lucas@recettevie.test` | Member (verified) |
 | `admin@recettevie.test` | Admin, can edit every recipe |
 
-### Emails
+You can also create your own account: it can publish recipes right away (see demo mode below).
 
-Emails are discarded by default (`MAILER_DSN=null://null`). To see the confirmation and password-reset emails, create a free [Mailtrap](https://mailtrap.io) sandbox and put its SMTP address in `.env.local`:
+### Emails and demo mode
+
+The project runs without any mail server:
+
+- **Demo mode (default)**: `EMAIL_VERIFICATION=false`. New accounts are confirmed immediately, so every visitor can sign up and publish. Emails are discarded (`MAILER_DSN=null://null`).
+- **In development**, every email the app tries to send (confirmation, password reset) is visible in the **E-mails** panel of the Symfony debug toolbar, with its links.
+
+To turn on real email confirmation, set both values in `.env.local`, for example with a free [Mailtrap](https://mailtrap.io) sandbox:
 
 ```dotenv
+EMAIL_VERIFICATION=true
 MAILER_DSN="smtp://USER:PASSWORD@sandbox.smtp.mailtrap.io:2525"
 ```
 

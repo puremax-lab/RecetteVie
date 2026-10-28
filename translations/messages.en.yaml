@@ -160,6 +160,7 @@ flash:
     recipe_deleted: The recipe has been deleted.
     profile_updated: Your profile has been updated.
     registered: Welcome! A confirmation email has just been sent to you.
+    registered_demo: Welcome! Your account is ready, you can publish your recipes.
     email_verified: Your email address is confirmed. You can now publish recipes.
     verification_sent: A new confirmation email has just been sent.
     verify_email_first: Please confirm your email address before publishing a recipe.

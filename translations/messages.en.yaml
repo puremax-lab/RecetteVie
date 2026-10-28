@@ -44,6 +44,7 @@ recipe:
     list_title: All recipes
     results: '{0} No recipes found|{1} 1 recipe|]1,Inf[ %count% recipes'
     results_for: for “%query%”
+    loading: Loading recipes…
     all_categories: All
     clear_filters: Clear filters
     empty_title: No recipe matches.

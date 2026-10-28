@@ -1,0 +1,14 @@
+{# The cards of one page, followed by a lazy frame that loads the next page
+   when it scrolls into view. Expects: recipes (App\Pagination\Page), params #}
+{% for recipe in recipes %}
+    <div class="col">{{ include('recipe/_card.html.twig') }}</div>
+{% endfor %}
+
+{% if recipes.hasNext %}
+    <turbo-frame id="recipes-page-{{ recipes.current + 1 }}" class="recipes-next w-100" loading="lazy" target="_top"
+                 src="{{ path('app_recipe_index', params|merge({page: recipes.current + 1})) }}">
+        <div class="col-12 text-center text-body-secondary py-4">
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>{{ 'recipe.loading'|trans }}
+        </div>
+    </turbo-frame>
+{% endif %}

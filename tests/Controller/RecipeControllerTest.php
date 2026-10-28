@@ -28,17 +28,34 @@ final class RecipeControllerTest extends AppWebTestCase
         self::assertSelectorCount(6, '.recipe-card');
     }
 
-    public function testListIsPaginated(): void
+    public function testListLoadsNextPageOnScroll(): void
     {
         $crawler = $this->client->request('GET', '/recettes');
 
         self::assertResponseIsSuccessful();
         self::assertSelectorCount(9, '.recipe-card');
-        self::assertCount(1, $crawler->filter('.pagination a.page-link:contains("2")'));
+        // A lazy Turbo frame at the bottom points to page 2.
+        $frame = $crawler->filter('turbo-frame#recipes-page-2');
+        self::assertCount(1, $frame);
+        self::assertSame('lazy', $frame->attr('loading'));
+        self::assertStringEndsWith('/recettes?page=2', $frame->attr('src'));
 
-        $this->client->request('GET', '/recettes?page=2');
+        // Turbo requests that page with a Turbo-Frame header: only the cards come back.
+        $crawler = $this->client->request('GET', '/recettes?page=2', server: ['HTTP_TURBO_FRAME' => 'recipes-page-2']);
         self::assertResponseIsSuccessful();
+        self::assertSelectorNotExists('nav.site-nav');
+        self::assertCount(1, $crawler->filter('turbo-frame#recipes-page-2'));
         self::assertSelectorExists('.recipe-card');
+        // Last page: no further frame.
+        self::assertSelectorNotExists('turbo-frame#recipes-page-3');
+    }
+
+    public function testInfiniteScrollKeepsFilters(): void
+    {
+        $crawler = $this->client->request('GET', '/recettes?q=a');
+
+        $src = $crawler->filter('turbo-frame#recipes-page-2')->attr('src');
+        self::assertStringContainsString('q=a', $src);
     }
 
     public function testSearchByTitleOrIngredient(): void

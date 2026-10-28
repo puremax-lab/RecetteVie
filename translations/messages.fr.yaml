@@ -44,6 +44,7 @@ recipe:
     list_title: Toutes les recettes
     results: '{0} Aucune recette trouvée|{1} 1 recette|]1,Inf[ %count% recettes'
     results_for: pour « %query% »
+    loading: Chargement des recettes…
     all_categories: Toutes
     clear_filters: Effacer les filtres
     empty_title: Aucune recette ne correspond.

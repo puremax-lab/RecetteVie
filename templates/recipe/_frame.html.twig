@@ -1,0 +1,6 @@
+{# Response to a lazy frame request: Turbo puts its content in place of the loading message. #}
+<turbo-frame id="recipes-page-{{ recipes.current }}">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+        {{ include('recipe/_page.html.twig') }}
+    </div>
+</turbo-frame>

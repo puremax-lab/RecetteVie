@@ -32,6 +32,7 @@ final class RecipeController extends AbstractController
 
     #[Route('', name: 'app_recipe_index', methods: ['GET'])]
     public function index(
+        Request $request,
         RecipeRepository $recipes,
         CategoryRepository $categories,
         #[MapQueryParameter] ?string $q = null,
@@ -39,9 +40,22 @@ final class RecipeController extends AbstractController
         #[MapQueryParameter] int $page = 1,
     ): Response {
         $category = $categorie ? $categories->findOneBy(['slug' => $categorie]) : null;
+        $results = $recipes->search($q, $category, $page);
+        // Query parameters to keep when building the URL of another page.
+        $params = array_filter(['q' => $q, 'categorie' => $category?->getSlug()]);
+
+        // Infinite scroll: Turbo asks for the next page inside a lazy frame,
+        // so only the cards of that page are returned.
+        if ($request->headers->get('Turbo-Frame') === 'recipes-page-'.$results->current) {
+            return $this->render('recipe/_frame.html.twig', [
+                'recipes' => $results,
+                'params' => $params,
+            ]);
+        }
 
         return $this->render('recipe/index.html.twig', [
-            'recipes' => $recipes->search($q, $category, $page),
+            'recipes' => $results,
+            'params' => $params,
             'categories' => $categories->findAllWithRecipeCount(),
             'currentCategory' => $category,
             'query' => $q,

@@ -168,6 +168,10 @@ h1, h2, h3, .h1, .h2, .h3, .brand, .page-title, .section-title, .display-4, .dis
 .recipe-hero-img { height: 380px; }
 .recipe-hero-img.recipe-placeholder span { font-size: 8rem; }
 
+/* Infinite scroll: each lazy frame is a full-width block holding the next page's grid.
+   (It needs a real box: the browser must see it on screen to trigger the loading.) */
+turbo-frame.recipes-next { display: block; }
+
 /* ---------- Recipe page ---------- */
 .recipe-facts > div { display: grid; grid-template-columns: auto 1fr; column-gap: .6rem; align-items: center; }
 .recipe-facts .bi { grid-row: span 2; font-size: 1.5rem; color: var(--rv-primary); }

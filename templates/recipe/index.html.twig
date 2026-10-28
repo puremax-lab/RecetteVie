@@ -3,8 +3,6 @@
 {% block title %}{{ currentCategory ? currentCategory|category_name : 'recipe.list_title'|trans }}{% endblock %}
 
 {% block body %}
-    {% set params = {q: query, categorie: currentCategory ? currentCategory.slug : null}|filter(v => v) %}
-
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-4">
         <div>
             <h1 class="page-title mb-1">{{ currentCategory ? currentCategory.icon ~ ' ' ~ currentCategory|category_name : 'recipe.list_title'|trans }}</h1>
@@ -32,11 +30,12 @@
 
     {% if recipes.totalItems > 0 %}
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
-            {% for recipe in recipes %}
-                <div class="col">{{ include('recipe/_card.html.twig') }}</div>
-            {% endfor %}
+            {{ include('recipe/_page.html.twig') }}
         </div>
-        {{ include('layouts/partials/_pagination.html.twig', {page: recipes, route: 'app_recipe_index', params: params}) }}
+        {# Without JavaScript (and for search engines), classic page links. #}
+        <noscript>
+            {{ include('layouts/partials/_pagination.html.twig', {page: recipes, route: 'app_recipe_index', params: params}) }}
+        </noscript>
     {% else %}
         <div class="empty-state text-center py-5">
             <div class="display-4 mb-3">🔍</div>

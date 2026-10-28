@@ -30,6 +30,10 @@ Log in with **camille@recettevie.test** / **password**, or create your own accou
 |---|---|---|
 | ![Mobile home](docs/screenshots/mobile-home.png) | ![Mobile recipes](docs/screenshots/mobile-recipes.png) | ![Mobile recipe in English](docs/screenshots/mobile-recipe-en.png) |
 
+**Bilingual recipe form**, with DeepL translation buttons and live character counters:
+
+![Recipe form](docs/screenshots/form.png)
+
 ## Tech stack
 
 | | |

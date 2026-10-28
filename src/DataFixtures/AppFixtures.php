@@ -51,14 +51,19 @@ class AppFixtures extends Fixture
         }
 
         $authors = [$camille, $lucas];
+        $english = $this->englishVersions();
         foreach ($this->recipes() as $i => [$category, $title, $duration, $ingredients, $steps]) {
             $createdAt = new \DateTimeImmutable(\sprintf('-%d days -%d hours', $i * 3 + 1, $i * 5 % 24));
+            [$titleEn, $ingredientsEn, $stepsEn] = $english[$title];
             $recipe = (new Recipe())
                 ->setTitle($title)
                 ->setCategory($categories[$category])
                 ->setDuration($duration)
                 ->setIngredients(implode("\n", $ingredients))
                 ->setContent(implode("\n", $steps))
+                ->setTitleEn($titleEn)
+                ->setIngredientsEn(implode("\n", $ingredientsEn))
+                ->setContentEn(implode("\n", $stepsEn))
                 ->setUser($authors[$i % 2])
                 ->setCreatedAt($createdAt)
                 ->setUpdatedAt($createdAt);
@@ -268,6 +273,197 @@ class AppFixtures extends Fixture
                 'Fouettez les jaunes avec le sucre, puis versez la crème chaude en mélangeant.',
                 'Répartissez dans des ramequins et faites cuire 50 minutes.',
                 'Après refroidissement, saupoudrez de cassonade et caramélisez au chalumeau.',
+            ]],
+        ];
+    }
+
+    /**
+     * English translations of the demo recipes, keyed by French title.
+     *
+     * @return array<string, array{string, list<string>, list<string>}>
+     */
+    private function englishVersions(): array
+    {
+        return [
+            'Bœuf bourguignon' => ['Beef bourguignon', [
+                '1.2 kg braising beef (chuck, cheek)',
+                '200 g smoked bacon lardons',
+                '250 g button mushrooms',
+                '2 carrots',
+                '2 onions',
+                '2 garlic cloves',
+                '75 cl Burgundy red wine',
+                '2 tbsp flour',
+                '1 bouquet garni',
+                'Salt, pepper, butter',
+            ], [
+                'Cut the meat into large cubes and marinate it overnight in the wine with the sliced carrots, the onions and the bouquet garni.',
+                'Drain the meat, pat it dry and brown it in a casserole dish with a little butter.',
+                'Add the bacon, onions and garlic, then sprinkle with flour and stir for one minute.',
+                'Pour in the wine from the marinade, season and simmer covered over very low heat for 3 hours.',
+                'Fry the mushrooms in a pan and add them 15 minutes before the end of cooking.',
+                'Serve hot with steamed potatoes or fresh pasta.',
+            ]],
+            'Tarte tatin' => ['Tarte tatin', [
+                '1 shortcrust pastry',
+                '8 apples (Golden or Reinette)',
+                '120 g sugar',
+                '80 g salted butter',
+                '1 pinch of cinnamon (optional)',
+            ], [
+                'Preheat the oven to 200 °C.',
+                'In an ovenproof pan, melt the sugar into a light caramel, then add the butter.',
+                'Peel the apples, cut them into quarters and pack them tightly on the caramel.',
+                'Cook for 10 minutes on the hob, then cover with the pastry, tucking in the edges.',
+                'Bake for 30 minutes, until the pastry is golden.',
+                'Wait 5 minutes, then turn the tart out onto a serving plate.',
+            ]],
+            'Velouté de potimarron' => ['Red kuri squash soup', [
+                '1 red kuri squash (about 1 kg)',
+                '1 onion',
+                '1 potato',
+                '1 l vegetable stock',
+                '10 cl single cream',
+                'Nutmeg, salt, pepper',
+            ], [
+                'Wash the squash (no need to peel it), remove the seeds and cut it into cubes.',
+                'Soften the sliced onion in a saucepan with a drizzle of oil.',
+                'Add the squash, the diced potato and the stock. Cook for 25 minutes.',
+                'Blend until smooth, add the cream and nutmeg, then season.',
+            ]],
+            'Ratatouille provençale' => ['Provençal ratatouille', [
+                '2 aubergines',
+                '3 courgettes',
+                '2 peppers (1 red, 1 yellow)',
+                '5 ripe tomatoes',
+                '2 onions',
+                '3 garlic cloves',
+                'Thyme, bay leaf, olive oil',
+            ], [
+                'Cut all the vegetables into roughly 2 cm cubes.',
+                'Fry the aubergines, courgettes and peppers separately in olive oil, then set aside.',
+                'In a casserole dish, soften the onions and garlic, then add the tomatoes.',
+                'Return all the vegetables, add the thyme and bay leaf, and simmer covered for 45 minutes.',
+                'Serve hot or cold: it is even better the next day.',
+            ]],
+            'Pain maison à la cocotte' => ['Homemade Dutch oven bread', [
+                '500 g bread flour',
+                '350 g lukewarm water',
+                '10 g salt',
+                '5 g dried baker\'s yeast',
+            ], [
+                'Mix the flour, salt and yeast, then add the water and stir without kneading.',
+                'Cover and leave to rise for 2 hours at room temperature.',
+                'Preheat the oven to 240 °C with the closed Dutch oven inside.',
+                'Shape a ball on a floured surface and place it in the hot pot.',
+                'Bake for 30 minutes with the lid on, then 15 minutes without.',
+                'Let it cool on a rack before slicing.',
+            ]],
+            'Mousse au chocolat' => ['Chocolate mousse', [
+                '200 g dark chocolate',
+                '6 eggs',
+                '1 pinch of salt',
+                '30 g sugar',
+            ], [
+                'Melt the chocolate over a bain-marie and let it cool slightly.',
+                'Separate the eggs and stir the yolks into the chocolate.',
+                'Whisk the whites with the salt until stiff, then add the sugar.',
+                'Gently fold the whites into the chocolate in three batches.',
+                'Chill for at least 4 hours before serving.',
+            ]],
+            'Poulet basquaise' => ['Basque-style chicken', [
+                '1 chicken, cut into pieces',
+                '3 peppers (red, green, yellow)',
+                '4 tomatoes',
+                '2 onions',
+                '3 garlic cloves',
+                '15 cl dry white wine',
+                'Espelette pepper, olive oil',
+            ], [
+                'Brown the chicken pieces in a casserole dish with olive oil, then set aside.',
+                'Fry the onions, garlic and sliced peppers for 10 minutes.',
+                'Add the chopped tomatoes, the white wine and the Espelette pepper.',
+                'Return the chicken, cover and simmer for 40 minutes.',
+                'Serve with white rice.',
+            ]],
+            'Citronnade maison à la menthe' => ['Homemade mint lemonade', [
+                '4 lemons',
+                '1 l cold water',
+                '80 g sugar',
+                '1 bunch of fresh mint',
+                'Ice cubes',
+            ], [
+                'Squeeze the lemons and pour the juice into a jug.',
+                'Add the sugar and stir until it dissolves.',
+                'Top up with the cold water and the lightly crushed mint leaves.',
+                'Serve chilled with ice cubes.',
+            ]],
+            'Quiche lorraine' => ['Quiche lorraine', [
+                '1 shortcrust pastry',
+                '200 g bacon lardons',
+                '3 eggs',
+                '20 cl crème fraîche',
+                '20 cl milk',
+                'Nutmeg, salt, pepper',
+            ], [
+                'Preheat the oven to 180 °C and line a tin with the pastry.',
+                'Fry the bacon in a dry pan and spread it over the pastry.',
+                'Beat the eggs with the cream, milk, nutmeg, salt and pepper.',
+                'Pour the mixture over the bacon and bake for 35 minutes.',
+            ]],
+            'Curry de pois chiches' => ['Chickpea curry', [
+                '2 tins of chickpeas',
+                '40 cl coconut milk',
+                '1 tin of chopped tomatoes',
+                '1 onion',
+                '2 garlic cloves',
+                '1 piece of fresh ginger',
+                '2 tbsp curry powder',
+                '2 handfuls of baby spinach',
+            ], [
+                'Fry the chopped onion, garlic and ginger in a little oil.',
+                'Add the curry powder and toast it for one minute.',
+                'Pour in the tomatoes, the coconut milk and the drained chickpeas.',
+                'Simmer for 20 minutes, then stir in the spinach just before serving.',
+                'Serve with basmati rice or naan bread.',
+            ]],
+            'Crêpes de la Chandeleur' => ['French crêpes', [
+                '250 g flour',
+                '4 eggs',
+                '50 cl milk',
+                '50 g melted butter',
+                '1 tbsp sugar',
+                '1 pinch of salt',
+            ], [
+                'Mix the flour, sugar and salt, then make a well in the centre.',
+                'Add the eggs and gradually whisk in the milk to avoid lumps.',
+                'Add the melted butter and let the batter rest for 1 hour.',
+                'Cook the crêpes in a hot, lightly buttered pan, 1 minute on each side.',
+            ]],
+            'Gratin dauphinois' => ['Gratin dauphinois', [
+                '1 kg potatoes',
+                '50 cl milk',
+                '25 cl single cream',
+                '2 garlic cloves',
+                'Nutmeg, salt, pepper, butter',
+            ], [
+                'Preheat the oven to 160 °C and rub a gratin dish with garlic, then butter.',
+                'Peel the potatoes and slice them thinly, without washing them.',
+                'Cook them for 10 minutes in the milk and cream with nutmeg, salt and pepper.',
+                'Pour everything into the dish and bake for 1 hour, until golden on top.',
+            ]],
+            'Crème brûlée à la vanille' => ['Vanilla crème brûlée', [
+                '50 cl whole cream',
+                '5 egg yolks',
+                '80 g sugar',
+                '1 vanilla pod',
+                'Brown sugar for caramelising',
+            ], [
+                'Preheat the oven to 100 °C.',
+                'Heat the cream with the split vanilla pod, then leave to infuse for 10 minutes.',
+                'Whisk the yolks with the sugar, then pour in the hot cream while stirring.',
+                'Divide into ramekins and bake for 50 minutes.',
+                'Once cooled, sprinkle with brown sugar and caramelise with a blowtorch.',
             ]],
         ];
     }

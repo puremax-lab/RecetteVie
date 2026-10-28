@@ -24,6 +24,18 @@ final class RecipeTest extends TestCase
         self::assertSame(['Préchauffez le four.', 'Mélangez.', 'Enfournez.'], $recipe->getSteps());
     }
 
+    public function testEnglishFallsBackToFrench(): void
+    {
+        $recipe = (new Recipe())->setTitle('Tarte aux pommes')->setContent("Étape 1\nÉtape 2");
+
+        self::assertSame('Tarte aux pommes', $recipe->getLocalizedTitle('en'));
+        self::assertSame(['Étape 1', 'Étape 2'], $recipe->getLocalizedSteps('en'));
+
+        $recipe->setTitleEn('Apple pie');
+        self::assertSame('Apple pie', $recipe->getLocalizedTitle('en'));
+        self::assertSame('Tarte aux pommes', $recipe->getLocalizedTitle('fr'));
+    }
+
     public function testDurationFormatting(): void
     {
         $extension = new AppExtension($this->createStub(TranslatorInterface::class));

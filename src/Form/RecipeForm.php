@@ -44,6 +44,23 @@ class RecipeForm extends AbstractType
                 'help' => 'recipe_form.one_per_line',
                 'attr' => ['rows' => 9, 'placeholder' => 'recipe_form.steps_placeholder'],
             ])
+            // Optional English version, shown to visitors browsing in English.
+            ->add('titleEn', TextType::class, [
+                'label' => 'recipe_form.title_en',
+                'required' => false,
+            ])
+            ->add('ingredientsEn', TextareaType::class, [
+                'label' => 'recipe_form.ingredients_en',
+                'help' => 'recipe_form.one_per_line',
+                'required' => false,
+                'attr' => ['rows' => 5],
+            ])
+            ->add('contentEn', TextareaType::class, [
+                'label' => 'recipe_form.steps_en',
+                'help' => 'recipe_form.one_per_line',
+                'required' => false,
+                'attr' => ['rows' => 6],
+            ])
             ->add('imageFile', FileType::class, [
                 'label' => 'recipe_form.photo',
                 'help' => 'recipe_form.photo_help',

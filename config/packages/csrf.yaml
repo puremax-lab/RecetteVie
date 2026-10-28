@@ -1,4 +1,5 @@
-# Enable stateless CSRF protection for forms and logins/logouts
+# Stateless CSRF protection for forms and the login form (see assets/controllers/csrf_protection_controller.js).
+# The logout link keeps a classic session token.
 framework:
     form:
         csrf_protection:
@@ -8,4 +9,3 @@ framework:
         stateless_token_ids:
             - submit
             - authenticate
-            - logout

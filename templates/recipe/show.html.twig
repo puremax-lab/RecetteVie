@@ -1,14 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ recipe.title }}{% endblock %}
-{% block meta_description %}{{ recipe.steps|first|u.truncate(155, '…') }}{% endblock %}
+{% block title %}{{ recipe.localizedTitle(app.request.locale) }}{% endblock %}
+{% block meta_description %}{{ recipe.localizedSteps(app.request.locale)|first|u.truncate(155, '…') }}{% endblock %}
 
 {% block body %}
+    {% set title = recipe.localizedTitle(app.request.locale) %}
+    {% set ingredients = recipe.localizedIngredientList(app.request.locale) %}
+    {% set steps = recipe.localizedSteps(app.request.locale) %}
+
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb small">
             <li class="breadcrumb-item"><a href="{{ path('app_recipe_index') }}">{{ 'nav.recipes'|trans }}</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_recipe_index', {categorie: recipe.category.slug}) }}">{{ recipe.category|category_name }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ recipe.title }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
         </ol>
     </nav>
 
@@ -19,11 +23,11 @@
             </div>
             <div class="col-lg-6">
                 <span class="badge category-badge mb-3">{{ recipe.category.icon }} {{ recipe.category|category_name }}</span>
-                <h1 class="display-5 page-title">{{ recipe.title }}</h1>
+                <h1 class="display-5 page-title">{{ title }}</h1>
                 <div class="d-flex flex-wrap gap-4 my-4 recipe-facts">
                     <div><i class="bi bi-clock"></i><span class="small text-body-secondary d-block">{{ 'recipe.duration'|trans }}</span><strong>{{ recipe.duration|duration }}</strong></div>
-                    <div><i class="bi bi-basket"></i><span class="small text-body-secondary d-block">{{ 'recipe.ingredients'|trans }}</span><strong>{{ recipe.ingredientList|length }}</strong></div>
-                    <div><i class="bi bi-list-ol"></i><span class="small text-body-secondary d-block">{{ 'recipe.steps'|trans }}</span><strong>{{ recipe.steps|length }}</strong></div>
+                    <div><i class="bi bi-basket"></i><span class="small text-body-secondary d-block">{{ 'recipe.ingredients'|trans }}</span><strong>{{ ingredients|length }}</strong></div>
+                    <div><i class="bi bi-list-ol"></i><span class="small text-body-secondary d-block">{{ 'recipe.steps'|trans }}</span><strong>{{ steps|length }}</strong></div>
                 </div>
                 <div class="d-flex align-items-center gap-2 text-body-secondary">
                     <span class="avatar">{{ recipe.user.firstname|first|upper }}</span>
@@ -50,7 +54,7 @@
                 <div class="panel">
                     <h2 class="h4 mb-3">{{ 'recipe.ingredients'|trans }}</h2>
                     <ul class="ingredient-list">
-                        {% for ingredient in recipe.ingredientList %}
+                        {% for ingredient in ingredients %}
                             <li>{{ ingredient }}</li>
                         {% endfor %}
                     </ul>
@@ -59,7 +63,7 @@
             <div class="col-lg-8">
                 <h2 class="h4 mb-3">{{ 'recipe.steps'|trans }}</h2>
                 <ol class="step-list">
-                    {% for step in recipe.steps %}
+                    {% for step in steps %}
                         <li>{{ step }}</li>
                     {% endfor %}
                 </ol>

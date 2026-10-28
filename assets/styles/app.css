@@ -196,6 +196,11 @@ turbo-frame.recipes-next { display: block; }
     background: #fff3ea; color: var(--rv-primary-dark); font-weight: 700;
 }
 
+/* ---------- Forms ---------- */
+.translation-box { border: 1px dashed var(--rv-border); border-radius: .75rem; padding: .85rem 1rem; background: var(--rv-cream); }
+.translation-box summary { cursor: pointer; font-weight: 600; }
+.translation-box[open] summary { margin-bottom: .25rem; }
+
 /* ---------- Misc ---------- */
 .auth-card {
     max-width: 460px; margin: 1rem auto;

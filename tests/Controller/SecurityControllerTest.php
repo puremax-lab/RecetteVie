@@ -115,4 +115,17 @@ final class SecurityControllerTest extends AppWebTestCase
         self::assertSelectorTextContains('nav', 'Recipes');
         self::assertSelectorTextContains('h1', 'Cook, share, enjoy.');
     }
+
+    public function testRecipesAreShownInEnglish(): void
+    {
+        $client = static::createClient(server: ['HTTP_ACCEPT_LANGUAGE' => 'en']);
+
+        $crawler = $client->request('GET', '/recettes?q=chocolate');
+        self::assertSelectorTextContains('.recipe-card', 'Chocolate mousse');
+
+        $client->click($crawler->filter('a[aria-label="Chocolate mousse"]')->link());
+        self::assertSelectorTextContains('h1', 'Chocolate mousse');
+        self::assertSelectorTextContains('.ingredient-list', 'dark chocolate');
+        self::assertSelectorTextContains('.step-list', 'Melt the chocolate');
+    }
 }

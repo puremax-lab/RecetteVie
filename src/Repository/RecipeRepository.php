@@ -35,7 +35,7 @@ class RecipeRepository extends ServiceEntityRepository
 
         $query = trim((string) $query);
         if ('' !== $query) {
-            $qb->andWhere('r.title LIKE :q OR r.ingredients LIKE :q')
+            $qb->andWhere('r.title LIKE :q OR r.ingredients LIKE :q OR r.titleEn LIKE :q OR r.ingredientsEn LIKE :q')
                 ->setParameter('q', '%'.addcslashes($query, '%_').'%');
         }
 

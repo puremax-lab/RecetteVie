@@ -45,6 +45,19 @@ class Recipe
     #[InappropriateWords]
     private ?string $content = null;
 
+    /** Optional English version; the French text is shown when it is empty. */
+    #[ORM\Column(length: 80, nullable: true)]
+    #[Assert\Length(min: 3, max: 80)]
+    #[InappropriateWords]
+    private ?string $titleEn = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $ingredientsEn = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[InappropriateWords]
+    private ?string $contentEn = null;
+
     /** Total time in minutes. */
     #[ORM\Column]
     #[Assert\NotBlank]
@@ -132,6 +145,66 @@ class Recipe
     public function getSteps(): array
     {
         return self::splitLines($this->content);
+    }
+
+    public function getTitleEn(): ?string
+    {
+        return $this->titleEn;
+    }
+
+    public function setTitleEn(?string $titleEn): static
+    {
+        $this->titleEn = $titleEn;
+
+        return $this;
+    }
+
+    public function getIngredientsEn(): ?string
+    {
+        return $this->ingredientsEn;
+    }
+
+    public function setIngredientsEn(?string $ingredientsEn): static
+    {
+        $this->ingredientsEn = $ingredientsEn;
+
+        return $this;
+    }
+
+    public function getContentEn(): ?string
+    {
+        return $this->contentEn;
+    }
+
+    public function setContentEn(?string $contentEn): static
+    {
+        $this->contentEn = $contentEn;
+
+        return $this;
+    }
+
+    /**
+     * Title in the visitor's language, falling back to French.
+     */
+    public function getLocalizedTitle(string $locale): ?string
+    {
+        return 'en' === $locale && $this->titleEn ? $this->titleEn : $this->title;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getLocalizedIngredientList(string $locale): array
+    {
+        return self::splitLines('en' === $locale && $this->ingredientsEn ? $this->ingredientsEn : $this->ingredients);
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getLocalizedSteps(string $locale): array
+    {
+        return self::splitLines('en' === $locale && $this->contentEn ? $this->contentEn : $this->content);
     }
 
     public function getDuration(): ?int

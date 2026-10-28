@@ -8,6 +8,16 @@
         <div class="col-12">{{ form_row(form.ingredients) }}</div>
         <div class="col-12">{{ form_row(form.content) }}</div>
         <div class="col-12">
+            {# Opened automatically when it already has content or contains an error. #}
+            <details class="translation-box" {{ form.titleEn.vars.value or form.ingredientsEn.vars.value or form.contentEn.vars.value or not form.titleEn.vars.valid or not form.contentEn.vars.valid ? 'open' }}>
+                <summary><i class="bi bi-translate me-1"></i> {{ 'recipe_form.english_version'|trans }}</summary>
+                <p class="small text-body-secondary mt-2">{{ 'recipe_form.english_help'|trans }}</p>
+                {{ form_row(form.titleEn) }}
+                {{ form_row(form.ingredientsEn) }}
+                {{ form_row(form.contentEn) }}
+            </details>
+        </div>
+        <div class="col-12">
             {% if recipe is defined and recipe.imageName %}
                 <p class="small text-body-secondary mb-1">{{ 'recipe.current_photo'|trans }}</p>
                 <img src="{{ asset('uploads/recipes/' ~ recipe.imageName) }}" alt="" class="rounded-3 mb-3 object-fit-cover" width="160" height="110">

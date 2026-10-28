@@ -87,6 +87,11 @@ recipe_form:
     one_per_line: Un élément par ligne.
     photo: Photo
     photo_help: JPG, PNG ou WebP, 4 Mo maximum. Optionnel.
+    title_en: Titre en anglais
+    ingredients_en: Ingrédients en anglais
+    steps_en: Étapes en anglais
+    english_version: Version anglaise (optionnelle)
+    english_help: Ces champs sont affichés aux visiteurs qui consultent le site en anglais. S'ils sont vides, la version française est affichée.
 
 user_form:
     firstname: Prénom

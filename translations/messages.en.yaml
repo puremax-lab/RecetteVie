@@ -87,6 +87,11 @@ recipe_form:
     one_per_line: One item per line.
     photo: Photo
     photo_help: JPG, PNG or WebP, 4 MB max. Optional.
+    title_en: Title in English
+    ingredients_en: Ingredients in English
+    steps_en: Method in English
+    english_version: English version (optional)
+    english_help: Shown to visitors browsing the site in English. If left empty, the French version is shown.
 
 user_form:
     firstname: First name

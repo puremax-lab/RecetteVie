@@ -62,7 +62,7 @@
             </div>
             <div class="col-lg-8">
                 <h2 class="h4 mb-3">{{ 'recipe.steps'|trans }}</h2>
-                {% if app.request.locale == 'en' and recipe.autoTranslated %}
+                {% if recipe.machineTranslated(app.request.locale) %}
                     <p class="small text-body-secondary"><i class="bi bi-translate me-1"></i>{{ 'recipe.machine_translated'|trans }}</p>
                 {% endif %}
                 <ol class="step-list">

@@ -68,7 +68,7 @@ recipe:
     cancel: Cancel
     current_photo: Current photo
     no_photo: No photo yet
-    machine_translated: Translated automatically with DeepL.
+    machine_translated: This version was translated automatically with DeepL.
 
 pagination:
     label: Pagination
@@ -76,24 +76,25 @@ pagination:
     next: Next
 
 recipe_form:
-    title: Title
-    title_placeholder: e.g. Grandma's apple pie
     category: Category
     category_placeholder: Choose a category
     duration: Total time (minutes)
+    title: Title
+    title_help: Between 3 and 80 characters.
     ingredients: Ingredients
-    ingredients_placeholder: "200 g flour\n3 eggs\n…"
+    ingredients_help: One ingredient per line.
     steps: Method
-    steps_placeholder: "Preheat the oven to 180 °C.\nMix…"
-    one_per_line: One item per line.
+    steps_help: One step per line, at least 20 characters in total.
+    char_count: '%count% characters'
+    char_min: 'minimum %min%'
     photo: Photo
     photo_help: JPG, PNG or WebP, 4 MB max. Optional.
-    title_en: Title in English
-    ingredients_en: Ingredients in English
-    steps_en: Method in English
-    english_version: English version (optional)
-    english_help: Shown to visitors browsing the site in English. Leave empty for an automatic translation (when enabled); otherwise the French text is shown.
-
+    languages_title: Your recipe in French and in English
+    languages_auto: Write the recipe in the language of your choice and leave the other one empty; it will be translated automatically with DeepL. You can review and correct the translation afterwards. The same rules apply to both languages.
+    languages_manual: Both versions are required (automatic translation is not enabled on this site). The same rules apply to both languages.
+    language_fr: 🇫🇷 Français
+    language_en: 🇬🇧 English
+    machine_badge: Translated with DeepL
 user_form:
     firstname: First name
     lastname: Last name
@@ -165,6 +166,8 @@ flash:
     recipe_created: Your recipe has been published.
     recipe_updated: The recipe has been updated.
     recipe_deleted: The recipe has been deleted.
+    recipe_translated_en: The English version was translated automatically. You can review it with “Edit”.
+    recipe_translated_fr: The French version was translated automatically. You can review it with “Edit”.
     profile_updated: Your profile has been updated.
     registered: Welcome! A confirmation email has just been sent to you.
     registered_demo: Welcome! Your account is ready, you can publish your recipes.

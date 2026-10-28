@@ -6,7 +6,11 @@ use App\Entity\Recipe;
 use App\Entity\User;
 use App\Repository\RecipeRepository;
 use App\Repository\UserRepository;
+use App\Service\RecipeTranslator;
+use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\JsonMockResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class RecipeControllerTest extends AppWebTestCase
@@ -139,6 +143,10 @@ final class RecipeControllerTest extends AppWebTestCase
             'recipe_form[duration]' => '20',
             'recipe_form[ingredients]' => "Thon\nTomates\nŒufs durs",
             'recipe_form[content]' => "Coupez les tomates.\nAjoutez le thon et les œufs.",
+            // No DeepL key in tests: the author writes both languages.
+            'recipe_form[titleEn]' => 'Niçoise salad',
+            'recipe_form[ingredientsEn]' => "Tuna\nTomatoes\nHard-boiled eggs",
+            'recipe_form[contentEn]' => "Cut the tomatoes.\nAdd the tuna and the eggs.",
         ]);
         $form['recipe_form[imageFile]']->upload($this->createTestImage());
         $this->client->submit($form);
@@ -146,6 +154,8 @@ final class RecipeControllerTest extends AppWebTestCase
         $recipe = $this->findRecipe('Salade niçoise');
         self::assertResponseRedirects(\sprintf('/recettes/salade-nicoise-%d', $recipe->getId()));
         self::assertSame('camille@recettevie.test', $recipe->getUser()->getEmail());
+        self::assertSame('Niçoise salad', $recipe->getTitleEn());
+        self::assertNull($recipe->getMachineTranslatedLocale());
         self::assertNotNull($recipe->getImageName());
         self::assertFileExists(static::getContainer()->getParameter('kernel.project_dir').'/public/uploads/recipes/'.$recipe->getImageName());
 
@@ -171,7 +181,57 @@ final class RecipeControllerTest extends AppWebTestCase
         ]));
 
         self::assertResponseStatusCodeSame(422);
-        self::assertSelectorTextContains('.invalid-feedback', 'inapproprié');
+        self::assertAnySelectorTextContains('.invalid-feedback', 'inapproprié');
+    }
+
+    public function testBothLanguagesAreRequiredWithoutAutomaticTranslation(): void
+    {
+        $this->client->loginUser($this->getUser('camille@recettevie.test'));
+        $crawler = $this->client->request('GET', '/recettes/nouvelle');
+        self::assertSelectorTextContains('.translation-intro', 'Les deux versions sont obligatoires');
+
+        // Only French, and no DeepL key in the test environment.
+        $crawler = $this->client->submit($crawler->selectButton('Enregistrer la recette')->form([
+            'recipe_form[title]' => 'Salade de fruits',
+            'recipe_form[category]' => (string) $this->findRecipe('Mousse au chocolat')->getCategory()->getId(),
+            'recipe_form[duration]' => '15',
+            'recipe_form[ingredients]' => "Pommes\nPoires",
+            'recipe_form[content]' => 'Coupez les fruits et mélangez-les.',
+        ]));
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertStringContainsString('obligatoire', $crawler->filter('#recipe_form_titleEn')->ancestors()->first()->text());
+        self::assertNull($this->findRecipe('Salade de fruits'));
+    }
+
+    public function testEnglishOnlyRecipeIsTranslatedIntoFrench(): void
+    {
+        // Fake DeepL: the service is replaced by one using a mocked HTTP client.
+        $client = new MockHttpClient(static function (string $method, string $url, array $options) {
+            $texts = json_decode($options['body'], true)['text'];
+
+            return new JsonMockResponse(['translations' => array_map(static fn ($t) => ['text' => 'FR '.$t], $texts)]);
+        });
+        // Keep the same kernel for every request, so the fake service is not lost.
+        $this->client->disableReboot();
+        static::getContainer()->set(RecipeTranslator::class, new RecipeTranslator($client, new NullLogger(), 'test-key:fx'));
+
+        $this->client->loginUser($this->getUser('camille@recettevie.test'));
+        $crawler = $this->client->request('GET', '/recettes/nouvelle');
+        $this->client->submit($crawler->selectButton('Enregistrer la recette')->form([
+            'recipe_form[category]' => (string) $this->findRecipe('Mousse au chocolat')->getCategory()->getId(),
+            'recipe_form[duration]' => '15',
+            'recipe_form[titleEn]' => 'Fruit salad',
+            'recipe_form[ingredientsEn]' => "Apples\nPears",
+            'recipe_form[contentEn]' => "Cut the fruit.\nMix everything.",
+        ]));
+
+        $recipe = $this->findRecipe('FR Fruit salad');
+        self::assertNotNull($recipe);
+        self::assertResponseRedirects(\sprintf('/recettes/%s-%d', $recipe->getSlug(), $recipe->getId()));
+        self::assertSame("FR Apples\nFR Pears", $recipe->getIngredients());
+        self::assertSame('fr', $recipe->getMachineTranslatedLocale());
+        self::assertSame('Fruit salad', $recipe->getTitleEn());
     }
 
     public function testAuthorCanEdit(): void

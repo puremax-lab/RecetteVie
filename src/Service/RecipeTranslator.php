@@ -9,15 +9,21 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * Fills the English version of a recipe with the DeepL API.
+ * Fills the missing language of a recipe (French -> English or English -> French)
+ * with the DeepL API.
  *
- * Without DEEPL_API_KEY the feature is simply disabled, and any API error
- * is logged without blocking the save: the French text is then shown.
+ * Without DEEPL_API_KEY, or when the API fails, nothing is translated and the
+ * form validation asks the author to write the other language.
  */
 final class RecipeTranslator
 {
     // DeepL accepts at most 50 texts per request.
     private const BATCH_SIZE = 50;
+
+    private const DEEPL_LANGUAGES = [
+        'fr' => ['source' => 'FR', 'target' => 'FR'],
+        'en' => ['source' => 'EN', 'target' => 'EN-GB'],
+    ];
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
@@ -35,57 +41,73 @@ final class RecipeTranslator
     /**
      * Texts of the recipe before the form is submitted, to compare afterwards.
      *
-     * @return array{fr: list<?string>, en: list<?string>}
+     * @return array{fr: array<string, ?string>, en: array<string, ?string>}
      */
     public function snapshot(Recipe $recipe): array
     {
-        return [
-            'fr' => [$recipe->getTitle(), $recipe->getIngredients(), $recipe->getContent()],
-            'en' => $recipe->getEnglishFields(),
-        ];
+        return ['fr' => $recipe->getTexts('fr'), 'en' => $recipe->getTexts('en')];
     }
 
     /**
-     * Called after the recipe form is submitted.
+     * Called when the recipe form is submitted, before validation.
      *
-     * @param array{fr: list<?string>, en: list<?string>} $before result of snapshot() before the form was submitted
+     * @param array{fr: array<string, ?string>, en: array<string, ?string>} $before result of snapshot() before submission
      */
-    public function updateTranslation(Recipe $recipe, array $before): void
+    public function sync(Recipe $recipe, array $before): void
     {
         $after = $this->snapshot($recipe);
+        $machine = $recipe->getMachineTranslatedLocale();
 
-        // The author wrote or edited the English text: it is theirs now.
-        if ($after['en'] !== $before['en']) {
-            $recipe->setAutoTranslated(false);
+        // The author edited the machine-translated version: it is theirs now.
+        if (null !== $machine && $after[$machine] !== $before[$machine]) {
+            $recipe->setMachineTranslatedLocale(null);
+            $machine = null;
         }
 
-        $needsTranslation = !$recipe->hasEnglishVersion()
-            // A machine translation is refreshed when the French text changed.
-            || ($recipe->isAutoTranslated() && $after['fr'] !== $before['fr']);
+        // Translate from the language written by the author (never from a machine translation).
+        $directions = 'fr' === $machine ? [['en', 'fr'], ['fr', 'en']] : [['fr', 'en'], ['en', 'fr']];
 
-        if ($needsTranslation) {
-            $this->translate($recipe);
+        foreach ($directions as [$source, $target]) {
+            if (!$recipe->isComplete($source)) {
+                continue;
+            }
+
+            // A machine translation is refreshed entirely when its source text changed.
+            $fields = $machine === $target && $after[$source] !== $before[$source]
+                ? Recipe::TEXT_FIELDS
+                : $recipe->getMissingFields($target);
+
+            if ([] !== $fields) {
+                $this->translate($recipe, $source, $target, $fields);
+            }
+
+            return;
         }
     }
 
     /**
+     * @param list<string> $fields fields of the target language to fill
+     *
      * @return bool false when disabled or when the API call failed
      */
-    public function translate(Recipe $recipe): bool
+    public function translate(Recipe $recipe, string $source, string $target, array $fields = Recipe::TEXT_FIELDS): bool
     {
         if (!$this->isEnabled()) {
             return false;
         }
 
         // Each line is sent as its own text so line breaks (one ingredient/step per line) are kept.
-        $ingredients = $recipe->getIngredientList();
-        $steps = $recipe->getSteps();
-        $texts = [(string) $recipe->getTitle(), ...$ingredients, ...$steps];
+        $lines = [];
+        foreach ($fields as $field) {
+            $lines[$field] = 'title' === $field
+                ? [(string) $recipe->getText($field, $source)]
+                : Recipe::splitLines($recipe->getText($field, $source));
+        }
 
         try {
             $translated = [];
-            foreach (array_chunk($texts, self::BATCH_SIZE) as $batch) {
-                array_push($translated, ...$this->callApi($batch));
+            foreach (array_chunk(array_merge(...array_values($lines)), self::BATCH_SIZE) as $batch) {
+                array_push($translated, ...$this->callApi($batch, $source, $target));
             }
         } catch (ExceptionInterface|\UnexpectedValueException $e) {
             $this->logger->warning('DeepL translation failed: {message}', ['message' => $e->getMessage()]);
@@ -93,11 +115,10 @@ final class RecipeTranslator
             return false;
         }
 
-        $recipe
-            ->setTitleEn(array_shift($translated))
-            ->setIngredientsEn(implode("\n", \array_slice($translated, 0, \count($ingredients))))
-            ->setContentEn(implode("\n", \array_slice($translated, \count($ingredients))))
-            ->setAutoTranslated(true);
+        foreach ($lines as $field => $fieldLines) {
+            $recipe->setText($field, $target, implode("\n", array_splice($translated, 0, \count($fieldLines))));
+        }
+        $recipe->setMachineTranslatedLocale($target);
 
         return true;
     }
@@ -107,14 +128,14 @@ final class RecipeTranslator
      *
      * @return list<string>
      */
-    private function callApi(array $texts): array
+    private function callApi(array $texts, string $source, string $target): array
     {
         $data = $this->httpClient->request('POST', $this->endpoint(), [
             'headers' => ['Authorization' => 'DeepL-Auth-Key '.$this->apiKey],
             'json' => [
                 'text' => $texts,
-                'source_lang' => 'FR',
-                'target_lang' => 'EN-GB',
+                'source_lang' => self::DEEPL_LANGUAGES[$source]['source'],
+                'target_lang' => self::DEEPL_LANGUAGES[$target]['target'],
             ],
             'timeout' => 10,
         ])->toArray();

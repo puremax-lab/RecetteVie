@@ -1,4 +1,5 @@
 recipe:
+    translation_required: Ce champ est obligatoire. Écrivez-le, ou remplissez entièrement l'autre langue pour qu'il soit traduit automatiquement.
     title_taken: Une recette porte déjà ce titre.
     inappropriate_word: Ce texte contient un mot inapproprié (« {{ word }} »).
 user:

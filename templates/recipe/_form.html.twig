@@ -1,31 +1,58 @@
 {# Expects: form, recipe (optional), cancel_url #}
+{% macro counted(field, min, max) %}
+    {# Live character counter (assets/controllers/char_counter_controller.js) #}
+    {{ form_row(field, {attr: field.vars.attr|merge({
+        'data-controller': 'char-counter',
+        'data-char-counter-min-value': min,
+        'data-char-counter-max-value': max,
+        'data-char-counter-label-value': 'recipe_form.char_count'|trans,
+        'data-char-counter-min-label-value': 'recipe_form.char_min'|trans({'%min%': min}),
+    })}) }}
+{% endmacro %}
+
 {{ form_start(form) }}
     {{ form_errors(form) }}
-    <div class="row g-3">
-        <div class="col-12">{{ form_row(form.title) }}</div>
+
+    <div class="row g-3 mb-4">
         <div class="col-md-7">{{ form_row(form.category) }}</div>
         <div class="col-md-5">{{ form_row(form.duration) }}</div>
-        <div class="col-12">{{ form_row(form.ingredients) }}</div>
-        <div class="col-12">{{ form_row(form.content) }}</div>
-        <div class="col-12">
-            {# Opened automatically when it already has content or contains an error. #}
-            <details class="translation-box" {{ form.titleEn.vars.value or form.ingredientsEn.vars.value or form.contentEn.vars.value or not form.titleEn.vars.valid or not form.contentEn.vars.valid ? 'open' }}>
-                <summary><i class="bi bi-translate me-1"></i> {{ 'recipe_form.english_version'|trans }}</summary>
-                <p class="small text-body-secondary mt-2">{{ 'recipe_form.english_help'|trans }}</p>
-                {{ form_row(form.titleEn) }}
-                {{ form_row(form.ingredientsEn) }}
-                {{ form_row(form.contentEn) }}
-            </details>
-        </div>
-        <div class="col-12">
-            {% if recipe is defined and recipe.imageName %}
-                <p class="small text-body-secondary mb-1">{{ 'recipe.current_photo'|trans }}</p>
-                <img src="{{ asset('uploads/recipes/' ~ recipe.imageName) }}" alt="" class="rounded-3 mb-3 object-fit-cover" width="160" height="110">
-            {% endif %}
-            {{ form_row(form.imageFile) }}
+    </div>
+
+    <div class="translation-intro mb-3">
+        <i class="bi bi-translate"></i>
+        <div>
+            <strong>{{ 'recipe_form.languages_title'|trans }}</strong><br>
+            {{ (form.vars.auto_translation ? 'recipe_form.languages_auto' : 'recipe_form.languages_manual')|trans }}
         </div>
     </div>
-    <div class="d-flex gap-2 mt-4">
+
+    <div class="row g-4">
+        {% for locale, suffix in {fr: '', en: 'En'} %}
+            <div class="col-lg-6">
+                <fieldset class="language-box h-100" lang="{{ locale }}">
+                    <legend>
+                        {{ ('recipe_form.language_' ~ locale)|trans }}
+                        {% if recipe is defined and recipe.machineTranslated(locale) %}
+                            <span class="badge machine-badge">{{ 'recipe_form.machine_badge'|trans }}</span>
+                        {% endif %}
+                    </legend>
+                    {{ _self.counted(form['title' ~ suffix], 3, 80) }}
+                    {{ form_row(form['ingredients' ~ suffix]) }}
+                    {{ _self.counted(form['content' ~ suffix], 20, 0) }}
+                </fieldset>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-4">
+        {% if recipe is defined and recipe.imageName %}
+            <p class="small text-body-secondary mb-1">{{ 'recipe.current_photo'|trans }}</p>
+            <img src="{{ asset('uploads/recipes/' ~ recipe.imageName) }}" alt="" class="rounded-3 mb-3 object-fit-cover" width="160" height="110">
+        {% endif %}
+        {{ form_row(form.imageFile) }}
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mt-4">
         <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-check-lg"></i> {{ 'recipe.save'|trans }}</button>
         <a href="{{ cancel_url }}" class="btn btn-link btn-lg">{{ 'recipe.cancel'|trans }}</a>
     </div>

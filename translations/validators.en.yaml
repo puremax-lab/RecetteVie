@@ -1,4 +1,5 @@
 recipe:
+    translation_required: This field is required. Write it, or fill in the other language completely so it can be translated automatically.
     title_taken: A recipe with this title already exists.
     inappropriate_word: This text contains an inappropriate word (“{{ word }}”).
 user:

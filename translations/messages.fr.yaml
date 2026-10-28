@@ -68,7 +68,7 @@ recipe:
     cancel: Annuler
     current_photo: Photo actuelle
     no_photo: Pas encore de photo
-    machine_translated: Traduit automatiquement avec DeepL.
+    machine_translated: Cette version a été traduite automatiquement avec DeepL.
 
 pagination:
     label: Pagination
@@ -76,24 +76,25 @@ pagination:
     next: Suivant
 
 recipe_form:
-    title: Titre
-    title_placeholder: ex. Tarte aux pommes de grand-mère
     category: Catégorie
     category_placeholder: Choisissez une catégorie
     duration: Durée totale (minutes)
+    title: Titre
+    title_help: Entre 3 et 80 caractères.
     ingredients: Ingrédients
-    ingredients_placeholder: "200 g de farine\n3 œufs\n…"
+    ingredients_help: Un ingrédient par ligne.
     steps: Étapes de préparation
-    steps_placeholder: "Préchauffez le four à 180 °C.\nMélangez…"
-    one_per_line: Un élément par ligne.
+    steps_help: Une étape par ligne, 20 caractères minimum au total.
+    char_count: '%count% caractères'
+    char_min: 'minimum %min%'
     photo: Photo
     photo_help: JPG, PNG ou WebP, 4 Mo maximum. Optionnel.
-    title_en: Titre en anglais
-    ingredients_en: Ingrédients en anglais
-    steps_en: Étapes en anglais
-    english_version: Version anglaise (optionnelle)
-    english_help: Affichée aux visiteurs qui consultent le site en anglais. Laissez vide pour une traduction automatique (si elle est activée), sinon le français est affiché.
-
+    languages_title: Votre recette en français et en anglais
+    languages_auto: Écrivez la recette dans la langue de votre choix et laissez l'autre vide, elle sera traduite automatiquement avec DeepL. Vous pourrez relire et corriger la traduction ensuite. Les mêmes règles s'appliquent aux deux langues.
+    languages_manual: Les deux versions sont obligatoires (la traduction automatique n'est pas activée sur ce site). Les mêmes règles s'appliquent aux deux langues.
+    language_fr: 🇫🇷 Français
+    language_en: 🇬🇧 English
+    machine_badge: Traduit avec DeepL
 user_form:
     firstname: Prénom
     lastname: Nom
@@ -165,6 +166,8 @@ flash:
     recipe_created: Votre recette a bien été publiée.
     recipe_updated: La recette a bien été modifiée.
     recipe_deleted: La recette a bien été supprimée.
+    recipe_translated_en: La version anglaise a été traduite automatiquement. Vous pouvez la relire avec « Modifier ».
+    recipe_translated_fr: La version française a été traduite automatiquement. Vous pouvez la relire avec « Modifier ».
     profile_updated: Votre profil a bien été mis à jour.
     registered: Bienvenue ! Un e-mail de confirmation vient de vous être envoyé.
     registered_demo: Bienvenue ! Votre compte est prêt, vous pouvez publier vos recettes.

@@ -197,9 +197,17 @@ turbo-frame.recipes-next { display: block; }
 }
 
 /* ---------- Forms ---------- */
-.translation-box { border: 1px dashed var(--rv-border); border-radius: .75rem; padding: .85rem 1rem; background: var(--rv-cream); }
-.translation-box summary { cursor: pointer; font-weight: 600; }
-.translation-box[open] summary { margin-bottom: .25rem; }
+.translation-intro {
+    display: flex; gap: .75rem; align-items: flex-start;
+    background: #fff3ea; border-radius: .75rem; padding: .85rem 1rem; font-size: .92rem;
+}
+.translation-intro .bi { font-size: 1.3rem; color: var(--rv-primary); line-height: 1.2; }
+.language-box { border: 1px solid var(--rv-border); border-radius: .85rem; padding: 1rem 1.1rem .25rem; background: var(--rv-cream); }
+.language-box legend { float: none; width: auto; font-size: 1rem; font-weight: 600; padding: 0 .4rem; margin-bottom: .25rem; }
+.machine-badge { background: var(--rv-ink); color: #fff; font-weight: 500; font-size: .7rem; vertical-align: middle; }
+.char-counter { margin-top: .25rem; }
+.char-counter.is-short { color: var(--bs-danger); }
+.char-counter.is-ok { color: var(--bs-success); }
 
 /* ---------- Misc ---------- */
 .auth-card {

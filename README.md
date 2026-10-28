@@ -2,6 +2,10 @@
 
 > Site de partage de recettes développé avec Symfony 7.4 — *A recipe-sharing web app built with Symfony 7.4.*
 
+### 👉 [Live demo: recettevie.alwaysdata.net](https://recettevie.alwaysdata.net)
+
+Log in with **camille@recettevie.test** / **password**, or create your own account (no email confirmation needed on the demo).
+
 Visitors browse, search and filter recipes. Members publish their own recipes with a photo, then edit or delete them. The interface is available in **French and English**.
 
 ![Symfony](https://img.shields.io/badge/Symfony-7.4_LTS-000000?logo=symfony)

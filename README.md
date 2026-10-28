@@ -30,7 +30,7 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 
 ## Features
 
-- **Recipes**: list with pagination, search by title or ingredient, filter by category, detail page with ingredients, numbered steps and similar recipes
+- **Recipes**: list with infinite scroll, search by title or ingredient, filter by category, detail page with ingredients, numbered steps and similar recipes
 - **Publishing**: create, edit and delete your own recipes, with an optional photo upload (JPG/PNG/WebP, 4 MB max)
 - **Accounts**: sign-up, login with "remember me", email verification, password reset by email, profile page listing your recipes
 - **Permissions**: only the author (or an admin) can edit or delete a recipe; members must confirm their email before publishing
@@ -52,7 +52,7 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 | Back end | PHP 8.2+, Symfony 7.4 (LTS), Doctrine ORM 3, Twig |
 | Database | MySQL 8/9 (tests run on SQLite) |
 | Front end | Bootstrap 5, Bootstrap Icons, AssetMapper, Turbo, Stimulus — no Node.js build step |
-| Security | Symfony Security: form login, CSRF protection, voters, login throttling |
+| Security | Symfony Security: form login, CSRF protection, voters, login throttling, rate limiter |
 | Bundles | VerifyEmailBundle, ResetPasswordBundle, KnpTimeBundle, DoctrineFixturesBundle |
 | External API | DeepL (machine translation), called with Symfony HttpClient |
 | Tests | PHPUnit 12: functional and unit tests |
@@ -61,7 +61,7 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 
 - **Security voter** ([`RecipeVoter`](src/Security/Voter/RecipeVoter.php)) decides who may edit or delete a recipe, used with `#[IsGranted]` in the controller and `is_granted()` in Twig.
 - **Custom validation constraint** ([`InappropriateWords`](src/Validator/InappropriateWords.php)) rejects titles or steps containing forbidden words (whole words only, case-insensitive).
-- **Pagination without a bundle**: Doctrine's `Paginator` wrapped in a small [`Page`](src/Pagination/Page.php) class.
+- **Infinite scroll without a bundle**: Doctrine's `Paginator` wrapped in a small [`Page`](src/Pagination/Page.php) class, and each next page loaded by a lazy Turbo Frame when it scrolls into view ([`_page.html.twig`](templates/recipe/_page.html.twig)). No custom JavaScript needed.
 - **Doctrine lifecycle callbacks**: timestamps and URL slugs are filled automatically ([`Timestampable`](src/Entity/Traits/Timestampable.php), [`Recipe::computeSlug()`](src/Entity/Recipe.php)).
 - **External API integration** ([`RecipeTranslator`](src/Service/RecipeTranslator.php)): calls DeepL with Symfony HttpClient from a form event, *before* validation, so both languages are validated. It translates in both directions, keeps line breaks by translating line by line, only fills missing fields, refreshes a machine translation when its source changes, and never overwrites text written by the author. API errors are logged and the form asks for the missing language. The preview endpoint ([`RecipeTranslationController`](src/Controller/RecipeTranslationController.php)) is a JSON route called by a small Stimulus controller, protected by login, a CSRF token and a **rate limiter** (30 translations per hour per user). Tested with `MockHttpClient`, so tests never hit the real API.
 - **Upload service** ([`RecipeImageUploader`](src/Service/RecipeImageUploader.php)) gives each file a unique, safe name and deletes the old photo when it is replaced.
@@ -126,11 +126,12 @@ erDiagram
 | URL | Page | Access |
 |---|---|---|
 | `/` | Home: search, categories, latest recipes | Everyone |
-| `/recettes` | Recipe list (`?q=`, `?categorie=`, `?page=`) | Everyone |
+| `/recettes` | Recipe list with infinite scroll (`?q=`, `?categorie=`, `?page=`) | Everyone |
 | `/recettes/{slug}-{id}` | Recipe detail | Everyone |
 | `/recettes/nouvelle` | Create a recipe | Verified members |
 | `/recettes/{id}/modifier` | Edit a recipe | Author or admin |
 | `/recettes/{id}/supprimer` | Delete a recipe (POST + CSRF) | Author or admin |
+| `/recettes/traduction` | DeepL translation preview (JSON, POST + CSRF) | Members |
 | `/inscription`, `/connexion` | Sign up, log in | Visitors |
 | `/compte`, `/compte/modifier` | Profile and my recipes | Members |
 | `/mot-de-passe-oublie` | Password reset by email | Everyone |
@@ -140,7 +141,7 @@ erDiagram
 
 ```
 src/
-├── Controller/        Home, Recipe, Account, Registration, Security, ResetPassword, Locale
+├── Controller/        Home, Recipe, RecipeTranslation, Account, Registration, Security, ResetPassword, Locale
 ├── DataFixtures/      Demo data (categories, accounts, recipes)
 ├── Entity/            User, Recipe, Category, ResetPasswordRequest + Timestampable trait
 ├── EventSubscriber/   LocaleSubscriber (language from session / browser)
@@ -151,6 +152,7 @@ src/
 ├── Service/           RecipeImageUploader, RecipeTranslator (DeepL)
 ├── Twig/              AppExtension (category_name and duration filters)
 └── Validator/         InappropriateWords constraint + validator
+assets/                CSS theme + Stimulus controllers (character counter, DeepL preview)
 templates/             Twig views (layout, partials, pages, emails, error pages)
 translations/          messages / validators / security, in French and English
 tests/                 Functional tests (controllers) and unit tests

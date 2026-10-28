@@ -1,19 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title "Profile" %}
+{% block title %}{{ 'account.edit_title'|trans }}{% endblock %}
 
 {% block body %}
-<div class"row">
-    <div class="col-md-6 mx-auto text-center">
-        <h1 class="text-center my-5">{{ "Update Profile"|trans }}</h1>
-        {{ form_start(userform) }}
-        {{ form_row(userform.firstname)}}
-        {{ form_row(userform.lastname)}}
-        <br>
-        <p>
-            <button type="submit" class="btn btn-primary">{{ "Apply changes"|trans }} </button>
-        </p>
-        {{ form_end(userform) }}
-    <div>
-</div>
+    <div class="auth-card">
+        <h1 class="page-title h2 mb-4">{{ 'account.edit_title'|trans }}</h1>
+        {{ form_start(form) }}
+            {{ form_row(form.firstname) }}
+            {{ form_row(form.lastname) }}
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">{{ 'account.save'|trans }}</button>
+                <a href="{{ path('app_account') }}" class="btn btn-link">{{ 'recipe.cancel'|trans }}</a>
+            </div>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

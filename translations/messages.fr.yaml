@@ -1,38 +1,176 @@
-recipeForm.title: Titre
-recipeForm.content: Description
-recipeForm.duration: Durée
-recipeForm.image_name: Image
-recipeForm.save: Enregistrer
-navBar.home: Accueil
-navBar.recipes: 'liste des recettes'
-navBar.addRecipe: 'Ajouter une recette'
-navBar.signUp: "S'enregistrer"
-navBar.login: 'Se connecter'
-navBar.logout: 'Se déconnecter'
-navBar.account: 'Mon compte'
-registerTemplate.title: Inscription
-registerTemplate.button: "s'enregistrer"
-registrationForm.firstname: Prénom
-registrationForm.lastname: Nom
-registrationForm.email: Email
-registrationForm.password: 'Mot de passe'
-registrationForm.agreeTerms: "Accepter les conditions d'utilisation"
-'Your email adress is not verified.': "Votre adresse email n'est pas vérifiée."
-recipeController.emailNotVerified: "Votre adresse email n'est pas vérifiée."
-'Forgot Password ?': 'Mot de passe oublié ?'
-reset_password.title: 'Réinitialiser votre mot de passe'
-reset_password.instructions: 'Veuillez saisir votre nouveau mot de passe.'
-reset_password.button: 'Réinitialiser le mot de passe'
-login.logged_in_as: 'Vous êtes connecté en tant que %user%'
-login.logout: 'Se déconnecter'
-login.title: 'Veuillez vous connecter'
-login.email.label: 'Adresse e-mail'
-login.password.label: 'Mot de passe'
-login.forgot_password: 'Mot de passe oublié ?'
-login.button: 'Se connecter'
-login.not_registered: 'Pas encore inscrit ?'
-login.create_account: 'Créer un compte'
-registration.title: Inscrivez-vous
-accountShow-profile: "Profil du compte"
-accountShow.Accountcreatedon: "Compte créé le"
-accountShow.editAccount: "Modifier le compte"
+site:
+    name: RecetteVie
+    tagline: Des recettes simples, partagées par des passionnés.
+
+nav:
+    home: Accueil
+    recipes: Recettes
+    add_recipe: Ajouter une recette
+    account: Mon compte
+    login: Connexion
+    register: Inscription
+    logout: Déconnexion
+    language: Langue
+    toggle: Ouvrir le menu
+
+footer:
+    about: Projet portfolio réalisé avec Symfony 7, Doctrine et Bootstrap.
+    source: Code source sur GitHub
+
+home:
+    title: Accueil
+    hero_title: Cuisinez, partagez, régalez-vous.
+    hero_text: Trouvez l'inspiration parmi les recettes de la communauté, ou partagez vos propres classiques.
+    search_placeholder: Une recette, un ingrédient…
+    search_button: Rechercher
+    browse: Parcourir les recettes
+    categories: Explorer par catégorie
+    latest: Les dernières recettes
+    see_all: Voir toutes les recettes
+    cta_title: Vous avez une recette fétiche ?
+    cta_text: Créez un compte gratuit et partagez-la avec la communauté en deux minutes.
+    cta_button: Partager une recette
+    recipe_count: '{0} Aucune recette|{1} 1 recette|]1,Inf[ %count% recettes'
+
+category:
+    entrees: Entrées
+    plats: Plats
+    desserts: Desserts
+    vegetarien: Végétarien
+    boulangerie: Boulangerie
+    boissons: Boissons
+
+recipe:
+    list_title: Toutes les recettes
+    results: '{0} Aucune recette trouvée|{1} 1 recette|]1,Inf[ %count% recettes'
+    results_for: pour « %query% »
+    all_categories: Toutes
+    clear_filters: Effacer les filtres
+    empty_title: Aucune recette ne correspond.
+    empty_text: Essayez un autre mot-clé ou une autre catégorie.
+    by: par %author%
+    published: Publiée %ago%
+    updated_on: Mise à jour le %date%
+    ingredients: Ingrédients
+    steps: Préparation
+    duration: Durée
+    category: Catégorie
+    edit: Modifier
+    delete: Supprimer
+    delete_confirm: Supprimer définitivement cette recette ?
+    back: Retour aux recettes
+    similar: Dans la même catégorie
+    create_title: Nouvelle recette
+    create_intro: Partagez une recette que vous aimez cuisiner.
+    edit_title: Modifier « %title% »
+    save: Enregistrer la recette
+    cancel: Annuler
+    current_photo: Photo actuelle
+    no_photo: Pas encore de photo
+
+pagination:
+    label: Pagination
+    previous: Précédent
+    next: Suivant
+
+recipe_form:
+    title: Titre
+    title_placeholder: ex. Tarte aux pommes de grand-mère
+    category: Catégorie
+    category_placeholder: Choisissez une catégorie
+    duration: Durée totale (minutes)
+    ingredients: Ingrédients
+    ingredients_placeholder: "200 g de farine\n3 œufs\n…"
+    steps: Étapes de préparation
+    steps_placeholder: "Préchauffez le four à 180 °C.\nMélangez…"
+    one_per_line: Un élément par ligne.
+    photo: Photo
+    photo_help: JPG, PNG ou WebP, 4 Mo maximum. Optionnel.
+
+user_form:
+    firstname: Prénom
+    lastname: Nom
+    email: Adresse e-mail
+    password: Mot de passe
+    password_help: 8 caractères minimum.
+    agree_terms: J'accepte que mes recettes soient visibles publiquement.
+
+account:
+    title: Mon compte
+    member_since: Membre depuis le %date%
+    edit_profile: Modifier mon profil
+    edit_title: Modifier mon profil
+    save: Enregistrer
+    my_recipes: Mes recettes
+    no_recipes: Vous n'avez pas encore publié de recette.
+    first_recipe: Publier ma première recette
+    not_verified_title: Confirmez votre adresse e-mail
+    not_verified_text: Nous vous avons envoyé un lien de confirmation. Vous pourrez publier des recettes une fois votre adresse confirmée.
+    resend: Renvoyer l'e-mail
+    verified: Adresse e-mail confirmée
+    stats_recipes: '{0} recette|{1} recette|]1,Inf[ recettes'
+
+login:
+    title: Connexion
+    subtitle: Heureux de vous revoir !
+    email: Adresse e-mail
+    password: Mot de passe
+    remember_me: Se souvenir de moi
+    forgot_password: Mot de passe oublié ?
+    submit: Se connecter
+    no_account: Pas encore de compte ?
+    create_account: Créer un compte
+    demo: 'Compte de démo : %email% / %password%'
+
+register:
+    title: Créer un compte
+    subtitle: Rejoignez la communauté et partagez vos recettes.
+    submit: Créer mon compte
+    has_account: Déjà inscrit ?
+
+reset_password:
+    request_title: Mot de passe oublié
+    request_text: Indiquez votre adresse e-mail, nous vous enverrons un lien pour choisir un nouveau mot de passe.
+    request_submit: Envoyer le lien
+    check_email_title: Vérifiez vos e-mails
+    check_email_text: Si un compte existe pour cette adresse, un e-mail contenant un lien de réinitialisation vient d'être envoyé. Ce lien expirera dans %expires%.
+    check_email_retry: Rien reçu ? Vérifiez vos spams ou <a href="%url%">réessayez</a>.
+    reset_title: Nouveau mot de passe
+    new_password: Nouveau mot de passe
+    repeat_password: Confirmez le mot de passe
+    reset_submit: Changer le mot de passe
+
+email:
+    hello: Bonjour %name%,
+    signature: L'équipe RecetteVie
+    confirm:
+        subject: Confirmez votre adresse e-mail
+        text: Merci pour votre inscription ! Cliquez sur le bouton ci-dessous pour confirmer votre adresse e-mail.
+        button: Confirmer mon adresse
+        expires: Ce lien expirera dans %expires%.
+    reset:
+        subject: Réinitialisation de votre mot de passe
+        text: Vous avez demandé à changer votre mot de passe. Cliquez sur le bouton ci-dessous pour en choisir un nouveau.
+        button: Choisir un nouveau mot de passe
+        expires: Ce lien expirera dans %expires%. Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet e-mail.
+
+flash:
+    recipe_created: Votre recette a bien été publiée.
+    recipe_updated: La recette a bien été modifiée.
+    recipe_deleted: La recette a bien été supprimée.
+    profile_updated: Votre profil a bien été mis à jour.
+    registered: Bienvenue ! Un e-mail de confirmation vient de vous être envoyé.
+    email_verified: Votre adresse e-mail est confirmée. Vous pouvez maintenant publier des recettes.
+    verification_sent: Un nouvel e-mail de confirmation vient d'être envoyé.
+    verify_email_first: Confirmez d'abord votre adresse e-mail pour publier une recette.
+    password_reset: Votre mot de passe a été changé. Vous pouvez vous connecter.
+
+error:
+    title: Oups !
+    not_found_title: Page introuvable
+    not_found_text: La page que vous cherchez n'existe pas ou a été déplacée.
+    forbidden_title: Accès refusé
+    forbidden_text: Vous n'avez pas le droit d'accéder à cette page.
+    generic_title: Une erreur est survenue
+    generic_text: Quelque chose s'est mal passé de notre côté. Réessayez dans quelques instants.
+    back_home: Retour à l'accueil

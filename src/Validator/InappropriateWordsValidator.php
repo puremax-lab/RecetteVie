@@ -4,44 +4,34 @@ namespace App\Validator;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
-// final class InappropriateWordsValidator extends ConstraintValidator
-// {
-//     public function validate(mixed $value, Constraint $constraint): void
-//     {
-//         /* @var InappropriateWords $constraint */
-
-//         if (null === $value || '' === $value) {
-//             return;
-//         }
-
-//         // TODO: implement the validation here
-//         $this->context->buildViolation($constraint->message)
-//             ->setParameter('{{ value }}', $value)
-//             ->addViolation()
-//         ;
-//     }
-// }
-
-class InappropriateWordsValidator extends ConstraintValidator
+final class InappropriateWordsValidator extends ConstraintValidator
 {
-    public function validate($value, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
-        /* @var InappropriateWords $constraint */
+        if (!$constraint instanceof InappropriateWords) {
+            throw new UnexpectedTypeException($constraint, InappropriateWords::class);
+        }
 
         if (null === $value || '' === $value) {
             return;
         }
 
-        // on met d'abord le mot introduit dans le formulaire en minuscule
-        // on fait ensuite une boucle pour vérifier que le mot interdit n'est pas dans notre liste
-        // si c'est le cas on ajoute une violation
-        $value = strtolower($value);
-        foreach ($constraint->listWords as $inappropriateWord) {
-            if (str_contains($value, $inappropriateWord)) {
+        if (!\is_string($value)) {
+            throw new UnexpectedValueException($value, 'string');
+        }
+
+        $text = mb_strtolower($value);
+        foreach ($constraint->words as $word) {
+            // Whole words only, so "Scunthorpe"-style false positives are avoided.
+            if (preg_match('/(?<!\p{L})'.preg_quote(mb_strtolower($word), '/').'(?!\p{L})/u', $text)) {
                 $this->context->buildViolation($constraint->message)
-                    ->setParameter('{{ inapropriateWords }}', $inappropriateWord)
+                    ->setParameter('{{ word }}', $word)
                     ->addViolation();
+
+                return;
             }
         }
     }

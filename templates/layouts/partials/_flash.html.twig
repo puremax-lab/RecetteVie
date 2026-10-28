@@ -1,5 +1,10 @@
-{% for type, message in app.flashes %}
-    <div class="alert alert-{{ type }}">
-        {{ message | join(". ") }}
-    </div>
+{% set icons = {success: 'check-circle', info: 'info-circle', warning: 'exclamation-triangle', danger: 'x-circle'} %}
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ type }} alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-{{ icons[type] ?? 'info-circle' }}"></i>
+            <div>{{ message|trans }}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
 {% endfor %}

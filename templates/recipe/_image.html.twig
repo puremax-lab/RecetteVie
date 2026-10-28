@@ -1,0 +1,8 @@
+{# The recipe photo, or a colored placeholder with the category emoji. Expects: recipe, class #}
+{% if recipe.imageName %}
+    <img src="{{ asset('uploads/recipes/' ~ recipe.imageName) }}" alt="{{ recipe.title }}" class="{{ class }} object-fit-cover" loading="lazy">
+{% else %}
+    <div class="{{ class }} recipe-placeholder" style="--placeholder-color: {{ recipe.category.color }}" role="img" aria-label="{{ recipe.title }}">
+        <span>{{ recipe.category.icon }}</span>
+    </div>
+{% endif %}

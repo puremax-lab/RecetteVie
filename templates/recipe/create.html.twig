@@ -1,24 +1,15 @@
-{# {% extends 'base.html.twig' %}
-
-{% block title %}New Recette{% endblock %}
-
-{% block body %}
-<h1>Creer une nouvelle Recette</h1>
-
-
-{{ form(form) }}
-
-{% endblock %} #}
-
 {% extends 'base.html.twig' %}
-{% block title 'Add Recipe'%}
+
+{% block title %}{{ 'recipe.create_title'|trans }}{% endblock %}
+
 {% block body %}
-    <div class = "row">
-        <div class= "col-md-6 mx-auto">
-            <h1 align="center">
-                Créer une nouvelle Recette
-            </h1>
-            {{form(form)}}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="page-title">{{ 'recipe.create_title'|trans }}</h1>
+            <p class="text-body-secondary mb-4">{{ 'recipe.create_intro'|trans }}</p>
+            <div class="panel">
+                {{ include('recipe/_form.html.twig', {cancel_url: path('app_recipe_index')}) }}
+            </div>
         </div>
     </div>
 {% endblock %}

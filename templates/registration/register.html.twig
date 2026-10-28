@@ -1,27 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}{{ 'register.title'|trans }}{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+    <div class="auth-card">
+        <h1 class="page-title h2 mb-1">{{ 'register.title'|trans }}</h1>
+        <p class="text-body-secondary mb-4">{{ 'register.subtitle'|trans }}</p>
 
-    <div class="col-md-6 mx-auto text-center"> 
-        <h1>{{ 'registration.title'|trans }}</h1>
+        {{ form_start(form, {attr: {'data-turbo': 'false'}}) }}
+            {{ form_errors(form) }}
+            <div class="row g-3">
+                <div class="col-sm-6">{{ form_row(form.firstname) }}</div>
+                <div class="col-sm-6">{{ form_row(form.lastname) }}</div>
+            </div>
+            {{ form_row(form.email) }}
+            {{ form_row(form.plainPassword) }}
+            {{ form_row(form.agreeTerms) }}
+            <button type="submit" class="btn btn-primary w-100 btn-lg mt-2">{{ 'register.submit'|trans }}</button>
+        {{ form_end(form) }}
 
-        {{ form_errors(registrationForm) }}
-
-        {{ form_start(registrationForm) }}
-            {{ form_row(registrationForm.firstname) }}
-            {{ form_row(registrationForm.lastname) }}
-            {{ form_row(registrationForm.email) }}
-            {{ form_row(registrationForm.plainPassword, {
-                label: 'Password'
-            }) }}
-            {{ form_row(registrationForm.agreeTerms) }}
-
-            <button type="submit" class="btn btn-primary">Register</button>
-        {{ form_end(registrationForm) }}
+        <p class="text-center mt-4 mb-0">
+            {{ 'register.has_account'|trans }} <a href="{{ path('app_login') }}">{{ 'login.submit'|trans }}</a>
+        </p>
     </div>
 {% endblock %}

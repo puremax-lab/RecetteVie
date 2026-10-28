@@ -1,57 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}{{ 'login.title'|trans }}{% endblock %}
 
 {% block body %}
-    <div class="col-md-6 mx-auto text-center">    
-        <form method="post">
-            {% if error %}
-                <div class="alert alert-error">
-                    {{ error.messageKey|trans(error.messageData, 'security') }}
-                </div>
-            {% endif %}
+    <div class="auth-card">
+        <h1 class="page-title h2 mb-1">{{ 'login.title'|trans }}</h1>
+        <p class="text-body-secondary mb-4">{{ 'login.subtitle'|trans }}</p>
 
-            {% if app.user %}
-                <div class="mb-3">
-                    {{ 'login.logged_in_as'|trans({'%user%': app.user.userIdentifier}) }}
-                    <a href="{{ path('app_logout') }}">{{ 'login.logout'|trans }}</a>
-                </div>
-            {% endif %}
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
 
-            <h1 class="h3 mb-3 font-weight-normal">{{ 'login.title'|trans }}</h1>
-
-            <label for="username">{{ 'login.email.label'|trans }}</label>
-            <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-
-            <label for="password">{{ 'login.password.label'|trans }}</label>
-            <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-
-            <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-            {#
-                Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-                See https://symfony.com/doc/current/security/remember_me.html
-
-                <div class="checkbox mb-3">
-                    <input type="checkbox" name="_remember_me" id="_remember_me">
-                    <label for="_remember_me">Remember me</label>
-                </div>
-            #}
-
-            <div>
-                <a href="{{ path('app_forgot_password_request') }}">
-                    {{ 'login.forgot_password'|trans }}
-                </a>
+        <form method="post" action="{{ path('app_login') }}" data-turbo="false">
+            <div class="mb-3">
+                <label for="username" class="form-label">{{ 'login.email'|trans }}</label>
+                <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
             </div>
-
-            <button class="btn btn-lg btn-primary" type="submit">
-                {{ 'login.button'|trans }}
-            </button>
-
-            <div>
-                <span>{{ 'login.not_registered'|trans }}</span>
-                <a href="#">{{ 'login.create_account'|trans }}</a>
+            <div class="mb-2">
+                <label for="password" class="form-label">{{ 'login.password'|trans }}</label>
+                <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
             </div>
+            <div class="d-flex justify-content-between align-items-center mb-4 small">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="_remember_me" id="remember_me">
+                    <label class="form-check-label" for="remember_me">{{ 'login.remember_me'|trans }}</label>
+                </div>
+                <a href="{{ path('app_forgot_password_request') }}">{{ 'login.forgot_password'|trans }}</a>
+            </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <button class="btn btn-primary w-100 btn-lg" type="submit">{{ 'login.submit'|trans }}</button>
         </form>
+
+        <p class="text-center mt-4 mb-0">
+            {{ 'login.no_account'|trans }} <a href="{{ path('app_register') }}">{{ 'login.create_account'|trans }}</a>
+        </p>
+        <p class="demo-hint small text-center mt-3 mb-0">
+            <i class="bi bi-info-circle"></i> {{ 'login.demo'|trans({'%email%': 'camille@recettevie.test', '%password%': 'password'}) }}
+        </p>
     </div>
 {% endblock %}

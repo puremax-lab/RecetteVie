@@ -2,44 +2,59 @@
 
 namespace App\Controller;
 
-use App\Form\UserForm;
+use App\Entity\User;
+use App\Form\ProfileForm;
+use App\Security\EmailVerifier;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use DateTimeImmutable;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[Route('/compte')]
+#[IsGranted('ROLE_USER')]
 final class AccountController extends AbstractController
 {
-    #[Route('/account', name: 'app_account')]
-    public function index(): Response
+    #[Route('', name: 'app_account', methods: ['GET'])]
+    public function show(#[CurrentUser] User $user): Response
     {
-        return $this->render('account/index.html.twig', [
-            'controller_name' => 'AccountController',
+        return $this->render('account/show.html.twig', [
+            'user' => $user,
         ]);
     }
 
-    #[Route('/account/edit', name: "app_account_edit")]
-    public function edit(Request $request, EntityManagerInterface $em,
-    TranslatorInterface $translator): Response{
-        /**
-        * @var User
-        */
-        $user=$this->getUser();
-        $form = $this->createForm(UserForm::class, $user);
+    #[Route('/modifier', name: 'app_account_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, #[CurrentUser] User $user, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(ProfileForm::class, $user);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $user->setUpdatedAt(new DateTimeImmutable());
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
-            $this->addFlash('success', $translator->trans('Account successfuly
-            updated !'));
+            $this->addFlash('success', 'flash.profile_updated');
+
             return $this->redirectToRoute('app_account');
         }
+
         return $this->render('account/edit.html.twig', [
-        'user' => $user,
-        'usermonForm' => $form->createView()
+            'form' => $form,
         ]);
+    }
+
+    #[Route('/renvoyer-confirmation', name: 'app_account_resend_verification', methods: ['POST'])]
+    public function resendVerification(Request $request, #[CurrentUser] User $user, EmailVerifier $emailVerifier): Response
+    {
+        if (!$this->isCsrfTokenValid('resend-verification', $request->getPayload()->getString('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
+        if (!$user->isVerified()) {
+            $emailVerifier->sendEmailConfirmation($user);
+            $this->addFlash('info', 'flash.verification_sent');
+        }
+
+        return $this->redirectToRoute('app_account');
     }
 }

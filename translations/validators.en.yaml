@@ -1,0 +1,7 @@
+recipe:
+    title_taken: A recipe with this title already exists.
+    inappropriate_word: This text contains an inappropriate word (“{{ word }}”).
+user:
+    email_taken: An account already exists with this email address.
+    agree_terms: You must accept this condition to create an account.
+    passwords_mismatch: The two passwords do not match.

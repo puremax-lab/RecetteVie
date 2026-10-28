@@ -1,10 +1,62 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}{{ 'home.title'|trans }}{% endblock %}
+
+{% block hero %}
+    <section class="hero">
+        <div class="container py-5">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7">
+                    <p class="eyebrow">{{ 'site.tagline'|trans }}</p>
+                    <h1 class="display-4 hero-title">{{ 'home.hero_title'|trans }}</h1>
+                    <p class="lead text-body-secondary mb-4">{{ 'home.hero_text'|trans }}</p>
+                    <form action="{{ path('app_recipe_index') }}" method="get" class="search-bar d-flex" role="search">
+                        <i class="bi bi-search"></i>
+                        <input type="search" name="q" class="form-control" placeholder="{{ 'home.search_placeholder'|trans }}" aria-label="{{ 'home.search_button'|trans }}">
+                        <button class="btn btn-primary" type="submit">{{ 'home.search_button'|trans }}</button>
+                    </form>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="hero-plates" aria-hidden="true">
+                        <span>🥗</span><span>🍲</span><span>🥖</span><span>🍰</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
 
 {% block body %}
-<div class = "text-center mt-5">
-    <h1>Bienvenue sur Recette Vie</h1>
-    <img src="https://cdn.cultura.com/cdn-cgi/image/width=830/media/pim/TITELIVE/81_9791090413009_1_75.jpg" alt="photo" class="img-fluid">
-</div>
+    <section class="mb-5">
+        <h2 class="section-title">{{ 'home.categories'|trans }}</h2>
+        <div class="row row-cols-2 row-cols-md-3 row-cols-xl-6 g-3">
+            {% for row in categories %}
+                <div class="col">
+                    <a href="{{ path('app_recipe_index', {categorie: row.category.slug}) }}" class="category-tile" style="--tile-color: {{ row.category.color }}">
+                        <span class="category-tile-icon">{{ row.category.icon }}</span>
+                        <span class="fw-semibold">{{ row.category|category_name }}</span>
+                        <span class="small text-body-secondary">{{ 'home.recipe_count'|trans({'%count%': row.recipeCount}) }}</span>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-end mb-3">
+            <h2 class="section-title mb-0">{{ 'home.latest'|trans }}</h2>
+            <a href="{{ path('app_recipe_index') }}" class="link-primary fw-semibold text-decoration-none">{{ 'home.see_all'|trans }} <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+            {% for recipe in latestRecipes %}
+                <div class="col">{{ include('recipe/_card.html.twig') }}</div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="cta rounded-4 p-4 p-lg-5 text-center">
+        <h2 class="h3">{{ 'home.cta_title'|trans }}</h2>
+        <p class="text-body-secondary mb-4">{{ 'home.cta_text'|trans }}</p>
+        <a href="{{ path(app.user ? 'app_recipe_create' : 'app_register') }}" class="btn btn-primary btn-lg">{{ 'home.cta_button'|trans }}</a>
+    </section>
 {% endblock %}

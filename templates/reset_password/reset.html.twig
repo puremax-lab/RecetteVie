@@ -1,14 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
+{% block title %}{{ 'reset_password.reset_title'|trans }}{% endblock %}
 
 {% block body %}
-    <div class="col-md-6 mx-auto text-center">
-        <h1>Reset your password</h1>
-
+    <div class="auth-card">
+        <h1 class="page-title h2 mb-4">{{ 'reset_password.reset_title'|trans }}</h1>
         {{ form_start(resetForm) }}
             {{ form_row(resetForm.plainPassword) }}
-            <button class="btn btn-primary">Reset password</button>
+            <button class="btn btn-primary w-100 btn-lg mt-2">{{ 'reset_password.reset_submit'|trans }}</button>
         {{ form_end(resetForm) }}
     </div>
 {% endblock %}

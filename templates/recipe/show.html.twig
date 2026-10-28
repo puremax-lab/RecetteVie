@@ -1,48 +1,82 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}#{{ recipe.id ~" "~ recipe.slug }}{% endblock %}
+{% block title %}{{ recipe.title }}{% endblock %}
+{% block meta_description %}{{ recipe.steps|first|u.truncate(155, '…') }}{% endblock %}
 
 {% block body %}
-    <div align="center" class= "col-md-6 mx-auto">>
-        <article>
-            {# <h3>
-            Bienvenu sur la recette numéro {{ recipe.id }}
-            </h3> #}
-            <h1>
-            {{ recipe.title |title }}
-            </h1>
-            {# <p>
-            Recette créé par {{ user.firstname }} {{ user.lastname }}
-            {{ dump(user) }}
-            Recette créé par {{ user.firstName ~" "~ user.lastName }}
-            </p>
-            <br> #}
-            <img style="max-width: 400px;" src={{ recipe.imageName }}>
-            <h5>
-            {{ recipe.content | nl2br}}
-            </h5>
-            <p>
-                By {{ recipe.user.firstname }} {{ recipe.user.lastname }}
-            </p>
-            <p>
-                Submitted {{ recipe.createdAt | date('d/m/Y') }}
-            </p>
-            <br>
-            <p>
-                Updated {{ recipe.updatedAt | date('d/m/Y h:i') }}
-            </p>
-            <br>
-            {% if app.user %}
-                {% if app.user.isVerified() and app.user.id == recipe.user.id %}   
-                    <a class="btn btn-primary btn-sm" href={{ path('app_recipe_edit', {id: recipe.id}) }}>
-                        Edit Recipe
-                    </a>
-                    <a class= "btn btn-danger btn-sm" href={{ path('app_recipe_delete', {id: recipe.id}) }} onclick="return confirm('Are you sure you want to delete this recipe?')">delete</a>
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{{ path('app_recipe_index') }}">{{ 'nav.recipes'|trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_recipe_index', {categorie: recipe.category.slug}) }}">{{ recipe.category|category_name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ recipe.title }}</li>
+        </ol>
+    </nav>
+
+    <article>
+        <div class="row g-4 g-lg-5 align-items-center mb-5">
+            <div class="col-lg-6">
+                {{ include('recipe/_image.html.twig', {class: 'recipe-hero-img rounded-4 w-100'}) }}
+            </div>
+            <div class="col-lg-6">
+                <span class="badge category-badge mb-3">{{ recipe.category.icon }} {{ recipe.category|category_name }}</span>
+                <h1 class="display-5 page-title">{{ recipe.title }}</h1>
+                <div class="d-flex flex-wrap gap-4 my-4 recipe-facts">
+                    <div><i class="bi bi-clock"></i><span class="small text-body-secondary d-block">{{ 'recipe.duration'|trans }}</span><strong>{{ recipe.duration|duration }}</strong></div>
+                    <div><i class="bi bi-basket"></i><span class="small text-body-secondary d-block">{{ 'recipe.ingredients'|trans }}</span><strong>{{ recipe.ingredientList|length }}</strong></div>
+                    <div><i class="bi bi-list-ol"></i><span class="small text-body-secondary d-block">{{ 'recipe.steps'|trans }}</span><strong>{{ recipe.steps|length }}</strong></div>
+                </div>
+                <div class="d-flex align-items-center gap-2 text-body-secondary">
+                    <span class="avatar">{{ recipe.user.firstname|first|upper }}</span>
+                    <span>
+                        {{ 'recipe.by'|trans({'%author%': recipe.user.fullName}) }} · {{ 'recipe.published'|trans({'%ago%': recipe.createdAt|ago}) }}
+                        {% if recipe.updatedAt > recipe.createdAt %}<br><small>{{ 'recipe.updated_on'|trans({'%date%': recipe.updatedAt|format_date('long')}) }}</small>{% endif %}
+                    </span>
+                </div>
+
+                {% if is_granted('RECIPE_EDIT', recipe) %}
+                    <div class="d-flex gap-2 mt-4">
+                        <a class="btn btn-outline-primary" href="{{ path('app_recipe_edit', {id: recipe.id}) }}"><i class="bi bi-pencil"></i> {{ 'recipe.edit'|trans }}</a>
+                        <form method="post" action="{{ path('app_recipe_delete', {id: recipe.id}) }}" data-turbo-confirm="{{ 'recipe.delete_confirm'|trans }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-recipe-' ~ recipe.id) }}">
+                            <button class="btn btn-outline-danger"><i class="bi bi-trash"></i> {{ 'recipe.delete'|trans }}</button>
+                        </form>
+                    </div>
                 {% endif %}
-            {% endif %}
-            <a class="btn btn-secondary btn-sm" href={{ path('app_recipe_index')}}>
-                Go Back
-            </a>
-        </article>
-    </div>
+            </div>
+        </div>
+
+        <div class="row g-4 g-lg-5">
+            <div class="col-lg-4">
+                <div class="panel">
+                    <h2 class="h4 mb-3">{{ 'recipe.ingredients'|trans }}</h2>
+                    <ul class="ingredient-list">
+                        {% for ingredient in recipe.ingredientList %}
+                            <li>{{ ingredient }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <h2 class="h4 mb-3">{{ 'recipe.steps'|trans }}</h2>
+                <ol class="step-list">
+                    {% for step in recipe.steps %}
+                        <li>{{ step }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </article>
+
+    {% if similarRecipes is not empty %}
+        <section class="mt-5 pt-4 border-top">
+            <h2 class="section-title">{{ 'recipe.similar'|trans }}</h2>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+                {% for recipe in similarRecipes %}
+                    <div class="col">{{ include('recipe/_card.html.twig') }}</div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <a href="{{ path('app_recipe_index') }}" class="btn btn-link px-0 mt-4"><i class="bi bi-arrow-left"></i> {{ 'recipe.back'|trans }}</a>
 {% endblock %}

@@ -2,21 +2,20 @@
 
 namespace App\Controller;
 
+use App\Repository\CategoryRepository;
+use App\Repository\RecipeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class HomeController extends AbstractController
 {
-    #[Route(path :'/', name: 'home')]
-    public function index(Request $request): Response
+    #[Route('/', name: 'home', methods: ['GET'])]
+    public function index(RecipeRepository $recipes, CategoryRepository $categories): Response
     {
-        // dd($request);
-
-        // return new Response
-        // ("hello ".$request->query->get("nom", "World"));
-
-        return $this->render('home/index.html.twig');
+        return $this->render('home/index.html.twig', [
+            'latestRecipes' => $recipes->findLatest(6),
+            'categories' => $categories->findAllWithRecipeCount(),
+        ]);
     }
 }

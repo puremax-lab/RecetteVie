@@ -5,53 +5,47 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RegistrationForm extends AbstractType
 {
-public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('firstname', TextType::class, [
-                'label' => 'registrationForm.firstname'
+                'label' => 'user_form.firstname',
             ])
             ->add('lastname', TextType::class, [
-                'label' => 'registrationForm.lastname'
+                'label' => 'user_form.lastname',
             ])
-            ->add('email', TextType::class, [
-                'label' => 'registrationForm.email'
+            ->add('email', EmailType::class, [
+                'label' => 'user_form.email',
+                'attr' => ['autocomplete' => 'email'],
+            ])
+            ->add('plainPassword', PasswordType::class, [
+                // Not mapped: it is hashed in the controller before being stored.
+                'mapped' => false,
+                'label' => 'user_form.password',
+                'help' => 'user_form.password_help',
+                'attr' => ['autocomplete' => 'new-password'],
+                'constraints' => [
+                    new NotBlank(),
+                    // 4096 is the max length allowed by Symfony for security reasons
+                    new Length(min: 8, max: 4096),
+                ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
-                'label' => 'registrationForm.agreeTerms',
+                'label' => 'user_form.agree_terms',
                 'constraints' => [
-                    new IsTrue([
-                        // 'message' => 'You should agree to our terms.',
-                    ]),
-                ],
-            ])
-            ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
-                'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
-                'label' => 'registrationForm.password',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Cette valeur ne doit pas être vide.',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        // 'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
+                    new IsTrue(message: 'user.agree_terms'),
                 ],
             ])
         ;

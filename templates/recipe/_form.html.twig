@@ -1,0 +1,22 @@
+{# Expects: form, recipe (optional), cancel_url #}
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class="row g-3">
+        <div class="col-12">{{ form_row(form.title) }}</div>
+        <div class="col-md-7">{{ form_row(form.category) }}</div>
+        <div class="col-md-5">{{ form_row(form.duration) }}</div>
+        <div class="col-12">{{ form_row(form.ingredients) }}</div>
+        <div class="col-12">{{ form_row(form.content) }}</div>
+        <div class="col-12">
+            {% if recipe is defined and recipe.imageName %}
+                <p class="small text-body-secondary mb-1">{{ 'recipe.current_photo'|trans }}</p>
+                <img src="{{ asset('uploads/recipes/' ~ recipe.imageName) }}" alt="" class="rounded-3 mb-3 object-fit-cover" width="160" height="110">
+            {% endif %}
+            {{ form_row(form.imageFile) }}
+        </div>
+    </div>
+    <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-check-lg"></i> {{ 'recipe.save'|trans }}</button>
+        <a href="{{ cancel_url }}" class="btn btn-link btn-lg">{{ 'recipe.cancel'|trans }}</a>
+    </div>
+{{ form_end(form) }}

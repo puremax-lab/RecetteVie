@@ -2,182 +2,151 @@
 
 namespace App\Controller;
 
-use App\Repository\RecipeRepository;
 use App\Entity\Recipe;
+use App\Entity\User;
 use App\Form\RecipeForm;
-use DateTimeImmutable;
+use App\Repository\CategoryRepository;
+use App\Repository\RecipeRepository;
+use App\Security\Voter\RecipeVoter;
+use App\Service\RecipeImageUploader;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[Route('/recettes')]
 final class RecipeController extends AbstractController
 {
-    #[Route("/recette", name: "app_recipe_index")]
-    public function index(Request $request, RecipeRepository $repository, EntityManagerInterface $em, TranslatorInterface $translator): Response
-    {
-        if ($this->getUser()){
-            /**
-             * @var User $user
-             */
-            $user = $this->getUser();
-            if (!$user->isVerified()) {
-                $this->addFlash("infos", $translator->trans("recipeController.emailNotVerified"));
-            }
-        }
-        // return new Response
-        // ("Bienvenue dans la page des recettes !");
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly RecipeImageUploader $uploader,
+    ) {
+    }
 
-        $recipes = $repository->findAll();
-        // $recipes = $repository->findRecipeDurationLowerThan(60);
+    #[Route('', name: 'app_recipe_index', methods: ['GET'])]
+    public function index(
+        RecipeRepository $recipes,
+        CategoryRepository $categories,
+        #[MapQueryParameter] ?string $q = null,
+        #[MapQueryParameter] ?string $categorie = null,
+        #[MapQueryParameter] int $page = 1,
+    ): Response {
+        $category = $categorie ? $categories->findOneBy(['slug' => $categorie]) : null;
 
-        // $recipe = new Recipe();
-        // $recipe->setTitle("Pizza 4 fromages")
-        //     ->setSlug("pizza-4-fromages")
-        //     ->setContent("Préparation
-        //         pour Pizza 4 fromages : la vraie recette traditionnelle italienne
-        //         Préparation : 15 min
-        //         Cuisson : 12 min
-        //         1. Râpez le parmesan et la fontina et coupez en morceaux la mozzarella et le gorgonzola.
-
-        //         2. Étalez la pâte à pizza sur une plaque allant au four et recouverte de papier sulfurisé. Ajoutez le parmesan, la fontina, la mozzarella et le gorgonzola.
-
-        //         3. Faites cuire dans le bas du four à 230 degrés pendant 12 à 14 minutes.")
-        //     ->setDuration(27)
-        //     ->setCreatedAt(new \DateTimeImmutable())
-        //     ->setUpdatedAt(new \DateTimeImmutable());
-        //     $em->persist($recipe);
-        //     $em->flush();
-
-        // $recipes[3]->setTitle("Omelette au Fromage")
-        //     ->setSlug("omelette-au-fromage");
-        // $em->flush();
-
-        // $em->remove($recipes[5]);
-        // $em->flush();
-        
-        // dd($recipes);
-        return $this->render("recipe/index.html.twig", [
-            "recipes" => $recipes
+        return $this->render('recipe/index.html.twig', [
+            'recipes' => $recipes->search($q, $category, $page),
+            'categories' => $categories->findAllWithRecipeCount(),
+            'currentCategory' => $category,
+            'query' => $q,
         ]);
     }
 
-    #[Route('/recette/{slug}-{id}', name: 'app_recipe_show', requirements: ["id"=> "\d+", "slug"=> "[a-z0-9\-]+"])]
-    public function show(Request $request, string $slug, int $id, RecipeRepository $repository): Response
+    #[Route('/nouvelle', name: 'app_recipe_create', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function create(Request $request, #[CurrentUser] User $user): Response
     {
-        // dd($request);
-        // dd($request->attributes->get('slug') ,$request->attributes->get('id'));
-        // dd($slug, $id);
+        if (!$user->isVerified()) {
+            $this->addFlash('warning', 'flash.verify_email_first');
 
-        // return new Response
-        // ("Bienvenue dans la page ".$request->query->get ("recette","des recettes !"));
+            return $this->redirectToRoute('app_account');
+        }
 
-        // ("Recette numéro ". $id . " : " . $slug);
+        $recipe = (new Recipe())->setUser($user);
+        $form = $this->createForm(RecipeForm::class, $recipe);
+        $form->handleRequest($request);
 
-        // return new JsonResponse([
-        //     'id' => $id,
-        //     'slug' => $slug,
-        // ]);
-        // return $this->json([
-        //     'id' => $id,
-        //     'slug' => $slug,
-        // ]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->handleImageUpload($form, $recipe);
+            $this->em->persist($recipe);
+            $this->em->flush();
+            $this->addFlash('success', 'flash.recipe_created');
 
-        $recipe = $repository->find($id);
-        // dd($recipe);
+            return $this->redirectToRecipe($recipe);
+        }
+
+        return $this->render('recipe/create.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{slug}-{id}', name: 'app_recipe_show', requirements: ['id' => '\d+', 'slug' => '[a-z0-9-]*'], methods: ['GET'])]
+    public function show(
+        string $slug,
+        #[MapEntity(id: 'id')] Recipe $recipe,
+        RecipeRepository $recipes,
+    ): Response {
+        // Old or mistyped slug: redirect to the canonical URL.
         if ($recipe->getSlug() !== $slug) {
-            return $this->redirectToRoute("app_recipe_show", [
-                "slug" => $recipe->getSlug(), 
-                "id" => $recipe->getId()]);
+            return $this->redirectToRecipe($recipe, Response::HTTP_MOVED_PERMANENTLY);
         }
-        return $this->render("recipe/show.html.twig", [
-            "recipe" => $recipe
-            // "user" => [
-            //     "firstname" => "Maxime",
-            //     "lastname" => "Youta"
-            // ]
-        ]);
-    }
-    
-    #[Route(path: "/recette/{id}/edit", name: "app_recipe_edit")]
-    public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em) : Response{
-        if ($this->getUser()) {
-            if (!$this->getUser()->isVerified()) {
-                $this->addFlash("error", "You must confirm your email to edit Recipe !");
-                return $this->redirectToRoute("app_recipe_index");
-            }else if ($recipe->getUser()->getEmail() !== $this->getUser()->getEmail()) {
-                $this->addFlash("error", "You must be the user". $recipe->getUser()->getEmail() . " to edit this Recipe !");
-                return $this->redirectToRoute("app_recipe_index");
-            }
-        } else {
-            $this->addFlash("error", "You must login to edit a Recipe !");
-            return $this->redirectToRoute("app_login");
-        }
-        // dd($recipe);
-        // cette méthode est appelée si l'id de la recette existe
-        $form = $this->createForm(RecipeForm::class, $recipe);
-        $form->handleRequest($request);
-        // dd($recipe);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $recipe->setUpdatedAt(new DateTimeImmutable());
-            $em->flush();
-            $this->addFlash("success", "La recette a bien été modifiée");
-            return $this->redirectToRoute("app_recipe_index");
-        }
-        return $this->render("recipe/edit.html.twig", [
-            "recipe" => $recipe,
-            "monForm" => $form
+
+        return $this->render('recipe/show.html.twig', [
+            'recipe' => $recipe,
+            'similarRecipes' => $recipes->findSimilar($recipe),
         ]);
     }
 
-    #[Route(path: "/recette/create", name: "app_recipe_create")]
-    public function create(Request $request, EntityManagerInterface $em) : Response{
-        if ($this->getUser()) {
-            if (!$this->getUser()->isVerified()) {
-                $this->addFlash("error", "You must confirm your email to create Recipe !");
-                return $this->redirectToRoute("app_recipe_index");
-            }
-        } else {
-            $this->addFlash("error", "You must login to create a Recipe !");
-            return $this->redirectToRoute("app_login");
-        }
-        $recipe = new Recipe;
+    #[Route('/{id}/modifier', name: 'app_recipe_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[IsGranted(RecipeVoter::EDIT, 'recipe')]
+    public function edit(Recipe $recipe, Request $request): Response
+    {
         $form = $this->createForm(RecipeForm::class, $recipe);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $recipe->setUser($this->getUser());
-            $recipe->setCreatedAt(new DateTimeImmutable());
-            $recipe->setUpdatedAt(new DateTimeImmutable());
-            $em->persist($recipe);
-            $em->flush();
-            $this->addFlash("success", "La recette ". $recipe->getTitle() . " a bien été crée");
-            return $this->redirectToRoute("app_recipe_index");
+            $this->handleImageUpload($form, $recipe);
+            $this->em->flush();
+            $this->addFlash('success', 'flash.recipe_updated');
+
+            return $this->redirectToRecipe($recipe);
         }
-        return $this->render("recipe/create.html.twig", [
-            "form" => $form
+
+        return $this->render('recipe/edit.html.twig', [
+            'recipe' => $recipe,
+            'form' => $form,
         ]);
     }
-        #[Route(path: "/recette/{id}/delete", name: "app_recipe_delete")]
-        public function delete(Recipe $recipe, EntityManagerInterface $em) : Response{
-        if ($this->getUser()) {
-            if (!$this->getUser()->isVerified()) {
-                $this->addFlash("error", "You must confirm your email to delete Recipe !");
-                return $this->redirectToRoute("app_recipe_index");
-            }else if ($recipe->getUser()->getEmail() !== $this->getUser()->getEmail()) {
-                $this->addFlash("error", "You must be the user". $recipe->getUser()->getEmail() . " to edit this Recipe !");
-                return $this->redirectToRoute("app_recipe_index");
-            }
-        } else {
-            $this->addFlash("error", "You must login to delete a Recipe !");
-            return $this->redirectToRoute("app_login");
+
+    #[Route('/{id}/supprimer', name: 'app_recipe_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[IsGranted(RecipeVoter::DELETE, 'recipe')]
+    public function delete(Recipe $recipe, Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('delete-recipe-'.$recipe->getId(), $request->getPayload()->getString('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
         }
-            $titre = $recipe->getTitle();
-            $em->remove($recipe);
-            $em->flush();
-            $this->addFlash("info", "La recette ". $titre . " a bien été supprimée");
-            return $this->redirectToRoute("app_recipe_index");
-        }
+
+        $this->uploader->remove($recipe->getImageName());
+        $this->em->remove($recipe);
+        $this->em->flush();
+        $this->addFlash('success', 'flash.recipe_deleted');
+
+        return $this->redirectToRoute('app_account');
     }
+
+    private function handleImageUpload(FormInterface $form, Recipe $recipe): void
+    {
+        $file = $form->get('imageFile')->getData();
+        if (!$file instanceof UploadedFile) {
+            return;
+        }
+
+        $previous = $recipe->getImageName();
+        $recipe->setImageName($this->uploader->upload($file));
+        $this->uploader->remove($previous);
+    }
+
+    private function redirectToRecipe(Recipe $recipe, int $status = Response::HTTP_FOUND): Response
+    {
+        return $this->redirectToRoute('app_recipe_show', [
+            'id' => $recipe->getId(),
+            'slug' => $recipe->getSlug(),
+        ], $status);
+    }
+}

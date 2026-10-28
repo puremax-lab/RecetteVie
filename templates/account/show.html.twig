@@ -1,17 +1,58 @@
 {% extends 'base.html.twig' %}
 
-{% block title "Profile" %}
+{% block title %}{{ 'account.title'|trans }}{% endblock %}
 
 {% block body %}
-    <div class = "row">
-        <div class = "col-md-6 mx-auto text-center">
-            <h1>{{"accountShow-profile"|trans}}</h1>
-            <br>
-            <p>{{"accountShow.Accountcreatedon"|trans}} {{ app.user.createdAt|date("d/m/Y") }}</p>
-            <br>
-            <p>
-                <a class="btn btn-primary btn-sm" href="#">{{"accountShow.editAccount"|trans}}</a>
+    <div class="profile-header panel d-flex flex-column flex-md-row align-items-md-center gap-4 mb-4">
+        <span class="avatar avatar-lg">{{ user.firstname|first|upper }}</span>
+        <div class="flex-grow-1">
+            <h1 class="page-title h2 mb-1">{{ user.fullName }}</h1>
+            <p class="text-body-secondary mb-0">
+                {{ user.email }}
+                {% if user.verified %}<span class="badge text-bg-success-subtle text-success-emphasis ms-1"><i class="bi bi-patch-check"></i> {{ 'account.verified'|trans }}</span>{% endif %}
+                <br>{{ 'account.member_since'|trans({'%date%': user.createdAt|format_date('long')}) }}
             </p>
         </div>
+        <div class="text-md-end">
+            <div class="h2 mb-0">{{ user.recipes|length }}</div>
+            <div class="small text-body-secondary">{{ 'account.stats_recipes'|trans({'%count%': user.recipes|length}) }}</div>
+        </div>
+        <a href="{{ path('app_account_edit') }}" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> {{ 'account.edit_profile'|trans }}</a>
     </div>
+
+    {% if not user.verified %}
+        <div class="alert alert-warning d-flex flex-column flex-md-row align-items-md-center gap-3">
+            <div class="flex-grow-1">
+                <strong>{{ 'account.not_verified_title'|trans }}</strong><br>
+                {{ 'account.not_verified_text'|trans }}
+            </div>
+            <form method="post" action="{{ path('app_account_resend_verification') }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('resend-verification') }}">
+                <button class="btn btn-warning">{{ 'account.resend'|trans }}</button>
+            </form>
+        </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="section-title mb-0">{{ 'account.my_recipes'|trans }}</h2>
+        {% if user.verified %}
+            <a href="{{ path('app_recipe_create') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> {{ 'nav.add_recipe'|trans }}</a>
+        {% endif %}
+    </div>
+
+    {% if user.recipes is not empty %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+            {% for recipe in user.recipes %}
+                <div class="col">{{ include('recipe/_card.html.twig') }}</div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state text-center py-5">
+            <div class="display-4 mb-3">👩‍🍳</div>
+            <p class="text-body-secondary">{{ 'account.no_recipes'|trans }}</p>
+            {% if user.verified %}
+                <a href="{{ path('app_recipe_create') }}" class="btn btn-primary">{{ 'account.first_recipe'|trans }}</a>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endblock %}

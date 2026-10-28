@@ -1,0 +1,176 @@
+site:
+    name: RecetteVie
+    tagline: Simple recipes, shared by home cooks.
+
+nav:
+    home: Home
+    recipes: Recipes
+    add_recipe: Add a recipe
+    account: My account
+    login: Log in
+    register: Sign up
+    logout: Log out
+    language: Language
+    toggle: Open menu
+
+footer:
+    about: Portfolio project built with Symfony 7, Doctrine and Bootstrap.
+    source: Source code on GitHub
+
+home:
+    title: Home
+    hero_title: Cook, share, enjoy.
+    hero_text: Find inspiration among the community's recipes, or share your own classics.
+    search_placeholder: A recipe, an ingredient…
+    search_button: Search
+    browse: Browse recipes
+    categories: Explore by category
+    latest: Latest recipes
+    see_all: See all recipes
+    cta_title: Got a favourite recipe?
+    cta_text: Create a free account and share it with the community in two minutes.
+    cta_button: Share a recipe
+    recipe_count: '{0} No recipes|{1} 1 recipe|]1,Inf[ %count% recipes'
+
+category:
+    entrees: Starters
+    plats: Main courses
+    desserts: Desserts
+    vegetarien: Vegetarian
+    boulangerie: Bakery
+    boissons: Drinks
+
+recipe:
+    list_title: All recipes
+    results: '{0} No recipes found|{1} 1 recipe|]1,Inf[ %count% recipes'
+    results_for: for “%query%”
+    all_categories: All
+    clear_filters: Clear filters
+    empty_title: No recipe matches.
+    empty_text: Try another keyword or category.
+    by: by %author%
+    published: Published %ago%
+    updated_on: Updated on %date%
+    ingredients: Ingredients
+    steps: Method
+    duration: Time
+    category: Category
+    edit: Edit
+    delete: Delete
+    delete_confirm: Permanently delete this recipe?
+    back: Back to recipes
+    similar: In the same category
+    create_title: New recipe
+    create_intro: Share a recipe you love to cook.
+    edit_title: Edit “%title%”
+    save: Save recipe
+    cancel: Cancel
+    current_photo: Current photo
+    no_photo: No photo yet
+
+pagination:
+    label: Pagination
+    previous: Previous
+    next: Next
+
+recipe_form:
+    title: Title
+    title_placeholder: e.g. Grandma's apple pie
+    category: Category
+    category_placeholder: Choose a category
+    duration: Total time (minutes)
+    ingredients: Ingredients
+    ingredients_placeholder: "200 g flour\n3 eggs\n…"
+    steps: Method
+    steps_placeholder: "Preheat the oven to 180 °C.\nMix…"
+    one_per_line: One item per line.
+    photo: Photo
+    photo_help: JPG, PNG or WebP, 4 MB max. Optional.
+
+user_form:
+    firstname: First name
+    lastname: Last name
+    email: Email address
+    password: Password
+    password_help: At least 8 characters.
+    agree_terms: I agree that my recipes are publicly visible.
+
+account:
+    title: My account
+    member_since: Member since %date%
+    edit_profile: Edit my profile
+    edit_title: Edit my profile
+    save: Save
+    my_recipes: My recipes
+    no_recipes: You haven't published any recipe yet.
+    first_recipe: Publish my first recipe
+    not_verified_title: Confirm your email address
+    not_verified_text: We sent you a confirmation link. You can publish recipes once your address is confirmed.
+    resend: Resend the email
+    verified: Email address confirmed
+    stats_recipes: '{0} recipes|{1} recipe|]1,Inf[ recipes'
+
+login:
+    title: Log in
+    subtitle: Welcome back!
+    email: Email address
+    password: Password
+    remember_me: Remember me
+    forgot_password: Forgot your password?
+    submit: Log in
+    no_account: No account yet?
+    create_account: Create an account
+    demo: 'Demo account: %email% / %password%'
+
+register:
+    title: Create an account
+    subtitle: Join the community and share your recipes.
+    submit: Create my account
+    has_account: Already registered?
+
+reset_password:
+    request_title: Forgot your password
+    request_text: Enter your email address and we will send you a link to choose a new password.
+    request_submit: Send the link
+    check_email_title: Check your email
+    check_email_text: If an account exists for this address, an email with a reset link has just been sent. The link will expire in %expires%.
+    check_email_retry: Nothing received? Check your spam folder or <a href="%url%">try again</a>.
+    reset_title: New password
+    new_password: New password
+    repeat_password: Confirm the password
+    reset_submit: Change password
+
+email:
+    hello: Hi %name%,
+    signature: The RecetteVie team
+    confirm:
+        subject: Confirm your email address
+        text: Thanks for signing up! Click the button below to confirm your email address.
+        button: Confirm my address
+        expires: This link will expire in %expires%.
+    reset:
+        subject: Reset your password
+        text: You asked to change your password. Click the button below to choose a new one.
+        button: Choose a new password
+        expires: This link will expire in %expires%. If you did not make this request, simply ignore this email.
+
+flash:
+    recipe_created: Your recipe has been published.
+    recipe_updated: The recipe has been updated.
+    recipe_deleted: The recipe has been deleted.
+    profile_updated: Your profile has been updated.
+    registered: Welcome! A confirmation email has just been sent to you.
+    email_verified: Your email address is confirmed. You can now publish recipes.
+    verification_sent: A new confirmation email has just been sent.
+    verify_email_first: Please confirm your email address before publishing a recipe.
+    password_reset: Your password has been changed. You can now log in.
+
+error:
+    title: Oops!
+    not_found_title: Page not found
+    not_found_text: The page you are looking for doesn't exist or has been moved.
+    forbidden_title: Access denied
+    forbidden_text: You are not allowed to access this page.
+    generic_title: Something went wrong
+    generic_text: Something went wrong on our side. Please try again in a moment.
+    back_home: Back to home

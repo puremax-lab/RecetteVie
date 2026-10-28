@@ -1,12 +1,14 @@
 {% extends 'base.html.twig' %}
-{% block title 'Edit Recipe'%}
+
+{% block title %}{{ 'recipe.edit'|trans }} · {{ recipe.title }}{% endblock %}
+
 {% block body %}
-    <div class = "row">
-        <div class= "col-md-6 mx-auto">
-            <h1 align = "center">
-                {{ recipe.title |title }}
-            </h1>
-            {{ form(monForm)}}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="page-title mb-4">{{ 'recipe.edit_title'|trans({'%title%': recipe.title}) }}</h1>
+            <div class="panel">
+                {{ include('recipe/_form.html.twig', {cancel_url: path('app_recipe_show', {id: recipe.id, slug: recipe.slug})}) }}
+            </div>
         </div>
     </div>
 {% endblock %}

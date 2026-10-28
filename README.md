@@ -4,7 +4,25 @@
 
 Visitors browse, search and filter recipes. Members publish their own recipes with a photo, then edit or delete them. The interface is available in **French and English**.
 
+![Symfony](https://img.shields.io/badge/Symfony-7.4_LTS-000000?logo=symfony)
+![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8%2F9-4479A1?logo=mysql&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-29_passing-2ea44f)
+
 ![Home page](docs/screenshots/home.png)
+
+## Contents
+
+- [Features](#features)
+- [Tech stack](#tech-stack)
+- [Technical highlights](#technical-highlights)
+- [Database](#database)
+- [Pages](#pages)
+- [Project structure](#project-structure)
+- [Getting started](#getting-started)
+- [Tests](#tests)
+- [Production notes](#production-notes)
 
 ## Features
 
@@ -31,7 +49,7 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 | Bundles | VerifyEmailBundle, ResetPasswordBundle, KnpTimeBundle, DoctrineFixturesBundle |
 | Tests | PHPUnit 12: functional and unit tests |
 
-## What the code shows
+## Technical highlights
 
 - **Security voter** ([`RecipeVoter`](src/Security/Voter/RecipeVoter.php)) decides who may edit or delete a recipe, used with `#[IsGranted]` in the controller and `is_granted()` in Twig.
 - **Custom validation constraint** ([`InappropriateWords`](src/Validator/InappropriateWords.php)) rejects titles or steps containing forbidden words (whole words only, case-insensitive).
@@ -40,6 +58,90 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 - **Upload service** ([`RecipeImageUploader`](src/Service/RecipeImageUploader.php)) gives each file a unique, safe name and deletes the old photo when it is replaced.
 - **SEO-friendly URLs** like `/recettes/tarte-tatin-12`, with a 301 redirect when the slug is outdated.
 - **Translations**: all texts live in [`translations/`](translations/), and an event subscriber stores the chosen language in the session.
+
+## Database
+
+```mermaid
+erDiagram
+    USERS ||--o{ RECIPES : writes
+    CATEGORIES ||--o{ RECIPES : groups
+    USERS ||--o{ RESET_PASSWORD_REQUEST : requests
+
+    USERS {
+        int id PK
+        string email UK
+        json roles
+        string password "hashed"
+        string firstname
+        string lastname
+        bool is_verified
+        datetime created_at
+        datetime updated_at
+    }
+    CATEGORIES {
+        int id PK
+        string name
+        string slug UK
+        string icon
+        string color
+    }
+    RECIPES {
+        int id PK
+        int user_id FK
+        int category_id FK
+        string title
+        string slug
+        text ingredients
+        text content
+        int duration "minutes"
+        string image_name "nullable"
+        datetime created_at
+        datetime updated_at
+    }
+    RESET_PASSWORD_REQUEST {
+        int id PK
+        int user_id FK
+        string selector
+        string hashed_token
+        datetime requested_at
+        datetime expires_at
+    }
+```
+
+## Pages
+
+| URL | Page | Access |
+|---|---|---|
+| `/` | Home: search, categories, latest recipes | Everyone |
+| `/recettes` | Recipe list (`?q=`, `?categorie=`, `?page=`) | Everyone |
+| `/recettes/{slug}-{id}` | Recipe detail | Everyone |
+| `/recettes/nouvelle` | Create a recipe | Verified members |
+| `/recettes/{id}/modifier` | Edit a recipe | Author or admin |
+| `/recettes/{id}/supprimer` | Delete a recipe (POST + CSRF) | Author or admin |
+| `/inscription`, `/connexion` | Sign up, log in | Visitors |
+| `/compte`, `/compte/modifier` | Profile and my recipes | Members |
+| `/mot-de-passe-oublie` | Password reset by email | Everyone |
+| `/langue/{fr\|en}` | Change language | Everyone |
+
+## Project structure
+
+```
+src/
+├── Controller/        Home, Recipe, Account, Registration, Security, ResetPassword, Locale
+├── DataFixtures/      Demo data (categories, accounts, recipes)
+├── Entity/            User, Recipe, Category, ResetPasswordRequest + Timestampable trait
+├── EventSubscriber/   LocaleSubscriber (language from session / browser)
+├── Form/              RecipeForm, RegistrationForm, ProfileForm, password forms
+├── Pagination/        Page (wrapper around Doctrine's Paginator)
+├── Repository/        Search, latest and similar recipe queries
+├── Security/          EmailVerifier, Voter/RecipeVoter
+├── Service/           RecipeImageUploader
+├── Twig/              AppExtension (category_name and duration filters)
+└── Validator/         InappropriateWords constraint + validator
+templates/             Twig views (layout, partials, pages, emails, error pages)
+translations/          messages / validators / security, in French and English
+tests/                 Functional tests (controllers) and unit tests
+```
 
 ## Getting started
 

@@ -5,7 +5,13 @@
 
 ### 👉 [Try the live demo](https://recettevie.alwaysdata.net)
 
-Demo login: **camille@recettevie.test** / **password**. You can also create your own account in a few seconds.
+To try it as a member, click **Connexion / Log in** and use this demo account:
+
+| Email | Password |
+|---|---|
+| `camille@recettevie.test` | `password` |
+
+Or click **Inscription / Sign up** to create your own account. No email confirmation is needed, so you can publish a recipe right away.
 
 ![Symfony](https://img.shields.io/badge/Symfony-7.4_LTS-000000?logo=symfony)
 ![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white)

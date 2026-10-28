@@ -35,7 +35,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 - **Browse recipes**: search by title or ingredient, filter by category, infinite scroll, similar recipes
 - **Publish**: create, edit and delete your own recipes, with a photo
 - **Two languages**: the whole interface and every recipe are available in French and English
-- **Accounts**: sign-up, login, email verification, password reset, profile page
+- **Accounts**: sign-up, login, password reset, profile page, optional email verification (turned off on the demo)
 - **Responsive**: designed mobile-first, from small phones to large screens
 
 ## Screenshots
@@ -62,7 +62,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 
 **Security**
 - The translation preview ([`RecipeTranslationController`](src/Controller/RecipeTranslationController.php)) is a JSON endpoint protected by login, a CSRF token and a **rate limit** of 30 translations per hour.
-- CSRF protection on every form, login throttling, hashed passwords and safe names for uploaded files.
+- CSRF protection on forms, login throttling (5 attempts), hashed passwords and safe names for uploaded files.
 
 **Front end**
 - **Infinite scroll with no custom JavaScript**: lazy Turbo Frames on top of Doctrine's `Paginator`.
@@ -163,7 +163,7 @@ Then open http://127.0.0.1:8000 and log in with one of the demo accounts. They a
 |---|---|
 | `camille@recettevie.test` | Member |
 | `lucas@recettevie.test` | Member |
-| `admin@recettevie.test` | Admin, can edit every recipe |
+| `admin@recettevie.test` | Admin, can edit and delete every recipe |
 
 By default the app connects to MySQL as `root` with no password. To change that, or to enable DeepL ([free key](https://www.deepl.com/pro-api)), create a `.env.local` file:
 

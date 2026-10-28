@@ -204,18 +204,53 @@ final class RecipeControllerTest extends AppWebTestCase
         self::assertNull($this->findRecipe('Salade de fruits'));
     }
 
+    public function testTranslationPreviewRequiresLogin(): void
+    {
+        $this->client->jsonRequest('POST', '/recettes/traduction', ['source' => 'fr', 'texts' => ['title' => 'Tarte']]);
+
+        self::assertResponseRedirects('/connexion');
+    }
+
+    public function testTranslationPreviewReturnsTextsWithoutSaving(): void
+    {
+        $this->useFakeDeepL();
+        $this->client->loginUser($this->getUser('camille@recettevie.test'));
+        $token = $this->client->request('GET', '/recettes/nouvelle')->filter('form')->attr('data-translate-token-value');
+        self::assertSelectorTextContains('button[data-translate-target-param="en"]', 'Traduire en anglais');
+
+        $this->client->jsonRequest('POST', '/recettes/traduction', [
+            '_token' => $token,
+            'source' => 'fr',
+            'texts' => ['title' => 'Tarte aux poires', 'ingredients' => "Poires\nSucre", 'content' => ''],
+        ]);
+
+        self::assertResponseIsSuccessful();
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertSame('en', $data['target']);
+        self::assertSame(['title' => 'EN Tarte aux poires', 'ingredients' => "EN Poires\nEN Sucre"], $data['texts']);
+        self::assertNull($this->findRecipe('Tarte aux poires'));
+    }
+
+    public function testTranslationPreviewChecksCsrfAndLimit(): void
+    {
+        $this->useFakeDeepL();
+        $this->client->loginUser($this->getUser('camille@recettevie.test'));
+        $token = $this->client->request('GET', '/recettes/nouvelle')->filter('form')->attr('data-translate-token-value');
+
+        $this->client->jsonRequest('POST', '/recettes/traduction', ['_token' => 'invalid', 'source' => 'fr', 'texts' => ['title' => 'Tarte']]);
+        self::assertResponseStatusCodeSame(403);
+
+        // The test limit is 3 previews per hour.
+        for ($i = 1; $i <= 4; ++$i) {
+            $this->client->jsonRequest('POST', '/recettes/traduction', ['_token' => $token, 'source' => 'fr', 'texts' => ['title' => 'Tarte '.$i]]);
+        }
+        self::assertResponseStatusCodeSame(429);
+        self::assertStringContainsString('Limite atteinte', $this->client->getResponse()->getContent());
+    }
+
     public function testEnglishOnlyRecipeIsTranslatedIntoFrench(): void
     {
-        // Fake DeepL: the service is replaced by one using a mocked HTTP client.
-        $client = new MockHttpClient(static function (string $method, string $url, array $options) {
-            $texts = json_decode($options['body'], true)['text'];
-
-            return new JsonMockResponse(['translations' => array_map(static fn ($t) => ['text' => 'FR '.$t], $texts)]);
-        });
-        // Keep the same kernel for every request, so the fake service is not lost.
-        $this->client->disableReboot();
-        static::getContainer()->set(RecipeTranslator::class, new RecipeTranslator($client, new NullLogger(), 'test-key:fx'));
-
+        $this->useFakeDeepL();
         $this->client->loginUser($this->getUser('camille@recettevie.test'));
         $crawler = $this->client->request('GET', '/recettes/nouvelle');
         $this->client->submit($crawler->selectButton('Enregistrer la recette')->form([
@@ -279,6 +314,28 @@ final class RecipeControllerTest extends AppWebTestCase
         $this->client->request('POST', \sprintf('/recettes/%d/supprimer', $recipe->getId()), ['_token' => 'invalid']);
         self::assertResponseStatusCodeSame(403);
         self::assertNotNull($this->findRecipe('Quiche lorraine'));
+    }
+
+    /**
+     * Replaces the DeepL service by one using a mocked HTTP client: every text
+     * comes back prefixed with the target language ("EN ..." or "FR ...").
+     */
+    private function useFakeDeepL(): void
+    {
+        $client = new MockHttpClient(static function (string $method, string $url, array $options) {
+            $body = json_decode($options['body'], true);
+            $prefix = 'FR' === $body['target_lang'] ? 'FR ' : 'EN ';
+
+            return new JsonMockResponse(['translations' => array_map(static fn ($t) => ['text' => $prefix.$t], $body['text'])]);
+        });
+
+        // Keep the same kernel for every request, so the fake service is not lost.
+        $this->client->disableReboot();
+        static::getContainer()->set(RecipeTranslator::class, new RecipeTranslator($client, new NullLogger(), 'test-key:fx'));
+
+        // The preview limit is stored in the cache: start every test with a fresh counter.
+        $user = $this->getUser('camille@recettevie.test');
+        static::getContainer()->get('limiter.deepl_preview')->create('user-'.$user->getId())->reset();
     }
 
     private function findRecipe(string $title): ?Recipe

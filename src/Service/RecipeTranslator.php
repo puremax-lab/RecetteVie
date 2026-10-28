@@ -92,16 +92,42 @@ final class RecipeTranslator
      */
     public function translate(Recipe $recipe, string $source, string $target, array $fields = Recipe::TEXT_FIELDS): bool
     {
-        if (!$this->isEnabled()) {
+        $texts = [];
+        foreach ($fields as $field) {
+            $texts[$field] = (string) $recipe->getText($field, $source);
+        }
+
+        $translated = $this->translateTexts($texts, $source, $target);
+        if (null === $translated) {
             return false;
+        }
+
+        foreach ($translated as $field => $text) {
+            $recipe->setText($field, $target, $text);
+        }
+        $recipe->setMachineTranslatedLocale($target);
+
+        return true;
+    }
+
+    /**
+     * Translates recipe texts without touching any entity (also used for the
+     * preview button of the form).
+     *
+     * @param array<string, string> $texts field ("title", "ingredients", "content") => text
+     *
+     * @return array<string, string>|null same keys, translated; null when disabled or on API error
+     */
+    public function translateTexts(array $texts, string $source, string $target): ?array
+    {
+        if (!$this->isEnabled()) {
+            return null;
         }
 
         // Each line is sent as its own text so line breaks (one ingredient/step per line) are kept.
         $lines = [];
-        foreach ($fields as $field) {
-            $lines[$field] = 'title' === $field
-                ? [(string) $recipe->getText($field, $source)]
-                : Recipe::splitLines($recipe->getText($field, $source));
+        foreach ($texts as $field => $text) {
+            $lines[$field] = 'title' === $field ? [trim($text)] : Recipe::splitLines($text);
         }
 
         try {
@@ -112,15 +138,15 @@ final class RecipeTranslator
         } catch (ExceptionInterface|\UnexpectedValueException $e) {
             $this->logger->warning('DeepL translation failed: {message}', ['message' => $e->getMessage()]);
 
-            return false;
+            return null;
         }
 
+        $result = [];
         foreach ($lines as $field => $fieldLines) {
-            $recipe->setText($field, $target, implode("\n", array_splice($translated, 0, \count($fieldLines))));
+            $result[$field] = implode("\n", array_splice($translated, 0, \count($fieldLines)));
         }
-        $recipe->setMachineTranslatedLocale($target);
 
-        return true;
+        return $result;
     }
 
     /**

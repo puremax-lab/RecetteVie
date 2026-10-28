@@ -12,7 +12,7 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 ![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8%2F9-4479A1?logo=mysql&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-43_passing-2ea44f)
+![Tests](https://img.shields.io/badge/tests-46_passing-2ea44f)
 
 ![Home page](docs/screenshots/home.png)
 
@@ -36,6 +36,7 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 - **Permissions**: only the author (or an admin) can edit or delete a recipe; members must confirm their email before publishing
 - **Bilingual**: French/English switch, browser language detected on the first visit
 - **Every recipe in two languages**: the author writes in French *or* English, and the other language is translated automatically with the **DeepL API** (both directions), then validated with the same rules. Without DeepL, both versions are required
+- **Translation preview**: a "Translate with DeepL" button fills the other language instantly, so the author can review it before saving (rate-limited to protect the API quota)
 - **Live character counters** on the form, with the same limits in both languages
 - **Responsive design**: custom Bootstrap 5 theme, works on mobile
 - **Custom error pages** (404, 403, 500)
@@ -61,7 +62,7 @@ Visitors browse, search and filter recipes. Members publish their own recipes wi
 - **Custom validation constraint** ([`InappropriateWords`](src/Validator/InappropriateWords.php)) rejects titles or steps containing forbidden words (whole words only, case-insensitive).
 - **Pagination without a bundle**: Doctrine's `Paginator` wrapped in a small [`Page`](src/Pagination/Page.php) class.
 - **Doctrine lifecycle callbacks**: timestamps and URL slugs are filled automatically ([`Timestampable`](src/Entity/Traits/Timestampable.php), [`Recipe::computeSlug()`](src/Entity/Recipe.php)).
-- **External API integration** ([`RecipeTranslator`](src/Service/RecipeTranslator.php)): calls DeepL with Symfony HttpClient from a form event, *before* validation, so both languages are validated. It translates in both directions, keeps line breaks by translating line by line, only fills missing fields, refreshes a machine translation when its source changes, and never overwrites text written by the author. API errors are logged and the form asks for the missing language. Tested with `MockHttpClient`, so tests never hit the real API.
+- **External API integration** ([`RecipeTranslator`](src/Service/RecipeTranslator.php)): calls DeepL with Symfony HttpClient from a form event, *before* validation, so both languages are validated. It translates in both directions, keeps line breaks by translating line by line, only fills missing fields, refreshes a machine translation when its source changes, and never overwrites text written by the author. API errors are logged and the form asks for the missing language. The preview endpoint ([`RecipeTranslationController`](src/Controller/RecipeTranslationController.php)) is a JSON route called by a small Stimulus controller, protected by login, a CSRF token and a **rate limiter** (30 translations per hour per user). Tested with `MockHttpClient`, so tests never hit the real API.
 - **Upload service** ([`RecipeImageUploader`](src/Service/RecipeImageUploader.php)) gives each file a unique, safe name and deletes the old photo when it is replaced.
 - **SEO-friendly URLs** like `/recettes/tarte-tatin-12`, with a 301 redirect when the slug is outdated.
 - **Translations**: all texts live in [`translations/`](translations/), and an event subscriber stores the chosen language in the session.

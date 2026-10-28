@@ -10,7 +10,16 @@
     })}) }}
 {% endmacro %}
 
-{{ form_start(form) }}
+{% set translate_attr = form.vars.auto_translation ? {
+    'data-controller': 'translate',
+    'data-translate-url-value': path('app_recipe_translate'),
+    'data-translate-token-value': csrf_token('recipe-translate'),
+    'data-translate-loading-value': 'translate.loading'|trans,
+    'data-translate-done-value': 'translate.done'|trans,
+    'data-translate-incomplete-value': 'translate.error_empty'|trans,
+    'data-translate-failed-value': 'translate.error_unavailable'|trans,
+} : {} %}
+{{ form_start(form, {attr: translate_attr}) }}
     {{ form_errors(form) }}
 
     <div class="row g-3 mb-4">
@@ -23,6 +32,9 @@
         <div>
             <strong>{{ 'recipe_form.languages_title'|trans }}</strong><br>
             {{ (form.vars.auto_translation ? 'recipe_form.languages_auto' : 'recipe_form.languages_manual')|trans }}
+            {% if form.vars.auto_translation %}
+                <div class="translate-status small" data-translate-target="status" aria-live="polite"></div>
+            {% endif %}
         </div>
     </div>
 
@@ -39,6 +51,15 @@
                     {{ _self.counted(form['title' ~ suffix], 3, 80) }}
                     {{ form_row(form['ingredients' ~ suffix]) }}
                     {{ _self.counted(form['content' ~ suffix], 20, 0) }}
+                    {% if form.vars.auto_translation %}
+                        {% set other = locale == 'fr' ? 'en' : 'fr' %}
+                        <button type="button" class="btn btn-outline-primary btn-sm mb-3"
+                                data-action="translate#run"
+                                data-translate-source-param="{{ locale }}"
+                                data-translate-target-param="{{ other }}">
+                            <i class="bi bi-translate"></i> {{ ('translate.button_' ~ other)|trans }}
+                        </button>
+                    {% endif %}
                 </fieldset>
             </div>
         {% endfor %}

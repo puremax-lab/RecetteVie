@@ -90,7 +90,7 @@ recipe_form:
     photo: Photo
     photo_help: JPG, PNG or WebP, 4 MB max. Optional.
     languages_title: Your recipe in French and in English
-    languages_auto: Write the recipe in the language of your choice and leave the other one empty; it will be translated automatically with DeepL. You can review and correct the translation afterwards. The same rules apply to both languages.
+    languages_auto: Write the recipe in the language of your choice and leave the other one empty; it will be translated automatically with DeepL. To review it before saving, use the “Translate with DeepL” button. The same rules apply to both languages.
     languages_manual: Both versions are required (automatic translation is not enabled on this site). The same rules apply to both languages.
     language_fr: 🇫🇷 Français
     language_en: 🇬🇧 English
@@ -185,3 +185,14 @@ error:
     generic_title: Something went wrong
     generic_text: Something went wrong on our side. Please try again in a moment.
     back_home: Back to home
+
+translate:
+    button_en: Translate into English with DeepL
+    button_fr: Translate into French with DeepL
+    loading: Translating…
+    done: Translation added in the other column. Review it, correct it if needed, then save.
+    error_empty: Fill in this column first (title, ingredients and method).
+    error_too_long: The text is too long to be translated at once.
+    error_limit: Limit reached (30 translations per hour). Try again later, or save directly.
+    error_unavailable: Automatic translation is unavailable right now. Please write the other language yourself.
+    error_session: Your session has expired. Reload the page.

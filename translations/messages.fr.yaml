@@ -90,7 +90,7 @@ recipe_form:
     photo: Photo
     photo_help: JPG, PNG ou WebP, 4 Mo maximum. Optionnel.
     languages_title: Votre recette en français et en anglais
-    languages_auto: Écrivez la recette dans la langue de votre choix et laissez l'autre vide, elle sera traduite automatiquement avec DeepL. Vous pourrez relire et corriger la traduction ensuite. Les mêmes règles s'appliquent aux deux langues.
+    languages_auto: Écrivez la recette dans la langue de votre choix et laissez l'autre vide, elle sera traduite automatiquement avec DeepL. Pour la relire avant d'enregistrer, utilisez le bouton « Traduire avec DeepL ». Les mêmes règles s'appliquent aux deux langues.
     languages_manual: Les deux versions sont obligatoires (la traduction automatique n'est pas activée sur ce site). Les mêmes règles s'appliquent aux deux langues.
     language_fr: 🇫🇷 Français
     language_en: 🇬🇧 English
@@ -185,3 +185,14 @@ error:
     generic_title: Une erreur est survenue
     generic_text: Quelque chose s'est mal passé de notre côté. Réessayez dans quelques instants.
     back_home: Retour à l'accueil
+
+translate:
+    button_en: Traduire en anglais avec DeepL
+    button_fr: Traduire en français avec DeepL
+    loading: Traduction en cours…
+    done: Traduction ajoutée dans l'autre colonne. Relisez-la, corrigez-la si besoin, puis enregistrez.
+    error_empty: Remplissez d'abord cette colonne (titre, ingrédients et étapes).
+    error_too_long: Le texte est trop long pour être traduit en une fois.
+    error_limit: Limite atteinte (30 traductions par heure). Réessayez plus tard, ou enregistrez directement.
+    error_unavailable: La traduction automatique est indisponible pour le moment. Écrivez l'autre langue vous-même.
+    error_session: Votre session a expiré. Rechargez la page.

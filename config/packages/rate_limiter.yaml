@@ -1,0 +1,15 @@
+framework:
+    rate_limiter:
+        # "Translate with DeepL" preview button: protects the DeepL quota.
+        deepl_preview:
+            policy: sliding_window
+            limit: 30
+            interval: '60 minutes'
+
+when@test:
+    framework:
+        rate_limiter:
+            deepl_preview:
+                policy: sliding_window
+                limit: 3
+                interval: '60 minutes'

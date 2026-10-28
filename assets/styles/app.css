@@ -206,6 +206,12 @@ turbo-frame.recipes-next { display: block; }
 .language-box legend { float: none; width: auto; font-size: 1rem; font-weight: 600; padding: 0 .4rem; margin-bottom: .25rem; }
 .machine-badge { background: var(--rv-ink); color: #fff; font-weight: 500; font-size: .7rem; vertical-align: middle; }
 .char-counter { margin-top: .25rem; }
+/* Fields just filled by the DeepL preview flash briefly */
+.just-translated { animation: just-translated 1.8s ease-out; }
+@keyframes just-translated {
+    0%, 30% { background-color: #fde7d6; border-color: var(--rv-primary); }
+    100% { background-color: var(--bs-body-bg); }
+}
 .char-counter.is-short { color: var(--bs-danger); }
 .char-counter.is-ok { color: var(--bs-success); }
 

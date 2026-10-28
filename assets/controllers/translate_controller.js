@@ -12,6 +12,8 @@ export default class extends Controller {
     async run(event) {
         const button = event.currentTarget;
         const { source, target } = event.params;
+        // Messages appear right under the clicked button, where the author is looking.
+        this.statusElement = button.parentElement.querySelector('[data-translate-target="status"]') ?? this.statusTarget;
         const texts = Object.fromEntries(['title', 'ingredients', 'content'].map(field => [field, this.field(field, source).value]));
 
         if (Object.values(texts).every(text => text.trim() === '')) {
@@ -37,9 +39,13 @@ export default class extends Controller {
                 input.value = text;
                 // Refresh the character counters.
                 input.dispatchEvent(new Event('input', { bubbles: true }));
+                // Briefly highlight what DeepL just filled.
+                input.classList.remove('just-translated');
+                void input.offsetWidth;
+                input.classList.add('just-translated');
             }
             this.show(this.doneValue, 'success');
-            this.field('title', target).focus();
+            this.field('title', target).scrollIntoView({ behavior: 'smooth', block: 'center' });
         } catch (error) {
             this.show(error.message || this.failedValue, 'danger');
         } finally {
@@ -52,7 +58,8 @@ export default class extends Controller {
     }
 
     show(message, tone) {
-        this.statusTarget.textContent = message;
-        this.statusTarget.className = `translate-status small text-${tone}`;
+        const status = this.statusElement ?? this.statusTarget;
+        status.textContent = message;
+        status.className = `translate-status small mb-3 text-${tone}`;
     }
 }

@@ -86,39 +86,67 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 
 ## Database
 
-```mermaid
-erDiagram
-    USERS ||--o{ RECIPES : writes
-    CATEGORIES ||--o{ RECIPES : groups
+MySQL, 4 tables. **PK** = primary key, **FK** = foreign key, **unique** = no duplicates allowed.
 
-    USERS {
-        int id PK
-        string email UK
-        json roles
-        string password "hashed"
-        string firstname
-        string lastname
-        bool is_verified
-    }
-    CATEGORIES {
-        int id PK
-        string name
-        string slug UK
-    }
-    RECIPES {
-        int id PK
-        int user_id FK
-        int category_id FK
-        string title
-        text ingredients
-        text content
-        string title_en
-        text ingredients_en
-        text content_en
-        int duration "minutes"
-        string image_name "nullable"
-    }
-```
+**Relations**
+- A user writes 0 or more recipes. Each recipe has exactly 1 author (`recipes.user_id` → `users.id`).
+- A category groups 0 or more recipes. Each recipe has exactly 1 category (`recipes.category_id` → `categories.id`).
+- A user can have password reset requests (`reset_password_request.user_id` → `users.id`).
+
+**`users`**
+
+| Column | Type | Null | Description |
+|---|---|---|---|
+| `id` | int | no | PK |
+| `email` | varchar(180) | no | Unique, used to log in |
+| `roles` | json | no | For example `["ROLE_ADMIN"]` |
+| `password` | varchar(255) | no | Hashed, never stored in plain text |
+| `firstname` | varchar(35) | no | |
+| `lastname` | varchar(70) | no | |
+| `is_verified` | boolean | no | Email confirmed or not |
+| `created_at`, `updated_at` | datetime | no | Filled automatically |
+
+**`categories`**
+
+| Column | Type | Null | Description |
+|---|---|---|---|
+| `id` | int | no | PK |
+| `name` | varchar(60) | no | For example "Desserts" |
+| `slug` | varchar(60) | no | Unique, used in the URL (`?categorie=desserts`) |
+| `icon` | varchar(16) | no | Emoji shown in the interface |
+| `color` | varchar(7) | no | Hex colour, for example `#f6dce6` |
+
+**`recipes`**
+
+| Column | Type | Null | Description |
+|---|---|---|---|
+| `id` | int | no | PK |
+| `user_id` | int | no | FK → `users.id` (author) |
+| `category_id` | int | no | FK → `categories.id` |
+| `title` | varchar(80) | no | French title |
+| `slug` | varchar(100) | no | Used in the URL, made from the title |
+| `ingredients` | longtext | no | French, one ingredient per line |
+| `content` | longtext | no | French steps, one step per line |
+| `title_en` | varchar(80) | yes* | English title |
+| `ingredients_en` | longtext | yes* | English ingredients |
+| `content_en` | longtext | yes* | English steps |
+| `machine_translated_locale` | varchar(2) | yes | `fr` or `en` if that language was translated by DeepL, otherwise empty |
+| `duration` | int | no | Total time in minutes |
+| `image_name` | varchar(255) | yes | Photo file name, empty if there is no photo |
+| `created_at`, `updated_at` | datetime | no | Filled automatically |
+
+\* Nullable in the database so that the column could be added to existing recipes, but required by the form: a recipe cannot be saved without its English version.
+
+**`reset_password_request`** (used by the "forgot password" feature)
+
+| Column | Type | Null | Description |
+|---|---|---|---|
+| `id` | int | no | PK |
+| `user_id` | int | no | FK → `users.id` |
+| `selector` | varchar(20) | no | Identifies the request in the email link |
+| `hashed_token` | varchar(100) | no | Hashed secret token |
+| `requested_at` | datetime | no | |
+| `expires_at` | datetime | no | The link stops working after this date |
 
 ## Run it locally
 

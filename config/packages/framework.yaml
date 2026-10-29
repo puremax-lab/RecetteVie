@@ -3,7 +3,9 @@ framework:
     secret: '%env(APP_SECRET)%'
 
     # Note that the session will be started ONLY if you read or write from it.
-    session: true
+    session:
+        # Own cookie name: other apps served on the same domain must not share this session.
+        name: RECETTEVIE_SESSION
 
     #esi: true
     #fragments: true

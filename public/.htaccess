@@ -1,4 +1,5 @@
-# Apache configuration: send every request that is not an existing file to index.php
+# Apache configuration: send every request that is not an existing file to index.php.
+# Works at the root of a domain or in a sub-folder (e.g. /recettevie).
 DirectoryIndex index.php
 
 <IfModule mod_negotiation.c>
@@ -8,23 +9,21 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # Find the folder the app is served from, so the rules below work in a sub-folder too
+    RewriteCond %{REQUEST_URI}::$0 ^(/.+)/(.*)::\2$
+    RewriteRule .* - [E=BASE:%1]
+
     # Pass the Authorization header to PHP
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
     # Redirect /index.php/foo to /foo
     RewriteCond %{ENV:REDIRECT_STATUS} =""
-    RewriteRule ^index\.php(?:/(.*)|$) /$1 [R=301,L]
+    RewriteRule ^index\.php(?:/(.*)|$) %{ENV:BASE}/$1 [R=301,L]
 
     # Existing files (assets, uploads) are served directly
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
     # Everything else goes to Symfony
-    RewriteRule ^ index.php [L]
-</IfModule>
-
-<IfModule !mod_rewrite.c>
-    <IfModule mod_alias.c>
-        RedirectMatch 307 ^/$ /index.php/
-    </IfModule>
+    RewriteRule ^ %{ENV:BASE}/index.php [L]
 </IfModule>

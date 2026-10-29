@@ -3,21 +3,25 @@
 {% block title %}{{ 'account.title'|trans }}{% endblock %}
 
 {% block body %}
-    <div class="profile-header panel d-flex flex-column flex-md-row align-items-center gap-3 gap-md-4 text-center text-md-start mb-4">
-        <span class="avatar avatar-lg">{{ user.firstname|first|upper }}</span>
-        <div class="flex-grow-1">
-            <h1 class="page-title h2 mb-1">{{ user.fullName }}</h1>
-            <p class="text-body-secondary mb-0">
-                {{ user.email }}
-                {% if user.verified %}<span class="badge text-bg-success-subtle text-success-emphasis ms-1"><i class="bi bi-patch-check"></i> {{ 'account.verified'|trans }}</span>{% endif %}
-                <br>{{ 'account.member_since'|trans({'%date%': user.createdAt|format_date('long')}) }}
-            </p>
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4 d-flex flex-column flex-md-row align-items-center gap-3 gap-md-4 text-center text-md-start">
+            <span class="badge rounded-pill text-bg-primary fs-2 px-4 py-3">{{ user.firstname|first|upper }}</span>
+            <div class="flex-grow-1">
+                <h1 class="h2 fw-bold mb-1">{{ user.fullName }}</h1>
+                <p class="text-body-secondary mb-0">
+                    {{ user.email }}
+                    {% if user.verified %}<span class="badge bg-success-subtle text-success-emphasis ms-1"><i class="bi bi-patch-check"></i> {{ 'account.verified'|trans }}</span>{% endif %}
+                    <br>{{ 'account.member_since'|trans({'%date%': user.createdAt|format_date('long')}) }}
+                </p>
+            </div>
+            <div class="text-md-end">
+                <div class="h2 mb-0">{{ user.recipes|length }}</div>
+                <div class="small text-body-secondary">{{ 'account.stats_recipes'|trans({'%count%': user.recipes|length}) }}</div>
+            </div>
+            <div class="d-grid col-12 col-md-auto">
+                <a href="{{ path('app_account_edit') }}" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> {{ 'account.edit_profile'|trans }}</a>
+            </div>
         </div>
-        <div class="text-md-end">
-            <div class="h2 mb-0">{{ user.recipes|length }}</div>
-            <div class="small text-body-secondary">{{ 'account.stats_recipes'|trans({'%count%': user.recipes|length}) }}</div>
-        </div>
-        <a href="{{ path('app_account_edit') }}" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> {{ 'account.edit_profile'|trans }}</a>
     </div>
 
     {% if not user.verified %}
@@ -33,8 +37,8 @@
         </div>
     {% endif %}
 
-    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 mb-3">
-        <h2 class="section-title mb-0">{{ 'account.my_recipes'|trans }}</h2>
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 mb-4">
+        <h2 class="fs-3 fw-bold mb-0">{{ 'account.my_recipes'|trans }}</h2>
         {% if user.verified %}
             <a href="{{ path('app_recipe_create') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> {{ 'nav.add_recipe'|trans }}</a>
         {% endif %}
@@ -47,8 +51,8 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="empty-state text-center py-5">
-            <div class="display-4 mb-3">👩‍🍳</div>
+        <div class="bg-white border rounded-4 text-center py-5 px-3">
+            <i class="bi bi-journal-plus display-4 text-body-secondary d-block mb-3"></i>
             <p class="text-body-secondary">{{ 'account.no_recipes'|trans }}</p>
             {% if user.verified %}
                 <a href="{{ path('app_recipe_create') }}" class="btn btn-primary">{{ 'account.first_recipe'|trans }}</a>

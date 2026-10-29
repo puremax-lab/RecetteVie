@@ -3,24 +3,28 @@
 {% block title %}{{ 'register.title'|trans }}{% endblock %}
 
 {% block body %}
-    <div class="auth-card">
-        <h1 class="page-title h2 mb-1">{{ 'register.title'|trans }}</h1>
-        <p class="text-body-secondary mb-4">{{ 'register.subtitle'|trans }}</p>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+            <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
+                <h1 class="fw-bold h2 mb-1">{{ 'register.title'|trans }}</h1>
+                <p class="text-body-secondary mb-4">{{ 'register.subtitle'|trans }}</p>
 
-        {{ form_start(form, {attr: {'data-turbo': 'false'}}) }}
-            {{ form_errors(form) }}
-            <div class="row g-3">
-                <div class="col-sm-6">{{ form_row(form.firstname) }}</div>
-                <div class="col-sm-6">{{ form_row(form.lastname) }}</div>
+                {{ form_start(form, {attr: {'data-turbo': 'false'}}) }}
+                    {{ form_errors(form) }}
+                    <div class="row g-3">
+                        <div class="col-sm-6">{{ form_row(form.firstname) }}</div>
+                        <div class="col-sm-6">{{ form_row(form.lastname) }}</div>
+                    </div>
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.plainPassword) }}
+                    {{ form_row(form.agreeTerms) }}
+                    <button type="submit" class="btn btn-primary w-100 btn-lg mt-2">{{ 'register.submit'|trans }}</button>
+                {{ form_end(form) }}
+
+                <p class="text-center mt-4 mb-0">
+                    {{ 'register.has_account'|trans }} <a href="{{ path('app_login') }}">{{ 'login.submit'|trans }}</a>
+                </p>
             </div>
-            {{ form_row(form.email) }}
-            {{ form_row(form.plainPassword) }}
-            {{ form_row(form.agreeTerms) }}
-            <button type="submit" class="btn btn-primary w-100 btn-lg mt-2">{{ 'register.submit'|trans }}</button>
-        {{ form_end(form) }}
-
-        <p class="text-center mt-4 mb-0">
-            {{ 'register.has_account'|trans }} <a href="{{ path('app_login') }}">{{ 'login.submit'|trans }}</a>
-        </p>
+        </div>
     </div>
 {% endblock %}

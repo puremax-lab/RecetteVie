@@ -6,8 +6,8 @@
 
 {% block body %}
     <div class="text-center py-5">
-        <div class="error-code">{{ status_code }}</div>
-        <h1 class="page-title h2">{{ ('error.' ~ kind ~ '_title')|trans }}</h1>
+        <div class="display-1 fw-bold text-primary">{{ status_code }}</div>
+        <h1 class="fw-bold h2">{{ ('error.' ~ kind ~ '_title')|trans }}</h1>
         <p class="text-body-secondary mb-4">{{ ('error.' ~ kind ~ '_text')|trans }}</p>
         <a href="{{ path('home') }}" class="btn btn-primary">{{ 'error.back_home'|trans }}</a>
     </div>

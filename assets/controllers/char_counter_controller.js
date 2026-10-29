@@ -14,7 +14,7 @@ export default class extends Controller {
 
     connect() {
         this.counter = document.createElement('div');
-        this.counter.className = 'char-counter form-text';
+        this.counter.className = 'form-text';
         this.counter.setAttribute('aria-live', 'polite');
         this.element.insertAdjacentElement('afterend', this.counter);
 
@@ -35,7 +35,7 @@ export default class extends Controller {
 
         // Empty is fine (the other language can be translated); too short is not.
         const tooShort = count > 0 && count < this.minValue;
-        this.counter.classList.toggle('is-short', tooShort);
-        this.counter.classList.toggle('is-ok', count >= this.minValue);
+        this.counter.classList.toggle('text-danger', tooShort);
+        this.counter.classList.toggle('text-success', count >= this.minValue);
     }
 }

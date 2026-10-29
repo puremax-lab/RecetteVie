@@ -28,8 +28,8 @@ final class RecipeControllerTest extends AppWebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Cuisinez');
-        self::assertSelectorCount(6, '.category-tile');
-        self::assertSelectorCount(6, '.recipe-card');
+        self::assertSelectorCount(6, 'a.card[href*="categorie="]');
+        self::assertSelectorCount(6, 'article.card');
     }
 
     public function testListLoadsNextPageOnScroll(): void
@@ -37,7 +37,7 @@ final class RecipeControllerTest extends AppWebTestCase
         $crawler = $this->client->request('GET', '/recettes');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorCount(9, '.recipe-card');
+        self::assertSelectorCount(9, 'article.card');
         // A lazy Turbo frame at the bottom points to page 2.
         $frame = $crawler->filter('turbo-frame#recipes-page-2');
         self::assertCount(1, $frame);
@@ -47,9 +47,9 @@ final class RecipeControllerTest extends AppWebTestCase
         // Turbo requests that page with a Turbo-Frame header: only the cards come back.
         $crawler = $this->client->request('GET', '/recettes?page=2', server: ['HTTP_TURBO_FRAME' => 'recipes-page-2']);
         self::assertResponseIsSuccessful();
-        self::assertSelectorNotExists('nav.site-nav');
+        self::assertSelectorNotExists('nav.navbar');
         self::assertCount(1, $crawler->filter('turbo-frame#recipes-page-2'));
-        self::assertSelectorExists('.recipe-card');
+        self::assertSelectorExists('article.card');
         // Last page: no further frame.
         self::assertSelectorNotExists('turbo-frame#recipes-page-3');
     }
@@ -66,12 +66,12 @@ final class RecipeControllerTest extends AppWebTestCase
     {
         $this->client->request('GET', '/recettes?q=chocolat');
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('.recipe-card', 'Mousse au chocolat');
+        self::assertSelectorTextContains('article.card', 'Mousse au chocolat');
 
         // "lait de coco" only appears in the ingredients of the curry.
         $this->client->request('GET', '/recettes?q=lait de coco');
-        self::assertSelectorCount(1, '.recipe-card');
-        self::assertSelectorTextContains('.recipe-card', 'Curry de pois chiches');
+        self::assertSelectorCount(1, 'article.card');
+        self::assertSelectorTextContains('article.card', 'Curry de pois chiches');
     }
 
     public function testFilterByCategory(): void
@@ -79,8 +79,8 @@ final class RecipeControllerTest extends AppWebTestCase
         $this->client->request('GET', '/recettes?categorie=boissons');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorCount(1, '.recipe-card');
-        self::assertSelectorTextContains('.recipe-card', 'Citronnade');
+        self::assertSelectorCount(1, 'article.card');
+        self::assertSelectorTextContains('article.card', 'Citronnade');
     }
 
     public function testShowRecipe(): void
@@ -90,7 +90,7 @@ final class RecipeControllerTest extends AppWebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Bœuf bourguignon');
-        self::assertSelectorCount(\count($recipe->getIngredientList()), '.ingredient-list li');
+        self::assertSelectorCount(\count($recipe->getIngredientList()), 'ul.list-group li');
         // Anonymous visitors don't see the edit button.
         self::assertSelectorNotExists('a[href$="/modifier"]');
     }
@@ -188,7 +188,7 @@ final class RecipeControllerTest extends AppWebTestCase
     {
         $this->client->loginUser($this->getUser('camille@recettevie.test'));
         $crawler = $this->client->request('GET', '/recettes/nouvelle');
-        self::assertSelectorTextContains('.translation-intro', 'Les deux versions sont obligatoires');
+        self::assertSelectorTextContains('.alert-light', 'Les deux versions sont obligatoires');
 
         // Only French, and no DeepL key in the test environment.
         $crawler = $this->client->submit($crawler->selectButton('Enregistrer la recette')->form([

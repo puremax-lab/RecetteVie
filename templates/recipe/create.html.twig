@@ -5,9 +5,9 @@
 {% block body %}
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <h1 class="page-title text-center text-lg-start">{{ 'recipe.create_title'|trans }}</h1>
+            <h1 class="fw-bold text-center text-lg-start">{{ 'recipe.create_title'|trans }}</h1>
             <p class="text-body-secondary text-center text-lg-start mb-4">{{ 'recipe.create_intro'|trans }}</p>
-            <div class="panel">
+            <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
                 {{ include('recipe/_form.html.twig', {cancel_url: path('app_recipe_index')}) }}
             </div>
         </div>

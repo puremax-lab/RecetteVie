@@ -5,28 +5,32 @@
 {% block body %}
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-4">
         <div class="text-center text-lg-start">
-            <h1 class="page-title mb-1">{{ currentCategory ? currentCategory.icon ~ ' ' ~ currentCategory|category_name : 'recipe.list_title'|trans }}</h1>
+            <h1 class="fw-bold mb-1">{{ currentCategory ? currentCategory.icon ~ ' ' ~ currentCategory|category_name : 'recipe.list_title'|trans }}</h1>
             <p class="text-body-secondary mb-0">
                 {{ 'recipe.results'|trans({'%count%': recipes.totalItems}) }}
                 {% if query %}{{ 'recipe.results_for'|trans({'%query%': query}) }}{% endif %}
             </p>
         </div>
-        <form method="get" class="search-bar search-bar-sm d-flex mx-auto mx-lg-0" role="search">
-            <i class="bi bi-search"></i>
+        <form method="get" class="col-lg-5" role="search">
             {% if currentCategory %}<input type="hidden" name="categorie" value="{{ currentCategory.slug }}">{% endif %}
-            <input type="search" name="q" value="{{ query }}" class="form-control" placeholder="{{ 'home.search_placeholder'|trans }}" aria-label="{{ 'home.search_button'|trans }}">
-            <button class="btn btn-primary" type="submit" aria-label="{{ 'home.search_button'|trans }}"><span class="d-none d-sm-inline">{{ 'home.search_button'|trans }}</span><i class="bi bi-arrow-right d-sm-none"></i></button>
+            <div class="input-group shadow-sm">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-body-secondary"></i></span>
+                <input type="search" name="q" value="{{ query }}" class="form-control border-start-0" placeholder="{{ 'home.search_placeholder'|trans }}" aria-label="{{ 'home.search_button'|trans }}">
+                <button class="btn btn-primary" type="submit" aria-label="{{ 'home.search_button'|trans }}"><span class="d-none d-sm-inline">{{ 'home.search_button'|trans }}</span><i class="bi bi-arrow-right d-sm-none"></i></button>
+            </div>
         </form>
     </div>
 
-    <div class="chips mb-4">
-        <a href="{{ path('app_recipe_index', query ? {q: query} : {}) }}" class="chip {{ not currentCategory ? 'active' }}">{{ 'recipe.all_categories'|trans }}</a>
+    {# Category filter: one row that scrolls sideways on phones #}
+    <nav class="nav nav-pills flex-nowrap overflow-x-auto gap-2 pb-2 mb-4" aria-label="{{ 'recipe.all_categories'|trans }}">
+        <a href="{{ path('app_recipe_index', query ? {q: query} : {}) }}" class="nav-link text-nowrap rounded-pill border {{ not currentCategory ? 'active' : 'bg-white' }}">{{ 'recipe.all_categories'|trans }}</a>
         {% for row in categories %}
-            <a href="{{ path('app_recipe_index', {categorie: row.category.slug}|merge(query ? {q: query} : {})) }}" class="chip {{ currentCategory and currentCategory.id == row.category.id ? 'active' }}">
-                {{ row.category.icon }} {{ row.category|category_name }} <span class="chip-count">{{ row.recipeCount }}</span>
+            {% set active = currentCategory and currentCategory.id == row.category.id %}
+            <a href="{{ path('app_recipe_index', {categorie: row.category.slug}|merge(query ? {q: query} : {})) }}" class="nav-link text-nowrap rounded-pill border {{ active ? 'active' : 'bg-white' }}">
+                {{ row.category.icon }} {{ row.category|category_name }} <span class="badge rounded-pill {{ active ? 'text-bg-light' : 'text-bg-secondary' }} ms-1">{{ row.recipeCount }}</span>
             </a>
         {% endfor %}
-    </div>
+    </nav>
 
     {% if recipes.totalItems > 0 %}
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
@@ -37,8 +41,8 @@
             {{ include('layouts/partials/_pagination.html.twig', {page: recipes, route: 'app_recipe_index', params: params}) }}
         </noscript>
     {% else %}
-        <div class="empty-state text-center py-5">
-            <div class="display-4 mb-3">🔍</div>
+        <div class="bg-white border rounded-4 text-center py-5 px-3">
+            <i class="bi bi-search display-4 text-body-secondary d-block mb-3"></i>
             <h2 class="h4">{{ 'recipe.empty_title'|trans }}</h2>
             <p class="text-body-secondary">{{ 'recipe.empty_text'|trans }}</p>
             <a href="{{ path('app_recipe_index') }}" class="btn btn-outline-primary">{{ 'recipe.clear_filters'|trans }}</a>

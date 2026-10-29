@@ -1,8 +1,8 @@
 {% set route = app.current_route %}
-<nav class="navbar navbar-expand-lg site-nav sticky-top">
+<nav class="navbar navbar-expand-lg bg-body border-bottom sticky-top">
     <div class="container">
-        <a class="navbar-brand brand" href="{{ path('home') }}">
-            <span class="brand-mark" aria-hidden="true">🍲</span> RecetteVie
+        <a class="navbar-brand h4 mb-0 fw-bold" href="{{ path('home') }}">
+            <i class="bi bi-book-half text-primary me-1"></i> RecetteVie
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="{{ 'nav.toggle'|trans }}">
             <span class="navbar-toggler-icon"></span>
@@ -11,10 +11,10 @@
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link {{ route == 'home' ? 'active' }}" {{ route == 'home' ? 'aria-current="page"' }} href="{{ path('home') }}">{{ 'nav.home'|trans }}</a>
+                    <a class="nav-link fw-medium {{ route == 'home' ? 'active' }}" {{ route == 'home' ? 'aria-current="page"' }} href="{{ path('home') }}">{{ 'nav.home'|trans }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ route in ['app_recipe_index', 'app_recipe_show'] ? 'active' }}" href="{{ path('app_recipe_index') }}">{{ 'nav.recipes'|trans }}</a>
+                    <a class="nav-link fw-medium {{ route in ['app_recipe_index', 'app_recipe_show'] ? 'active' }}" href="{{ path('app_recipe_index') }}">{{ 'nav.recipes'|trans }}</a>
                 </li>
             </ul>
 
@@ -27,7 +27,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="avatar">{{ app.user.firstname|first|upper }}</span>
+                            <span class="badge rounded-pill text-bg-primary">{{ app.user.firstname|first|upper }}</span>
                             {{ app.user.firstname }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -38,7 +38,7 @@
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link {{ route == 'app_login' ? 'active' }}" href="{{ path('app_login') }}">{{ 'nav.login'|trans }}</a>
+                        <a class="nav-link fw-medium {{ route == 'app_login' ? 'active' }}" href="{{ path('app_login') }}">{{ 'nav.login'|trans }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="btn btn-primary btn-sm px-3" href="{{ path('app_register') }}">{{ 'nav.register'|trans }}</a>

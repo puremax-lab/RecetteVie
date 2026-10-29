@@ -121,11 +121,11 @@ final class SecurityControllerTest extends AppWebTestCase
         $client = static::createClient(server: ['HTTP_ACCEPT_LANGUAGE' => 'en']);
 
         $crawler = $client->request('GET', '/recettes?q=chocolate');
-        self::assertSelectorTextContains('.recipe-card', 'Chocolate mousse');
+        self::assertSelectorTextContains('article.card', 'Chocolate mousse');
 
         $client->click($crawler->filter('a[aria-label="Chocolate mousse"]')->link());
         self::assertSelectorTextContains('h1', 'Chocolate mousse');
-        self::assertSelectorTextContains('.ingredient-list', 'dark chocolate');
-        self::assertSelectorTextContains('.step-list', 'Melt the chocolate');
+        self::assertSelectorTextContains('ul.list-group', 'dark chocolate');
+        self::assertSelectorTextContains('article ol', 'Melt the chocolate');
     }
 }

@@ -21,7 +21,7 @@ export default class extends Controller {
         }
 
         button.disabled = true;
-        this.show(this.loadingValue, 'muted');
+        this.show(this.loadingValue, 'body-secondary');
 
         try {
             const response = await fetch(this.urlValue, {
@@ -40,9 +40,8 @@ export default class extends Controller {
                 // Refresh the character counters.
                 input.dispatchEvent(new Event('input', { bubbles: true }));
                 // Briefly highlight what DeepL just filled.
-                input.classList.remove('just-translated');
-                void input.offsetWidth;
-                input.classList.add('just-translated');
+                input.classList.add('bg-warning-subtle');
+                setTimeout(() => input.classList.remove('bg-warning-subtle'), 1800);
             }
             this.show(this.doneValue, 'success');
             this.field('title', target).scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -60,6 +59,6 @@ export default class extends Controller {
     show(message, tone) {
         const status = this.statusElement ?? this.statusTarget;
         status.textContent = message;
-        status.className = `translate-status small mb-3 text-${tone}`;
+        status.className = `small mb-3 text-${tone}`;
     }
 }

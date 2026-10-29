@@ -3,15 +3,19 @@
 {% block title %}{{ 'account.edit_title'|trans }}{% endblock %}
 
 {% block body %}
-    <div class="auth-card">
-        <h1 class="page-title h2 mb-4">{{ 'account.edit_title'|trans }}</h1>
-        {{ form_start(form) }}
-            {{ form_row(form.firstname) }}
-            {{ form_row(form.lastname) }}
-            <div class="d-flex gap-2 mt-4">
-                <button type="submit" class="btn btn-primary">{{ 'account.save'|trans }}</button>
-                <a href="{{ path('app_account') }}" class="btn btn-link">{{ 'recipe.cancel'|trans }}</a>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+            <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
+                <h1 class="fw-bold h2 mb-4">{{ 'account.edit_title'|trans }}</h1>
+                {{ form_start(form) }}
+                    {{ form_row(form.firstname) }}
+                    {{ form_row(form.lastname) }}
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">{{ 'account.save'|trans }}</button>
+                        <a href="{{ path('app_account') }}" class="btn btn-link">{{ 'recipe.cancel'|trans }}</a>
+                    </div>
+                {{ form_end(form) }}
             </div>
-        {{ form_end(form) }}
+        </div>
     </div>
 {% endblock %}

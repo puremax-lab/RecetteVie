@@ -5,7 +5,7 @@
 {% endfor %}
 
 {% if recipes.hasNext %}
-    <turbo-frame id="recipes-page-{{ recipes.current + 1 }}" class="recipes-next w-100" loading="lazy" target="_top"
+    <turbo-frame id="recipes-page-{{ recipes.current + 1 }}" class="d-block w-100" loading="lazy" target="_top"
                  src="{{ path('app_recipe_index', params|merge({page: recipes.current + 1})) }}">
         <div class="col-12 text-center text-body-secondary py-4">
             <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>{{ 'recipe.loading'|trans }}

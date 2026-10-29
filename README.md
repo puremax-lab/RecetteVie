@@ -79,7 +79,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 |---|---|
 | Back end | PHP 8.2+, Symfony 7.4 LTS, Doctrine ORM 3, Twig |
 | Database | MySQL (tests on SQLite) |
-| Front end | Bootstrap 5, Turbo, Stimulus, AssetMapper |
+| Front end | Bootstrap 5 (components and utility classes only, themed through its CSS variables), Turbo, Stimulus, AssetMapper |
 | External API | DeepL, called with Symfony HttpClient |
 | Tests | PHPUnit 12 |
 | Hosting | alwaysdata |

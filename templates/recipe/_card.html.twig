@@ -1,10 +1,12 @@
 {# A recipe preview. Expects: recipe #}
-<article class="card recipe-card h-100">
+<article class="card h-100 border-0 shadow-sm overflow-hidden">
     <a href="{{ path('app_recipe_show', {id: recipe.id, slug: recipe.slug}) }}" class="stretched-link" aria-label="{{ recipe.localizedTitle(app.request.locale) }}"></a>
-    {{ include('recipe/_image.html.twig', {recipe: recipe, class: 'card-img-top recipe-card-img'}) }}
+    <div class="ratio ratio-16x9">
+        {{ include('recipe/_image.html.twig', {recipe: recipe, class: 'card-img-top'}) }}
+    </div>
     <div class="card-body d-flex flex-column">
         <div class="d-flex justify-content-between align-items-center mb-2 small">
-            <span class="badge category-badge">{{ recipe.category.icon }} {{ recipe.category|category_name }}</span>
+            <span class="badge bg-primary-subtle text-primary-emphasis fw-medium">{{ recipe.category.icon }} {{ recipe.category|category_name }}</span>
             <span class="text-body-secondary"><i class="bi bi-clock"></i> {{ recipe.duration|duration }}</span>
         </div>
         <h3 class="h5 card-title mb-1">{{ recipe.localizedTitle(app.request.locale) }}</h3>

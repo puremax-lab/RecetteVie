@@ -1,4 +1,4 @@
-# 🍲 RecetteVie
+# RecetteVie
 
 **A bilingual recipe-sharing web app built with Symfony 7.4.**
 *Site de partage de recettes en français et en anglais, développé avec Symfony 7.4.*
@@ -17,7 +17,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 ![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-46_passing-2ea44f)
+[![Tests](https://github.com/puremax-lab/RecetteVie/actions/workflows/tests.yml/badge.svg)](https://github.com/puremax-lab/RecetteVie/actions/workflows/tests.yml)
 
 ![Home page](docs/screenshots/home.png)
 

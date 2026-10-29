@@ -7,7 +7,10 @@ use App\Entity\Recipe;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 /**
  * Demo data: php bin/console doctrine:fixtures:load
@@ -31,8 +34,11 @@ class AppFixtures extends Fixture
         'boissons' => ['Boissons', '🍹', '#d5e8f0'],
     ];
 
-    public function __construct(private readonly UserPasswordHasherInterface $hasher)
-    {
+    public function __construct(
+        private readonly UserPasswordHasherInterface $hasher,
+        #[Autowire('%kernel.project_dir%')]
+        private readonly string $projectDir,
+    ) {
     }
 
     public function load(ObjectManager $manager): void
@@ -66,11 +72,29 @@ class AppFixtures extends Fixture
                 ->setContentEn(implode("\n", $stepsEn))
                 ->setUser($authors[$i % 2])
                 ->setCreatedAt($createdAt)
-                ->setUpdatedAt($createdAt);
+                ->setUpdatedAt($createdAt)
+                ->setImageName($this->copyPhoto($title));
             $manager->persist($recipe);
         }
 
         $manager->flush();
+    }
+
+    /**
+     * Copies the demo photo (fixtures/images/<slug>.jpg, from Unsplash) into the uploads folder,
+     * so deleting a demo recipe never deletes the original.
+     */
+    private function copyPhoto(string $title): ?string
+    {
+        $fileName = (new AsciiSlugger())->slug($title)->lower()->toString().'.jpg';
+        $source = $this->projectDir.'/fixtures/images/'.$fileName;
+        if (!is_file($source)) {
+            return null;
+        }
+
+        (new Filesystem())->copy($source, $this->projectDir.'/public/uploads/recipes/'.$fileName, true);
+
+        return $fileName;
     }
 
     /**

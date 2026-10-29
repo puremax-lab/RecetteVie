@@ -154,7 +154,7 @@ composer install
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate -n
 php bin/console doctrine:fixtures:load -n
-php -S 127.0.0.1:8000 -t public public/index.php
+php -S 127.0.0.1:8000 -t public router.php
 ```
 
 Then open http://127.0.0.1:8000 and log in with one of the demo accounts. They all use the password `password`:
@@ -179,6 +179,26 @@ Without a DeepL key, authors write both languages themselves.
 ```bash
 php bin/phpunit
 ```
+
+## Photo credits
+
+The demo recipe photos come from [Unsplash](https://unsplash.com) (free [Unsplash License](https://unsplash.com/license)). They are stored in `fixtures/images` and copied into the uploads folder when the demo data is loaded.
+
+| Recipe | Photographer |
+|---|---|
+| Bœuf bourguignon | [Nathan Dumlao](https://unsplash.com/photos/JXYdIWqA5IM) |
+| Tarte tatin | [Diliara Garifullina](https://unsplash.com/photos/HHZ8g6Iy1yQ) |
+| Velouté de potimarron | [Cala](https://unsplash.com/photos/w6ftFbPCs9I) |
+| Ratatouille provençale | [Marjan Sadeghi](https://unsplash.com/photos/3vDJ--i7w88) |
+| Pain maison à la cocotte | [Diego Arenas de Rodrigo](https://unsplash.com/photos/guFjW-4kjCc) |
+| Mousse au chocolat | [American Heritage Chocolate](https://unsplash.com/photos/YxjIO0LmDO0) |
+| Poulet basquaise | [Raman](https://unsplash.com/photos/jjoyL1hk1Vo) |
+| Citronnade maison à la menthe | [Jake Charles](https://unsplash.com/photos/O9Whoh12czM) |
+| Quiche lorraine | [Diego Arenas de Rodrigo](https://unsplash.com/photos/qr-8HqqjqGQ) |
+| Curry de pois chiches | [Álvaro Bernal](https://unsplash.com/photos/ReySmTMcKEQ) |
+| Crêpes de la Chandeleur | [Husien Bisky](https://unsplash.com/photos/emeBtLURIjI) |
+| Gratin dauphinois | [Some Tale](https://unsplash.com/photos/lqRfdLcZm_w) |
+| Crème brûlée à la vanille | [Orkun Orcan](https://unsplash.com/photos/xQFLBRdch_k) |
 
 ## Author
 

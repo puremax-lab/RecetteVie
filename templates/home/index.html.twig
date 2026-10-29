@@ -20,10 +20,10 @@
                 </div>
                 <div class="col-lg-5 d-none d-lg-block">
                     <div class="row row-cols-2 g-3" aria-hidden="true">
-                        {% for icon in ['🥗', '🍲', '🥖', '🍰'] %}
+                        {% for recipe in latestRecipes|slice(0, 4) %}
                             <div class="col">
-                                <div class="ratio ratio-1x1 bg-white rounded-circle shadow-sm border">
-                                    <span class="d-flex align-items-center justify-content-center display-3">{{ icon }}</span>
+                                <div class="ratio ratio-1x1 rounded-circle overflow-hidden shadow-sm border border-4 border-white">
+                                    {{ include('recipe/_image.html.twig', {class: 'w-100'}) }}
                                 </div>
                             </div>
                         {% endfor %}

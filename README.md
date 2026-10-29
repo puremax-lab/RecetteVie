@@ -3,7 +3,7 @@
 **A bilingual recipe-sharing web app built with Symfony 7.4.**
 *Site de partage de recettes en français et en anglais, développé avec Symfony 7.4.*
 
-### 👉 [Try the live demo](https://recettevie.alwaysdata.net)
+### 👉 [Try the live demo](https://puremax-lab.alwaysdata.net/recettevie)
 
 To try it as a member, click **Connexion / Log in** and use this demo account:
 

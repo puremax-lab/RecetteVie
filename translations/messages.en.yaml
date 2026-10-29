@@ -14,7 +14,7 @@ nav:
     toggle: Open menu
 
 footer:
-    about: Portfolio project built with Symfony 7, Doctrine and Bootstrap.
+    about: A portfolio project by puremax-lab.
     source: Source code on GitHub
 
 home:
@@ -196,3 +196,16 @@ translate:
     error_limit: Limit reached (30 translations per hour). Try again later, or save directly.
     error_unavailable: Automatic translation is unavailable right now. Please write the other language yourself.
     error_session: Your session has expired. Reload the page.
+
+legal:
+    title: Legal notice
+    link: Legal notice
+    demo: "RecetteVie is a portfolio project: a demo website with no commercial purpose."
+    publisher_title: Publisher
+    publisher_text: "puremax-lab, web developer (private individual).\nContact: github.com/puremax-lab"
+    host_title: Hosting
+    host_text: "alwaysdata, SARL with a capital of €200,000, RCS Paris 492 893 490\n91 rue du Faubourg Saint-Honoré, 75008 Paris, France\nwww.alwaysdata.com"
+    data_title: Personal data
+    data_text: "The site only stores what your account needs: first name, last name, email address and a hashed password. This data is never sold or shared. Recipes sent for translation go through DeepL. The site only uses a session cookie (and \"remember me\" if you tick it), with no ads or tracking.\nTo delete your account, get in touch via github.com/puremax-lab."
+    credits_title: Credits
+    credits_text: "Demo recipe photos: Unsplash (Unsplash License). The photographers are listed in the project README."

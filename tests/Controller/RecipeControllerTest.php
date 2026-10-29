@@ -32,6 +32,16 @@ final class RecipeControllerTest extends AppWebTestCase
         self::assertSelectorCount(6, 'article.card');
     }
 
+    public function testLegalNoticeIsLinkedFromTheFooter(): void
+    {
+        $crawler = $this->client->request('GET', '/');
+        $this->client->click($crawler->filter('footer')->selectLink('Mentions légales')->link());
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('h1', 'Mentions légales');
+        self::assertSelectorTextContains('article', 'alwaysdata');
+    }
+
     public function testListLoadsNextPageOnScroll(): void
     {
         $crawler = $this->client->request('GET', '/recettes');

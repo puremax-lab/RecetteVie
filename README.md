@@ -37,6 +37,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 - **Two languages**: the whole interface and every recipe are available in French and English
 - **Accounts**: sign-up, login, password reset, profile page, optional email verification (turned off on the demo)
 - **Responsive**: designed mobile-first, from small phones to large screens
+- **Legal notice** in both languages: publisher, host and personal data
 
 ## Screenshots
 
@@ -72,6 +73,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 **Quality**
 - **Automated tests** (PHPUnit): pages, permissions, forms, uploads, sign-up, login, language switch and the DeepL service.
 - DeepL is mocked with `MockHttpClient`, so the tests never call the real API.
+- The tests run on every push with **GitHub Actions** (badge at the top).
 
 ## Tech stack
 
@@ -82,7 +84,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 | Front end | Bootstrap 5 (components and utility classes only, themed through its CSS variables), Turbo, Stimulus, AssetMapper |
 | External API | DeepL, called with Symfony HttpClient |
 | Tests | PHPUnit 12 |
-| Hosting | alwaysdata |
+| Hosting | alwaysdata, served from a sub-folder |
 
 ## Database
 

@@ -14,7 +14,7 @@ nav:
     toggle: Ouvrir le menu
 
 footer:
-    about: Projet portfolio réalisé avec Symfony 7, Doctrine et Bootstrap.
+    about: Projet portfolio de puremax-lab.
     source: Code source sur GitHub
 
 home:
@@ -196,3 +196,16 @@ translate:
     error_limit: Limite atteinte (30 traductions par heure). Réessayez plus tard, ou enregistrez directement.
     error_unavailable: La traduction automatique est indisponible pour le moment. Écrivez l'autre langue vous-même.
     error_session: Votre session a expiré. Rechargez la page.
+
+legal:
+    title: Mentions légales
+    link: Mentions légales
+    demo: "RecetteVie est un projet de portfolio : un site de démonstration, sans but commercial."
+    publisher_title: Éditeur
+    publisher_text: "puremax-lab, développeur web (particulier).\nContact : github.com/puremax-lab"
+    host_title: Hébergeur
+    host_text: "alwaysdata, SARL au capital de 200 000 €, RCS Paris 492 893 490\n91 rue du Faubourg Saint-Honoré, 75008 Paris, France\nwww.alwaysdata.com"
+    data_title: Données personnelles
+    data_text: "Le site enregistre seulement ce qui sert à votre compte : nom, prénom, adresse e-mail et mot de passe chiffré. Ces données ne sont ni vendues ni transmises. Les recettes envoyées à la traduction passent par DeepL. Le site n'utilise qu'un cookie de session (et « se souvenir de moi » si vous le cochez), sans publicité ni suivi.\nPour supprimer votre compte, écrivez via github.com/puremax-lab."
+    credits_title: Crédits
+    credits_text: "Photos des recettes de démonstration : Unsplash (licence Unsplash). La liste des photographes se trouve dans le README du projet."

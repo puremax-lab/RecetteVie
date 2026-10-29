@@ -18,4 +18,10 @@ final class HomeController extends AbstractController
             'categories' => $categories->findAllWithRecipeCount(),
         ]);
     }
+
+    #[Route('/mentions-legales', name: 'legal', methods: ['GET'])]
+    public function legal(): Response
+    {
+        return $this->render('home/legal.html.twig');
+    }
 }

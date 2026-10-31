@@ -36,6 +36,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 - **Publish**: create, edit and delete your own recipes, with a photo
 - **Two languages**: the whole interface and every recipe are available in French and English
 - **Accounts**: sign-up, login, password reset, profile page, optional email verification (turned off on the demo)
+- **REST API**: recipes and each member's meal plan in JSON, used by my React app [Semainier](https://github.com/puremax-lab/Semainier)
 - **Responsive**: designed mobile-first, from small phones to large screens
 - **Legal notice** in both languages: publisher, host and personal data
 
@@ -61,9 +62,13 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 - **Custom validation constraint** ([`InappropriateWords`](src/Validator/InappropriateWords.php)) to reject forbidden words.
 - **SEO-friendly URLs** (`/recettes/tarte-tatin-12`), with a 301 redirect when the title changes.
 
+- **REST API with API Platform**: recipes are read-only ([`Recipe`](src/Entity/Recipe.php)), and each member manages a weekly meal plan ([`MealPlanEntry`](src/Entity/MealPlanEntry.php)). A [Doctrine extension](src/Doctrine/CurrentUserExtension.php) limits the list to the member's own entries, and a [state processor](src/State/MealPlanEntryProcessor.php) replaces the recipe already planned in a slot.
+
 **Security**
 - The translation preview ([`RecipeTranslationController`](src/Controller/RecipeTranslationController.php)) is a JSON endpoint protected by login, a CSRF token and a **rate limit** of 30 translations per hour.
 - CSRF protection on forms, login throttling (5 attempts), hashed passwords and safe names for uploaded files.
+
+- The API is stateless: `POST /api/login` checks email and password and returns a **JWT** (LexikJWT), sent back in the `Authorization` header. Only the owner can delete a meal plan entry.
 
 **Front end**
 - **Infinite scroll with no custom JavaScript**: lazy Turbo Frames on top of Doctrine's `Paginator`.
@@ -79,7 +84,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 
 | | |
 |---|---|
-| Back end | PHP 8.2+, Symfony 7.4 LTS, Doctrine ORM 3, Twig |
+| Back end | PHP 8.2+, Symfony 7.4 LTS, Doctrine ORM 3, Twig, API Platform 4, LexikJWT |
 | Database | MySQL (tests on SQLite) |
 | Front end | Bootstrap 5 (components and utility classes only, themed through its CSS variables), Turbo, Stimulus, AssetMapper |
 | External API | DeepL, called with Symfony HttpClient |
@@ -88,13 +93,15 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 
 ## Database
 
-MySQL, 4 tables. **PK** = primary key, **FK** = foreign key, **UK** = unique (no duplicates allowed).
+MySQL, 5 tables. **PK** = primary key, **FK** = foreign key, **UK** = unique (no duplicates allowed).
 
 ```mermaid
 erDiagram
     users ||--o{ recipes : "writes"
     categories ||--o{ recipes : "groups"
     users ||--o{ reset_password_request : "requests"
+    users ||--o{ meal_plan_entries : "plans"
+    recipes ||--o{ meal_plan_entries : "planned as"
 
     users {
         int id PK
@@ -139,11 +146,19 @@ erDiagram
         datetime requested_at
         datetime expires_at
     }
+    meal_plan_entries {
+        int id PK
+        int owner_id FK
+        int recipe_id FK
+        date day
+        varchar meal "lunch or dinner"
+    }
 ```
 
 - A user writes 0 or more recipes. Each recipe has exactly 1 author.
 - A category groups 0 or more recipes. Each recipe has exactly 1 category.
 - A user can have 0 or more password reset requests.
+- A meal plan entry links a member, a recipe, a day and a meal. A member has at most one recipe per day and meal (`UNIQUE (owner_id, day, meal)`).
 
 ## Run it locally
 
@@ -175,6 +190,14 @@ DEEPL_API_KEY=your-key:fx
 ```
 
 Without a DeepL key, authors write both languages themselves.
+
+**To use the API**, add a passphrase of your choice to `.env.local` (`JWT_PASSPHRASE=…`), then create the key pair that signs the tokens:
+
+```bash
+php bin/console lexik:jwt:generate-keypair
+```
+
+The API documentation is then at http://127.0.0.1:8000/api.
 
 **Run the tests** (they use their own SQLite database):
 

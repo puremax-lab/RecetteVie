@@ -6,6 +6,7 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,11 +22,13 @@ class Category
 
     /** Default (French) name, used when no translation exists for the slug. */
     #[ORM\Column(length: 60)]
+    #[Groups(['recipe:read'])]
     #[Assert\NotBlank]
     #[Assert\Length(max: 60)]
     private ?string $name = null;
 
     #[ORM\Column(length: 60, unique: true)]
+    #[Groups(['recipe:read'])]
     #[Assert\NotBlank]
     #[Assert\Regex('/^[a-z0-9-]+$/')]
     private ?string $slug = null;

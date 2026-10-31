@@ -26,6 +26,8 @@ foreach ([
     ['command' => 'doctrine:schema:drop', '--force' => true, '--full-database' => true],
     ['command' => 'doctrine:schema:create'],
     ['command' => 'doctrine:fixtures:load', '--no-interaction' => true],
+    // Key pair that signs the API tokens in tests (config/jwt, not committed).
+    ['command' => 'lexik:jwt:generate-keypair', '--skip-if-exists' => true],
 ] as $command) {
     if (0 !== $application->run(new ArrayInput($command), new NullOutput())) {
         throw new RuntimeException(sprintf('Test database setup failed on "%s".', $command['command']));

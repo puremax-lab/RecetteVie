@@ -17,6 +17,25 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js|assets)/
             security: false
+        # API login (Semainier app): email + password in JSON, answers with a JWT.
+        api_login:
+            pattern: ^/api/login$
+            stateless: true
+            provider: app_user_provider
+            json_login:
+                check_path: api_login
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            login_throttling:
+                max_attempts: 5
+        # The rest of the API: no session, the JWT is sent in the Authorization header.
+        api:
+            pattern: ^/api
+            stateless: true
+            provider: app_user_provider
+            jwt: ~
         main:
             lazy: true
             provider: app_user_provider
@@ -50,4 +69,6 @@ when@test:
                 memory_cost: 10 # Lowest possible value for argon
         firewalls:
             main:
+                login_throttling: false
+            api_login:
                 login_throttling: false

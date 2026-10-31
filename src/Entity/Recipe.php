@@ -2,12 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Entity\Traits\Timestampable;
 use App\Repository\RecipeRepository;
 use App\Validator\InappropriateWords;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,6 +22,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'recipes')]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity('title', message: 'recipe.title_taken')]
+// Read-only in the API (used by the Semainier meal planner): recipes are written on the website.
+#[ApiResource(
+    operations: [new GetCollection(), new Get()],
+    normalizationContext: ['groups' => ['recipe:read']],
+    order: ['createdAt' => 'DESC'],
+    paginationItemsPerPage: 12,
+)]
+#[ApiFilter(SearchFilter::class, properties: ['title' => 'partial', 'category.slug' => 'exact'])]
 class Recipe
 {
     use Timestampable;
@@ -22,6 +37,7 @@ class Recipe
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['recipe:read'])]
     private ?int $id = null;
 
     // Each recipe exists in French and in English. The author writes one language;
@@ -32,9 +48,11 @@ class Recipe
     #[Assert\NotBlank(message: 'recipe.translation_required')]
     #[Assert\Length(min: 3, max: 80)]
     #[InappropriateWords]
+    #[Groups(['recipe:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['recipe:read'])]
     private ?string $slug = null;
 
     /** One ingredient per line. */
@@ -70,10 +88,12 @@ class Recipe
     #[Assert\NotBlank]
     #[Assert\Positive]
     #[Assert\LessThan(1440)]
+    #[Groups(['recipe:read'])]
     private ?int $duration = null;
 
     /** File name of the uploaded photo in public/uploads/recipes, if any. */
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['recipe:read'])]
     private ?string $imageName = null;
 
     /** Language ("fr" or "en") whose text was produced by machine translation, if any. */
@@ -83,6 +103,7 @@ class Recipe
     #[ORM\ManyToOne(inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
+    #[Groups(['recipe:read'])]
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'recipes')]
@@ -133,6 +154,8 @@ class Recipe
     /**
      * @return list<string>
      */
+    #[Groups(['recipe:read'])]
+    #[SerializedName('ingredients')]
     public function getIngredientList(): array
     {
         return self::splitLines($this->ingredients);

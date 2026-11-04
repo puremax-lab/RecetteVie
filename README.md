@@ -37,6 +37,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 - **Two languages**: the whole interface and every recipe are available in French and English
 - **Accounts**: sign-up, login, password reset, profile page, optional email verification (turned off on the demo)
 - **REST API**: recipes and each member's meal plan in JSON, used by my React app [Semainier](https://github.com/puremax-lab/Semainier)
+- **Meal planner built in**: the menu and the home page lead to [Semainier](https://puremax-lab.alwaysdata.net/semainier/), where members sign in with their RecetteVie account
 - **Responsive**: designed mobile-first, from small phones to large screens
 - **Legal notice** in both languages: publisher, host and personal data
 

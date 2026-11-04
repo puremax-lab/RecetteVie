@@ -70,8 +70,12 @@ final class RecipeControllerTest extends AppWebTestCase
         self::assertSelectorNotExists('nav.navbar');
         self::assertCount(1, $crawler->filter('turbo-frame#recipes-page-2'));
         self::assertSelectorExists('article.card');
-        // Last page: no further frame.
-        self::assertSelectorNotExists('turbo-frame#recipes-page-3');
+        self::assertCount(1, $crawler->filter('turbo-frame#recipes-page-3'));
+
+        // 60 demo recipes, 9 per page: page 7 is the last one, with no further frame.
+        $crawler = $this->client->request('GET', '/recettes?page=7', server: ['HTTP_TURBO_FRAME' => 'recipes-page-7']);
+        self::assertSelectorCount(6, 'article.card');
+        self::assertCount(0, $crawler->filter('turbo-frame#recipes-page-8'));
     }
 
     public function testInfiniteScrollKeepsFilters(): void
@@ -88,19 +92,21 @@ final class RecipeControllerTest extends AppWebTestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('article.card', 'Mousse au chocolat');
 
-        // "lait de coco" only appears in the ingredients of the curry.
-        $this->client->request('GET', '/recettes?q=lait de coco');
+        // "pousses d'épinard" only appears in the ingredients of the curry.
+        $this->client->request('GET', "/recettes?q=pousses d'épinard");
         self::assertSelectorCount(1, 'article.card');
         self::assertSelectorTextContains('article.card', 'Curry de pois chiches');
     }
 
     public function testFilterByCategory(): void
     {
-        $this->client->request('GET', '/recettes?categorie=boissons');
+        $crawler = $this->client->request('GET', '/recettes?categorie=boissons');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorCount(1, 'article.card');
+        // 10 drinks: 9 on the first page, the newest one first.
+        self::assertSelectorCount(9, 'article.card');
         self::assertSelectorTextContains('article.card', 'Citronnade');
+        self::assertStringContainsString('categorie=boissons', $crawler->filter('turbo-frame#recipes-page-2')->attr('src'));
     }
 
     public function testShowRecipe(): void
@@ -158,23 +164,23 @@ final class RecipeControllerTest extends AppWebTestCase
         $crawler = $this->client->request('GET', '/recettes/nouvelle');
 
         $form = $crawler->selectButton('Enregistrer la recette')->form([
-            'recipe_form[title]' => 'Salade niçoise',
+            'recipe_form[title]' => 'Salade de thon',
             'recipe_form[category]' => (string) $this->findRecipe('Velouté de potimarron')->getCategory()->getId(),
             'recipe_form[duration]' => '20',
             'recipe_form[ingredients]' => "Thon\nTomates\nŒufs durs",
             'recipe_form[content]' => "Coupez les tomates.\nAjoutez le thon et les œufs.",
             // No DeepL key in tests: the author writes both languages.
-            'recipe_form[titleEn]' => 'Niçoise salad',
+            'recipe_form[titleEn]' => 'Tuna salad',
             'recipe_form[ingredientsEn]' => "Tuna\nTomatoes\nHard-boiled eggs",
             'recipe_form[contentEn]' => "Cut the tomatoes.\nAdd the tuna and the eggs.",
         ]);
         $form['recipe_form[imageFile]']->upload($this->createTestImage());
         $this->client->submit($form);
 
-        $recipe = $this->findRecipe('Salade niçoise');
-        self::assertResponseRedirects(\sprintf('/recettes/salade-nicoise-%d', $recipe->getId()));
+        $recipe = $this->findRecipe('Salade de thon');
+        self::assertResponseRedirects(\sprintf('/recettes/salade-de-thon-%d', $recipe->getId()));
         self::assertSame('camille@recettevie.test', $recipe->getUser()->getEmail());
-        self::assertSame('Niçoise salad', $recipe->getTitleEn());
+        self::assertSame('Tuna salad', $recipe->getTitleEn());
         self::assertNull($recipe->getMachineTranslatedLocale());
         self::assertNotNull($recipe->getImageName());
         self::assertFileExists(static::getContainer()->getParameter('kernel.project_dir').'/public/uploads/recipes/'.$recipe->getImageName());

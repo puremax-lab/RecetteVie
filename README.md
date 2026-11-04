@@ -33,6 +33,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 ## Features
 
 - **Browse recipes**: search by title or ingredient, filter by category, infinite scroll, similar recipes
+- **60 demo recipes**, ten per category, each with a real photo credited below
 - **Publish**: create, edit and delete your own recipes, with a photo
 - **Two languages**: the whole interface and every recipe are available in French and English
 - **Accounts**: sign-up, login, password reset, profile page, optional email verification (turned off on the demo)
@@ -228,6 +229,53 @@ The demo recipe photos come from [Unsplash](https://unsplash.com) (free [Unsplas
 | Crêpes de la Chandeleur | [Husien Bisky](https://unsplash.com/photos/emeBtLURIjI) |
 | Gratin dauphinois | [Some Tale](https://unsplash.com/photos/lqRfdLcZm_w) |
 | Crème brûlée à la vanille | [Orkun Orcan](https://unsplash.com/photos/xQFLBRdch_k) |
+| Thé glacé à la pêche | [Ashley Winkler](https://unsplash.com/photos/clear-drinking-glass-with-orange-liquid-3yioyf0-SMY) |
+| Smoothie banane et fraise | [Denis](https://unsplash.com/photos/pink-smoothie-hsTwPUzFegQ) |
+| Chocolat chaud à l'ancienne | [Ashkan Forouzani](https://unsplash.com/photos/filled-white-teacup-on-saucer-with-teaspoon-on-tray-lMfEoyC6K_Q) |
+| Café glacé à la vanille | [Demi DeHerrera](https://unsplash.com/photos/glass-cup-filled-with-ice-latte-on-tabletop-L-sm1B4L1Ns) |
+| Limonade à la framboise | [Will Mcmahon](https://unsplash.com/photos/red-jucie-on-mason-jar-xsKYTZxIYg0) |
+| Jus d'orange et carotte | [Vedrana Filipović](https://unsplash.com/photos/orange-fruit-on-clear-glass-bowl-vFuknaztGdY) |
+| Chai latte maison | [Mae Mu](https://unsplash.com/photos/white-mug-filled-with-brown-coffee-eNfR6MUyjBI) |
+| Lassi à la mangue | [Jyoti Singh](https://unsplash.com/photos/green-apple-beside-clear-drinking-glass-with-milk-cfo98H6h3tQ) |
+| Vin chaud aux épices | [Gaby Dyson](https://unsplash.com/photos/clear-hurricane-glass-with-red-liquid-RJTbTzJ1lrM) |
+| Croissants maison | [Conor Brown](https://unsplash.com/photos/a-bunch-of-croissants-that-are-on-a-table-sqkXyyj4WdE) |
+| Baguette tradition | [Sergio Arze](https://unsplash.com/photos/bread-cWXibBbXx44) |
+| Brioche tressée | [Jing Wang](https://unsplash.com/photos/a-golden-brown-braided-loaf-of-bread-on-a-cooling-rack-LDXu5N0W82k) |
+| Pain aux noix | [Serghey Savchuk](https://unsplash.com/photos/a-loaf-of-bread-nuts-and-grapes-on-a-slate-board-Vu3Air6A1Bw) |
+| Focaccia tomates cerises et romarin | [Paula Berto](https://unsplash.com/photos/brown-bread-with-red-sauce-WLbD34w3kRQ) |
+| Pains au chocolat | [Skyler Ewing](https://unsplash.com/photos/a-group-of-baked-goods-vYp6fehqaZw) |
+| Madeleines au citron | [Jonathan Pielmayer](https://unsplash.com/photos/stainless-steel-fork-beside-of-sliced-lemons-ecbZ5gEE-60) |
+| Pain de mie maison | [Charles Chen](https://unsplash.com/photos/brown-bread-on-white-ceramic-plate-e83dQJ-BMog) |
+| Tiramisu | [Gina's Auckland](https://unsplash.com/photos/a-piece-of-cake-sitting-on-top-of-a-white-plate-d-Mx494kXAg) |
+| Clafoutis aux cerises | [Enrique Briseno](https://unsplash.com/photos/a-casserole-dish-with-blueberries-in-it-ugwOrAT2dbE) |
+| Fondant au chocolat | [Valentina Perez](https://unsplash.com/photos/chocolate-cake-on-white-ceramic-plate-hXm8rAgs11c) |
+| Tarte au citron meringuée | [Vlad Kutepov](https://unsplash.com/photos/a-bowl-of-food-Zn1mePgxEkc) |
+| Forêt-noire | [Umesh Soni](https://unsplash.com/photos/chocolate-cake-on-white-ceramic-plate-LDnmyOaA-ew) |
+| Panna cotta aux fruits rouges | [Adél Grőber](https://unsplash.com/photos/strawberry-on-white-ceramic-plate-eKEBV50VeZs) |
+| Cookies aux pépites de chocolat | [Joshua Bedford](https://unsplash.com/photos/brown-cookies-on-black-metal-grill-krNP2ESq-54) |
+| Salade niçoise | [tommao wang](https://unsplash.com/photos/vegetable-salad-on-white-ceramic-plate-Tac7_RQFFh4) |
+| Soupe à l'oignon gratinée | [sheri silver](https://unsplash.com/photos/soup-with-green-leaf-in-teacup-FjxEnioTNs0) |
+| Gaspacho andalou | [Farhad Ibrahimzade](https://unsplash.com/photos/stainless-steel-spoon-on-white-ceramic-plate-3KHFUgr9Ckw) |
+| Œufs mimosa | [Rosalie Barley](https://unsplash.com/photos/white-and-yellow-icing-covered-cupcakes-qb8EK1uQF9w) |
+| Bruschetta tomate et basilic | [Konstantinas Ladauskas](https://unsplash.com/photos/sliced-tomato-and-green-vegetable-on-brown-wooden-chopping-board-86vIY4SPr6A) |
+| Salade de chèvre, pommes et noix | [Robby McCullough](https://unsplash.com/photos/a-salad-with-apples-spinach-walnuts-and-feta-cheese-sgMCfeKXLFs) |
+| Carpaccio de bœuf | [Dmitriy Frantsev](https://unsplash.com/photos/green-leaves-covered-meat-slices-on-white-plate-4LDTmCWmIKo) |
+| Houmous maison | [Christopher Alvarenga](https://unsplash.com/photos/white-ceramic-plate-with-pasta-dish-5uYH4yTDp34) |
+| Sauté de veau aux carottes | [Jacques Bopp](https://unsplash.com/photos/steamed-rice-and-meat-and-vegetable-slices-dDSH6Fz7_Uk) |
+| Coq au vin | [Dai López](https://unsplash.com/photos/a-bowl-of-food-71gD9JoiPQY) |
+| Lasagnes à la bolognaise | [Emanuel Ekström](https://unsplash.com/photos/a-white-plate-topped-with-lasagna-covered-in-sauce-flEUTTwGlJQ) |
+| Pavé de saumon, citron et herbes | [Sebastian Coman Photography](https://unsplash.com/photos/sliced-bread-on-white-ceramic-plate-Co-T6odt0es) |
+| Moules marinières | [Nikolay Smeh](https://unsplash.com/photos/black-fish-on-black-round-container-godkmdG6M6o) |
+| Hachis parmentier | [The Fry Family Food Co.](https://unsplash.com/photos/a-casserole-dish-on-a-plate-with-a-fork-next-to-it-LHr6EN-B8NQ) |
+| Poulet rôti au citron | [Cisco Lin](https://unsplash.com/photos/grilled-meat-on-black-round-plate-YMkX5NjURhk) |
+| Risotto aux champignons | [Yu Hosoi](https://unsplash.com/photos/a-plate-of-food-mvlMmpK9R-c) |
+| Shakshuka | [AN Photography](https://unsplash.com/photos/tomato-soup-on-black-cooking-pan-beside-stainless-steel-fork-and-bread-knife-KD93b4XevCQ) |
+| Dahl de lentilles corail | [VD Photography](https://unsplash.com/photos/sliced-orange-fruit-beside-white-ceramic-bowl-with-green-soup-iEJ3GhgO3jY) |
+| Tarte aux poireaux | [Timothy Muza](https://unsplash.com/photos/sliced-caked-on-plate-Jw4rKiZFiSM) |
+| Buddha bowl au quinoa | [Charlotte Karlsen](https://unsplash.com/photos/bowl-filled-with-food-DAih2b5MFcA) |
+| Cannellonis épinards et ricotta | [Alexey Demidov](https://unsplash.com/photos/a-white-plate-topped-with-lasagna-covered-in-sauce-C2aXYWCYRuA) |
+| Falafels maison | [Anton](https://unsplash.com/photos/brown-cookies-on-white-ceramic-bowl-rN7GMHp_og4) |
+| Gnocchis beurre et sauge | [Leandro Rossi](https://unsplash.com/photos/gnocchi-with-sauce-and-fresh-basil-served-on-a-plate-_ESn6muFTPU) |
 
 ## Author
 

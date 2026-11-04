@@ -56,11 +56,17 @@ class AppFixtures extends Fixture
             $manager->persist($user);
         }
 
-        $authors = [$camille, $lucas];
         $english = $this->englishVersions();
-        foreach ($this->recipes() as $i => [$category, $title, $duration, $ingredients, $steps]) {
+        $recipes = [];
+        foreach ($this->recipes() as [$category, $title, $duration, $ingredients, $steps]) {
+            $recipes[] = [$category, $title, $english[$title][0], $duration, $ingredients, $steps, $english[$title][1], $english[$title][2]];
+        }
+        // The first recipes are the newest, so the home page keeps showing them.
+        $recipes = [...$recipes, ...ExtraRecipes::all()];
+
+        $authors = [$camille, $lucas];
+        foreach ($recipes as $i => [$category, $title, $titleEn, $duration, $ingredients, $steps, $ingredientsEn, $stepsEn]) {
             $createdAt = new \DateTimeImmutable(\sprintf('-%d days -%d hours', $i * 3 + 1, $i * 5 % 24));
-            [$titleEn, $ingredientsEn, $stepsEn] = $english[$title];
             $recipe = (new Recipe())
                 ->setTitle($title)
                 ->setCategory($categories[$category])

@@ -5,6 +5,7 @@ site:
 nav:
     home: Home
     recipes: Recipes
+    planner: Plan my meals
     add_recipe: Add a recipe
     account: My account
     login: Log in
@@ -27,6 +28,9 @@ home:
     categories: Explore by category
     latest: Latest recipes
     see_all: See all recipes
+    planner_title: The week's meals, on a single page.
+    planner_text: With Semainier, pick a recipe for every lunch and dinner. The shopping list builds itself, and your RecetteVie account is all you need to sign in.
+    planner_button: Open Semainier
     cta_title: Got a favourite recipe?
     cta_text: Create a free account and share it with the community in two minutes.
     cta_button: Share a recipe

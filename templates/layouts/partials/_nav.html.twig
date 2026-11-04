@@ -16,6 +16,9 @@
                 <li class="nav-item">
                     <a class="nav-link fw-medium {{ route in ['app_recipe_index', 'app_recipe_show'] ? 'active' }}" href="{{ path('app_recipe_index') }}">{{ 'nav.recipes'|trans }}</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-medium" href="{{ semainier_url }}"><i class="bi bi-calendar-week me-1"></i>{{ 'nav.planner'|trans }}</a>
+                </li>
             </ul>
 
             <ul class="navbar-nav align-items-lg-center gap-lg-2">

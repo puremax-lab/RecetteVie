@@ -32,6 +32,16 @@ final class RecipeControllerTest extends AppWebTestCase
         self::assertSelectorCount(6, 'article.card');
     }
 
+    public function testHomePageLinksToTheMealPlanner(): void
+    {
+        $this->client->request('GET', '/');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorExists('nav a[href="https://puremax-lab.alwaysdata.net/semainier/"]');
+        self::assertSelectorTextContains('.planner-promo', 'Semainier');
+        self::assertSelectorExists('meta[property="og:image"][content$="/og-image.jpg"]');
+    }
+
     public function testLegalNoticeIsLinkedFromTheFooter(): void
     {
         $crawler = $this->client->request('GET', '/');

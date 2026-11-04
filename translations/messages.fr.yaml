@@ -5,6 +5,7 @@ site:
 nav:
     home: Accueil
     recipes: Recettes
+    planner: Planifier mes repas
     add_recipe: Ajouter une recette
     account: Mon compte
     login: Connexion
@@ -27,6 +28,9 @@ home:
     categories: Explorer par catégorie
     latest: Les dernières recettes
     see_all: Voir toutes les recettes
+    planner_title: Les repas de la semaine, sur une seule page.
+    planner_text: Avec Semainier, choisissez une recette pour chaque midi et chaque soir. La liste de courses se fait toute seule, et votre compte RecetteVie suffit pour vous connecter.
+    planner_button: Ouvrir Semainier
     cta_title: Vous avez une recette fétiche ?
     cta_text: Créez un compte gratuit et partagez-la avec la communauté en deux minutes.
     cta_button: Partager une recette

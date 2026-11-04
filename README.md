@@ -25,8 +25,8 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 
 | | |
 |---|---|
-| **What it does** | Visitors browse and search recipes. Members publish, edit and delete their own recipes, in French and English |
-| **What it shows** | A complete Symfony app: authentication, permissions, forms and validation, a database, an external API, tests and deployment |
+| **What it does** | Visitors browse and search recipes. Members publish, edit and delete their own recipes, in French and English, and plan their week's meals with [Semainier](https://github.com/puremax-lab/Semainier) |
+| **What it shows** | A complete Symfony app: authentication, permissions, forms and validation, a database, an external API, a REST API for a React app, tests and deployment |
 | **Stand-out feature** | Authors write in one language, and **DeepL** translates the other, with a preview to review before saving |
 | **Status** | Deployed online, responsive on phones and desktops, covered by automated tests |
 
@@ -36,8 +36,9 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 - **Publish**: create, edit and delete your own recipes, with a photo
 - **Two languages**: the whole interface and every recipe are available in French and English
 - **Accounts**: sign-up, login, password reset, profile page, optional email verification (turned off on the demo)
-- **REST API**: recipes and each member's meal plan in JSON, used by my React app [Semainier](https://github.com/puremax-lab/Semainier)
-- **Meal planner built in**: the menu and the home page lead to [Semainier](https://puremax-lab.alwaysdata.net/semainier/), where members sign in with their RecetteVie account
+- **REST API**: recipes and each member's meal plan in JSON, with JWT login, used by my React app [Semainier](https://github.com/puremax-lab/Semainier)
+- **Meal planner built in**: "Planifier mes repas" in the menu, a section on the home page and a footer link lead to [Semainier](https://puremax-lab.alwaysdata.net/semainier/), where members sign in with their RecetteVie account
+- **Link previews**: Open Graph tags and a preview image, so a shared link shows a card on LinkedIn or in a chat
 - **Responsive**: designed mobile-first, from small phones to large screens
 - **Legal notice** in both languages: publisher, host and personal data
 
@@ -77,7 +78,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 - No Node.js build step: assets are served with Symfony AssetMapper.
 
 **Quality**
-- **Automated tests** (PHPUnit): pages, permissions, forms, uploads, sign-up, login, language switch and the DeepL service.
+- **Automated tests** (PHPUnit, 56 tests): pages, permissions, forms, uploads, sign-up, login, language switch, the link to Semainier, the DeepL service, the custom validator and the REST API (JWT login, meal plans that only their owner can see and delete).
 - DeepL is mocked with `MockHttpClient`, so the tests never call the real API.
 - The tests run on every push with **GitHub Actions** (badge at the top).
 
@@ -85,7 +86,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 
 | | |
 |---|---|
-| Back end | PHP 8.2+, Symfony 7.4 LTS, Doctrine ORM 3, Twig, API Platform 4, LexikJWT |
+| Back end | PHP 8.2+, Symfony 7.4 LTS, Doctrine ORM 3, Twig, API Platform 5, LexikJWT |
 | Database | MySQL (tests on SQLite) |
 | Front end | Bootstrap 5 (components and utility classes only, themed through its CSS variables), Turbo, Stimulus, AssetMapper |
 | External API | DeepL, called with Symfony HttpClient |
@@ -191,6 +192,8 @@ DEEPL_API_KEY=your-key:fx
 ```
 
 Without a DeepL key, authors write both languages themselves.
+
+The "Planifier mes repas" link points to the online Semainier. To use a local copy, set `SEMAINIER_URL=http://localhost:5173/` in `.env.local`.
 
 **To use the API**, add a passphrase of your choice to `.env.local` (`JWT_PASSPHRASE=…`), then create the key pair that signs the tokens:
 

@@ -65,7 +65,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 - **Custom validation constraint** ([`InappropriateWords`](src/Validator/InappropriateWords.php)) to reject forbidden words.
 - **SEO-friendly URLs** (`/recettes/tarte-tatin-12`), with a 301 redirect when the title changes.
 
-- **REST API with API Platform**: recipes are read-only ([`Recipe`](src/Entity/Recipe.php)), and each member manages a weekly meal plan ([`MealPlanEntry`](src/Entity/MealPlanEntry.php)). A [Doctrine extension](src/Doctrine/CurrentUserExtension.php) limits the list to the member's own entries, and a [state processor](src/State/MealPlanEntryProcessor.php) replaces the recipe already planned in a slot.
+- **REST API with API Platform**: recipes are read-only ([`Recipe`](src/Entity/Recipe.php)) and sent in both languages, searchable by French or English title, and each member manages a weekly meal plan ([`MealPlanEntry`](src/Entity/MealPlanEntry.php)). A [Doctrine extension](src/Doctrine/CurrentUserExtension.php) limits the list to the member's own entries, and a [state processor](src/State/MealPlanEntryProcessor.php) replaces the recipe already planned in a slot.
 
 **Security**
 - The translation preview ([`RecipeTranslationController`](src/Controller/RecipeTranslationController.php)) is a JSON endpoint protected by login, a CSRF token and a **rate limit** of 30 translations per hour.
@@ -79,7 +79,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 - No Node.js build step: assets are served with Symfony AssetMapper.
 
 **Quality**
-- **Automated tests** (PHPUnit, 56 tests): pages, permissions, forms, uploads, sign-up, login, language switch, the link to Semainier, the DeepL service, the custom validator and the REST API (JWT login, meal plans that only their owner can see and delete).
+- **Automated tests** (PHPUnit, 57 tests): pages, permissions, forms, uploads, sign-up, login, language switch, the link to Semainier, the DeepL service, the custom validator and the REST API (JWT login, meal plans that only their owner can see and delete).
 - DeepL is mocked with `MockHttpClient`, so the tests never call the real API.
 - The tests run on every push with **GitHub Actions** (badge at the top).
 

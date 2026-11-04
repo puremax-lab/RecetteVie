@@ -21,7 +21,7 @@ final class MealPlanApiTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertCount(12, $recipes);
-        self::assertSame(['id', 'title', 'slug', 'duration', 'imageName', 'category', 'ingredients'], array_keys($recipes[0]));
+        self::assertSame(['id', 'title', 'slug', 'titleEn', 'duration', 'imageName', 'category', 'ingredients', 'ingredientsEn'], array_keys($recipes[0]));
         self::assertIsList($recipes[0]['ingredients']);
     }
 
@@ -30,6 +30,16 @@ final class MealPlanApiTest extends WebTestCase
         $recipes = $this->json('GET', '/api/recipes?title=tatin');
 
         self::assertSame(['Tarte tatin'], array_column($recipes, 'title'));
+    }
+
+    public function testRecipesComeInBothLanguagesAndCanBeSearchedInEnglish(): void
+    {
+        $recipes = $this->json('GET', '/api/recipes?titleEn=squash');
+
+        self::assertCount(1, $recipes);
+        self::assertSame('Velouté de potimarron', $recipes[0]['title']);
+        self::assertSame('Red kuri squash soup', $recipes[0]['titleEn']);
+        self::assertNotSame($recipes[0]['ingredients'], $recipes[0]['ingredientsEn']);
     }
 
     public function testLoginGivesATokenWithTheFirstName(): void

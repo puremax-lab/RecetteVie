@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     order: ['createdAt' => 'DESC'],
     paginationItemsPerPage: 12,
 )]
-#[ApiFilter(SearchFilter::class, properties: ['title' => 'partial', 'category.slug' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['title' => 'partial', 'titleEn' => 'partial', 'category.slug' => 'exact'])]
 class Recipe
 {
     use Timestampable;
@@ -71,6 +71,7 @@ class Recipe
     #[Assert\NotBlank(message: 'recipe.translation_required')]
     #[Assert\Length(min: 3, max: 80)]
     #[InappropriateWords]
+    #[Groups(['recipe:read'])]
     private ?string $titleEn = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -159,6 +160,16 @@ class Recipe
     public function getIngredientList(): array
     {
         return self::splitLines($this->ingredients);
+    }
+
+    /**
+     * @return list<string>
+     */
+    #[Groups(['recipe:read'])]
+    #[SerializedName('ingredientsEn')]
+    public function getIngredientListEn(): array
+    {
+        return $this->getLocalizedIngredientList('en');
     }
 
     public function getContent(): ?string

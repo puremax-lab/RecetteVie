@@ -37,3 +37,10 @@ h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5, .display-4, .display-5, .navbar-bra
 .nav-pills { --bs-nav-pills-link-active-bg: #c2410c; --bs-nav-link-color: var(--bs-body-color); }
 .pagination { --bs-pagination-active-bg: #c2410c; --bs-pagination-active-border-color: #c2410c; }
 .form-check-input:checked { background-color: #c2410c; border-color: #c2410c; }
+
+/* Infinite scroll: the frame of the next page is a full-width block while it waits to load.
+   Once loaded ("complete"), it and its row disappear from the layout, so the new cards join
+   the grid above instead of starting a new row (no gap after an odd page on two columns). */
+.recipes-next { display: block; width: 100%; }
+.recipes-next[complete],
+.recipes-next[complete] > .row { display: contents; }

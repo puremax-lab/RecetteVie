@@ -8,8 +8,9 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Applies the language chosen by the visitor (stored in session), or the
- * browser's preferred language on the first visit.
+ * Applies the language chosen by the visitor (stored in session). Before any
+ * choice it follows the browser: French stays French, and any other language
+ * gives English.
  */
 final class LocaleSubscriber implements EventSubscriberInterface
 {
@@ -21,23 +22,18 @@ final class LocaleSubscriber implements EventSubscriberInterface
     public function __construct(
         #[Autowire('%kernel.enabled_locales%')]
         private readonly array $enabledLocales,
-        #[Autowire('%kernel.default_locale%')]
-        private readonly string $defaultLocale,
     ) {
     }
 
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        if (!$request->hasPreviousSession()) {
-            $request->setLocale($request->getPreferredLanguage($this->enabledLocales) ?? $this->defaultLocale);
+        $locale = $request->hasPreviousSession() ? $request->getSession()->get(self::SESSION_KEY) : null;
 
-            return;
-        }
-
-        $locale = $request->getSession()->get(self::SESSION_KEY);
         if (\in_array($locale, $this->enabledLocales, true)) {
             $request->setLocale($locale);
+        } elseif (preg_match('/^\s*(?!fr\b)[a-z]/i', (string) $request->headers->get('Accept-Language'))) {
+            $request->setLocale('en');
         }
     }
 

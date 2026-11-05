@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Repository\UserRepository;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class SecurityControllerTest extends AppWebTestCase
 {
@@ -114,6 +115,37 @@ final class SecurityControllerTest extends AppWebTestCase
 
         self::assertSelectorTextContains('nav', 'Recipes');
         self::assertSelectorTextContains('h1', 'Cook, share, enjoy.');
+    }
+
+    #[DataProvider('browserLanguages')]
+    public function testAFirstVisitFollowsTheBrowser(string $acceptLanguage, string $locale): void
+    {
+        $client = static::createClient(server: ['HTTP_ACCEPT_LANGUAGE' => $acceptLanguage]);
+
+        $crawler = $client->request('GET', '/');
+
+        self::assertSame($locale, $crawler->filter('html')->attr('lang'));
+    }
+
+    public static function browserLanguages(): array
+    {
+        return [
+            'English' => ['en-GB,en;q=0.9', 'en'],
+            'French' => ['fr-BE,fr;q=0.9,en;q=0.8', 'fr'],
+            'German' => ['de-DE,de;q=0.9,en;q=0.8', 'en'],
+            'Spanish' => ['es', 'en'],
+        ];
+    }
+
+    public function testTheChosenLanguageBeatsTheBrowser(): void
+    {
+        $client = static::createClient(server: ['HTTP_ACCEPT_LANGUAGE' => 'en-GB']);
+        $client->request('GET', '/');
+        $client->request('GET', '/langue/fr');
+
+        $crawler = $client->request('GET', '/');
+
+        self::assertSame('fr', $crawler->filter('html')->attr('lang'));
     }
 
     public function testRecipesAreShownInEnglish(): void

@@ -35,7 +35,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 - **Browse recipes**: search by title or ingredient, filter by category, infinite scroll, similar recipes
 - **60 demo recipes**, ten per category, each with a real photo credited below
 - **Publish**: create, edit and delete your own recipes, with a photo
-- **Two languages**: the whole interface and every recipe are available in French and English
+- **Two languages**: the whole interface and every recipe are available in French and English. A first visit follows the language of the browser, with English for any language other than French or English
 - **Accounts**: sign-up, login, password reset, profile page, optional email verification (turned off on the demo)
 - **REST API**: recipes and each member's meal plan in JSON, with JWT login, used by my React app [Semainier](https://github.com/puremax-lab/Semainier)
 - **Meal planner built in**: "Planifier mes repas" in the menu, a section on the home page and a footer link lead to [Semainier](https://puremax-lab.alwaysdata.net/semainier/), where members sign in with their RecetteVie account
@@ -79,7 +79,7 @@ Or click **Inscription / Sign up** to create your own account. No email confirma
 - No Node.js build step: assets are served with Symfony AssetMapper.
 
 **Quality**
-- **Automated tests** (PHPUnit, 57 tests): pages, permissions, forms, uploads, sign-up, login, language switch, the link to Semainier, the DeepL service, the custom validator and the REST API (JWT login, meal plans that only their owner can see and delete).
+- **Automated tests** (PHPUnit, 62 tests): pages, permissions, forms, uploads, sign-up, login, language switch, the link to Semainier, the DeepL service, the custom validator and the REST API (JWT login, meal plans that only their owner can see and delete).
 - DeepL is mocked with `MockHttpClient`, so the tests never call the real API.
 - The tests run on every push with **GitHub Actions** (badge at the top).
 
